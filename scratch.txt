@@ -1,0 +1,388 @@
+
+          <InputLabel htmlFor="revoked">revoked</InputLabel>
+          <Select
+            value={state.revoked}
+            onChange={handler('revoked')}
+            input={<Input id="revoked" />}
+          >
+            <MenuItem value={true}>true</MenuItem>
+            <MenuItem value={false}>false</MenuItem>
+          </Select>
+
+
+
+open /Applications/Google\ Chrome.app --args --disable-web-security --user-data-dir
+
+<List> {this.listOfApiRoots()} </List>
+    return <List><ListItemText primary={JSON.stringify(this.state.discovery)}/></List>;
+<Typography type="body1" wrap>{this.state.info}</Typography>  
+
+
+  <ListItemText
+        disableTypography
+        primary={<Typography type="body2" style={{ color: "black" }}>{this.props.conn[j].baseURL}</Typography>}
+      /> 
+
+
+var player = {score: 1, name: 'Jeff'};
+var newPlayer = Object.assign({}, player, {score: 2});
+
+ <List> {this.listOfItems(4)} </List>
+            <FormControlLabel value="1" control={<Radio />} label={`taxii_1 host `} />
+            <FormControlLabel value="2" control={<Radio />} label={`taxii_2 host `} />
+            <FormControlLabel value="3" control={<Radio />} label={`taxii_3 host `} />
+            <FormControlLabel value="4" control={<Radio />} label={`taxii_4 host `} />
+
+            <FormControlLabel value={j} control={<Radio />} label={`taxii_ ${j+1} host `} />
+
+          <ListItem dense button key={j}>
+            <Radio tabIndex={-1} />
+            <ListItemText primary={`taxii_ ${j+1} host `} />
+          </ListItem>
+        
+        <Grid item xs={3}>
+          <Grid container className={this.props.root} justify="center" spacing={Number(this.state.spacing)}>
+            <List> {this.listOfItems(8)} </List>
+          </Grid>
+        </Grid>
+
+                  <AppBar position="fixed" color="default">
+          <Tabs value={this.state.value}
+            onChange={this.handleChange}
+            indicatorColor="primary"
+            textColor="primary"
+            fullWidth >
+            <Tab label="Servers" />
+            <Tab label="Collections" />
+            <Tab label="Objects" />
+          </Tabs>
+        </AppBar>
+
+
+        {this.state.value === 0 && <TabContainer>{'Servers'}</TabContainer>}
+        {this.state.value === 1 && <TabContainer>{'Api roots'}</TabContainer>}
+        {this.state.value === 2 && <TabContainer>{'Collections'}</TabContainer>}      
+        
+
+        <SwipeableViews index={this.state.value} onChangeIndex={this.handleChangeIndex}>
+          <TabContainer>{'Servers'}</TabContainer>
+          <TabContainer>{'Api roots'}</TabContainer>
+          <TabContainer>{'Collections'}</TabContainer>
+        </SwipeableViews>
+
+
+
+cyber-tally
+cyber-ledger
+cyber-viewer
+
+
+
+/* eslint-disable flowtype/require-valid-file-annotation */
+
+/* global conn */
+// @flow weak
+
+import { Router, Route, Switch } from 'react-router'
+
+import {TaxiiConnect, Server} from '../pages/taxii2lib.js';
+
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import withRoot from '../components/withRoot';
+//import { withStyles } from 'material-ui/styles';
+import withStyles from 'material-ui/styles/withStyles';
+import Drawer from 'material-ui/Drawer';
+import AppBar from 'material-ui/AppBar';
+import Toolbar from 'material-ui/Toolbar';
+import Typography from 'material-ui/Typography';
+import Divider from 'material-ui/Divider';
+import List, { ListItem, ListItemSecondaryAction, ListItemText } from 'material-ui/List';
+import Checkbox from 'material-ui/Checkbox';
+import Button from 'material-ui/Button';
+
+const conn = new TaxiiConnect("https://test.freetaxii.com:8000", "user-me", "user-password");
+const server = new Server("/taxii/", conn);
+
+const drawerWidth = 120;
+
+const styles = theme => ({
+  root: {
+    width: '100%',
+    height: 540,
+    marginTop: theme.spacing.unit,
+    zIndex: 1,
+    overflow: 'hidden'
+  },
+  appFrame: {
+    position: 'relative',
+    display: 'flex',
+    width: '100%',
+    height: '100%'
+  },
+  appBar: {
+    position: 'absolute',
+    width: `calc(100% - ${drawerWidth}px)`,
+    marginLeft: drawerWidth,
+    order: 1
+  },
+  drawerPaper: {
+    position: 'relative',
+    height: 'auto',
+    width: drawerWidth
+  },
+  drawerHeader: theme.mixins.toolbar,
+  content: {
+    backgroundColor: theme.palette.background.default,
+    width: `calc(100% - ${drawerWidth}px)`,
+    padding: theme.spacing.unit,
+    height: 'calc(100% - 56px)',
+    marginTop: 26,
+    marginLeft: drawerWidth,
+    [theme.breakpoints.up('sm')]: {
+      height: 'calc(100% - 64px)',
+      marginTop: 64
+    }
+  }
+});
+
+const space = "  ";
+const mailFolderListItems = [0, 1, 2, 3].map(value => (
+            <ListItem dense button key={value}>
+              <ListItemText primary={`Line item ${value + 1}   `} />
+              <ListItemSecondaryAction>
+                <Checkbox
+                />
+              </ListItemSecondaryAction>
+            </ListItem>
+          ));
+        
+const otherMailFolderListItems = [4, 5, 6, 7].map(value => (
+            <ListItem dense button key={value}>
+              <ListItemText primary={`Line item ${value + 1}   `} />
+              <ListItemSecondaryAction>
+                <Checkbox
+                />
+              </ListItemSecondaryAction>
+            </ListItem>
+          ));
+
+class MainPage extends Component {
+    
+constructor(props) {
+    super(props);
+    this.state = {value: "click connect"};
+}
+    
+handleClick = () => {
+    server.discovery().then(discovery => {
+        this.setState({value: JSON.stringify(discovery)});
+    });   
+  };
+  
+render() {
+  return (
+    <div className={this.props.classes.root}>
+      <div className={this.props.classes.appFrame}>
+      
+        <AppBar className={this.props.classes.appBar}>
+          <Toolbar>
+            <Typography type="title" color="inherit" noWrap>
+              The tool bar
+            </Typography>
+            <Button color="contrast" onClick={this.handleClick}>Connect</Button>
+          </Toolbar>
+        </AppBar>
+        
+        <Drawer type="permanent" classes={this.props.classes.drawerPaper}>
+          <div className={this.props.classes.drawerHeader} />
+          <Divider />
+          <List>{mailFolderListItems}</List>
+          <Divider />
+          <List>{otherMailFolderListItems}</List>
+        </Drawer>
+        
+        <main className={this.props.classes.content}>
+          <Typography type="body1" wrap>{this.state.value}</Typography>
+        </main>
+        
+      </div>
+    </div>
+  );
+}
+};
+   
+MainPage.propTypes = {
+  classes: PropTypes.object.isRequired
+};
+
+export default withRoot(withStyles(styles)(MainPage));
+
+
+
+//           <Typography type="body1" wrap>{this.state.value}</Typography>
+          
+    // <IconButton className={this.props.classes.menuButton} color="contrast" aria-label="Menu">
+    // <MenuIcon />
+    // </IconButton> 
+
+
+     <Typography type="body1" wrap>{this.props.conn.baseURL}</Typography>
+   
+listOfServers() {
+    let items = [];
+    for(let j = 0; j < this.props.conn.length; j++ ) {    
+        items.push(
+          <ListItem dense button key={j}>
+             <Checkbox checked="true"/>            
+             <ListItemText primary={this.props.conn[j].baseURL} />            
+          </ListItem>);
+    }
+    return items;
+};
+
+
+
+         <Radio value="1" label="a" style={{display: 'inline-block', width: 'auto'}} />
+            <Radio value="2" label="b" style={{display: 'inline-block', width: 'auto'}} />    
+            
+     <FormControlLabel value="male" control={<Radio />} label="Male" />
+<FormControlLabel value="female" control={<Radio />} label="Male" />
+
+
+//  style={{position: 'fixed', zIndex: 1, marginTop: 2, top: 52}}
+
+              <FormLabel component="inbundle">Currently in bundle</FormLabel>
+
+
+
+        <Grid item xs={6}>
+          <Grid container className={this.props.root} justify="flex-start">
+            <FormControl component="fieldset" required>
+              <Typography type="body1" wrap style={{margin: 26}}> Bundle content </Typography>
+              <RadioGroup style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between' }}
+                aria-label="indicator"
+                name="indicatorGroup"
+                value={this.state.value}
+                onChange={this.handleChange}>
+                <BundleContent sdoType="indicator" bundle={this.props.bundle}  />
+              </RadioGroup>
+            </FormControl>
+          </Grid>
+        </Grid>
+
+
+
+  render() {
+    return (
+      <Grid container className={this.props.root}>
+
+        <Grid item xs={6}>
+          <Grid container className={this.props.root} justify="flex-start">
+            <FormControl component="fieldset" required>
+              <Typography type="body1" wrap style={{margin: 26}}> Bundle content </Typography>
+              <RadioGroup style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between' }}
+                aria-label="indicator"
+                name="indicatorGroup"
+                value={this.state.value}
+                onChange={this.handleChange}>
+                {this.state.objList}
+              </RadioGroup>
+            </FormControl>
+          </Grid>
+        </Grid>
+
+        <Grid item xs={6}>
+          <Grid container className={this.props.root} justify="center">
+                    <Typography type="body1" wrap style={{margin: 26}}> the bundle </Typography>
+          </Grid>
+        </Grid>
+
+      </Grid>
+    );
+  };
+
+  // fill the list with the indicators currently in the bundle
+  componentDidMount() {
+    let objItems = [];
+    if (this.props.bundle !== undefined) {
+      this.props.bundle.objects.filter(obj => obj.type === "indicator").map(sdo =>
+        objItems.push(<ListItemText key={sdo.id} primary={sdo.name} />)
+      );
+      this.setState({ objList: objItems });
+    }
+  };
+  // update the bundle
+  selectedObject = value => {
+    // call the parent (StixView) update method
+    this.props.update(this.state.objList);
+    this.setState({ value });
+  };
+
+
+  // find the selected object in the bundle
+//  findObject = sdoid => {
+//      let objFound = this.props.bundle.objects.find(obj => obj.id === sdoid);
+//      if (objFound !== undefined) {
+//          this.setState({ info: objFound.name + "_" + objFound.id });
+//      }
+//  };
+  
+
+
+//  // update the selected bundle object, sdoid is the sdo id
+//  // if deleted=true update the info display
+//  selectedObject = (sdoid, isDeleted) => {
+//      if (isDeleted) {
+//          this.setState({ sdoId: sdoid, info: '' });
+//        } else {
+//    if (sdoid !== undefined) {
+//      // find the object with sdoid in the bundle, to get its info
+//      let objFound = this.props.bundle.objects.find(obj => obj.id === sdoid);
+//      if (objFound !== undefined) {
+//        this.setState({ sdoId: sdoid, info: objFound.name + "_" + objFound.id });
+//      } else {
+//        this.setState({ sdoId: sdoid });
+//      }
+//    }
+//        }
+//  };
+
+
+        <Grid item xs={6}>
+          <Grid container className={this.props.root} justify="center">
+            <Typography type="body1" wrap style={{ margin: 26 }}> {this.state.info} </Typography>
+          </Grid>
+        </Grid>
+
+
+/*
+ * case class Indicator(`type`: String = Indicator.`type`,
+                     id: Identifier = Identifier(Indicator.`type`),
+                     created: Timestamp = Timestamp.now(),
+                     modified: Timestamp = Timestamp.now(),
+                     pattern: String,
+                     valid_from: Timestamp,
+                     name: Option[String] = None,
+                     valid_until: Option[Timestamp] = None,
+                     labels: Option[List[String]] = None, // todo ---> should not be optional
+                     kill_chain_phases: Option[List[KillChainPhase]] = None,
+                     description: Option[String] = None,
+                     revoked: Option[Boolean] = None,
+                     confidence: Option[Int] = None,
+                     external_references: Option[List[ExternalReference]] = None,
+                     lang: Option[String] = None,
+                     object_marking_refs: Option[List[Identifier]] = None,
+                     granular_markings: Option[List[GranularMarking]] = None,
+                     created_by_ref: Option[Identifier] = None,
+                     custom: Option[CustomProps] = None) extends SDO
+ */  
+
+
+<form noValidate autoComplete="off">
+
+
+    this.handleChange = this.handleChange.bind(this);
+    this.selectedObject = this.selectedObject.bind(this);
+
+
