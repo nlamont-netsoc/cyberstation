@@ -77,7 +77,8 @@ export class BundleContent extends Component {
   handleAdd = (event) => {
     let newName = (this.props.stix.type === undefined || this.props.stix.type === '') ? "new-object" : "new-" + this.props.stix.type;
     // copy the clean stix
-    let newStix = Object.assign({}, this.props.stix); 
+    let newStix = Object.assign({}, this.props.stix);
+    // give it an id
     newStix.id = this.props.stix.type + "--" + uuidv4();
     newStix.name = newName;
     // add to the object list

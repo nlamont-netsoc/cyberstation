@@ -1,3 +1,22 @@
+                </Grid>
+                <Grid key="a1" item>
+                <TextField style={{ marginLeft: 8 }}
+                type="text"
+                name="id"
+                id="id"
+                label="id"
+                value={state.id}
+                margin="normal"
+                onChange={handler('id')}
+                style={{ width: 460 }}
+                />
+                <Button fab dense color="primary" aria-label="redo" style={{width: 33, height: 22}}
+                onClick={(e) => { handler('id')({ target: { value: state.type + "--" + uuidv4() } }) }}>
+                <Cached />
+                </Button>
+                </Grid>
+
+
 
           <InputLabel htmlFor="revoked">revoked</InputLabel>
           <Select
