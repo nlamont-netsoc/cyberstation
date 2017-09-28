@@ -11,15 +11,13 @@ import withRoot from '../components/withRoot';
 import withStyles from 'material-ui/styles/withStyles';
 import Typography from 'material-ui/Typography';
 import Divider from 'material-ui/Divider';
-import List, {ListItem, ListItemSecondaryAction, ListItemText} from 'material-ui/List';
-import Checkbox from 'material-ui/Checkbox';
-import Paper from 'material-ui/Paper';
+import List, {ListItemText} from 'material-ui/List';
 import {FormLabel, FormControl, FormControlLabel} from 'material-ui/Form';
 import Radio, {RadioGroup} from 'material-ui/Radio';
-import uuidv4 from 'uuid/v4';
-import {BundlePanel} from '../stix/bundlePanel.js';
 import TextField from 'material-ui/TextField';
 import Button from 'material-ui/Button';
+import Dialog, {DialogActions, DialogContent, DialogContentText, DialogTitle,} from 'material-ui/Dialog';
+import Slide from 'material-ui/transitions/Slide';
 
 
 export class ServersPage extends Component {
@@ -27,8 +25,9 @@ export class ServersPage extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            open: false,    // for the url dialog
             serverList: [], // the list of servers to choose from
-            discovery: '', // the current server discovery info
+            discovery: '',  // the current server discovery info
             currentSelection: '' // the current selected server url
         }
     };
@@ -43,12 +42,6 @@ export class ServersPage extends Component {
         let event = {target: {value: server.conn.baseURL}};
         this.handleSelected(event);
     };
-
-    // getServerDiscovery() {
-    //     this.state.discovery().then(discovery => {
-    //         this.setState({ discovery: discovery });
-    //     });
-    // };
 
     serverListAsFormLabels() {
         let formItems = [];
@@ -68,33 +61,25 @@ export class ServersPage extends Component {
         return items;
     };
 
-    handleChange = name => event => {
-
-    };
-
-    // change the selected server to edit
+    // change the selected server
     handleSelected = event => {
         let url = event.target.value;
         let sevr = this.state.serverList.find(s => s.conn.baseURL === url);
-        if(sevr !== undefined) {
+        if (sevr !== undefined) {
+            // tell the parent component
+            this.props.update(sevr, false);
+            // get the discovery info
             sevr.discovery().then(discovery => {
                 this.setState({discovery: discovery, currentSelection: url});
             });
         }
-        // tell the parent component
-        //    this.props.update(url);
-    };
-
-    // add a new server to the list
-    handleAdd = (event) => {
-
     };
 
     // delete the selected server
     handleDelete = (event) => {
         // delete the selected server from the list
         let witoutSelected = this.state.serverList.filter(s => s.conn.baseURL !== this.state.currentSelection);
-        this.setState({ serverList: witoutSelected, discovery: '', currentSelection: '' });
+        this.setState({serverList: witoutSelected, discovery: '', currentSelection: ''});
         // tell the parent it has been deleted
         this.props.update(this.state.currentSelection, true);
     };
@@ -111,31 +96,90 @@ export class ServersPage extends Component {
         }
     };
 
+    // add a new server to the list
+    handleAdd = (event) => {
+        this.setState({open: true});
+    };
+
+    handleRequestDialogCancel = () => {
+        this.setState({open: false});
+        this.setState({currentSelection: ''});
+    };
+
+    handleRequestDialogOk = () => {
+        this.setState({open: false});
+        // create a server, test it and add it to the list
+        // should check the url first
+        let newServer = new Server("/taxii/", new TaxiiConnect(this.state.currentSelection, "user-me", "user-password"));
+        newServer.discovery().then(discovery => {
+            this.setState({
+                discovery: discovery,
+                serverList: [...this.state.serverList, newServer],
+                currentSelection: newServer.conn.baseURL
+            });
+        });
+        let event = {target: {value: newServer.conn.baseURL}};
+        this.handleSelected(event);
+    };
+
+    // dynamically change the url input text
+    handleDialogChange = event => {
+        this.setState({currentSelection: event.target.value});
+    };
+
     render() {
         return (
-            <Grid container spacing={8}>
-                <Grid item xs={6}>
-                    <FormControl component="fieldset" required>
-                        <Typography type="body1" wrap style={{margin: 8}}> {this.title} </Typography>
-                        <Button onClick={this.handleAdd} raised color="default" style={{margin: 8}}>Add new server</Button>
-                        <Button onClick={this.handleDelete} raised color="default" style={{margin: 8}}>Delete selected</Button>
-                        <Divider/>
-                        <RadioGroup style={{display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between'}}
-                                    aria-label="obj"
-                                    name="objGroup"
-                                    value={this.state.currentSelection}
-                                    onChange={this.handleSelected}>
-                            {this.serverListAsFormLabels()};
-                        </RadioGroup>
-                    </FormControl>
-                </Grid>
+            <div>
+                <Grid container spacing={8}>
+                    <Grid item xs={6}>
+                        <FormControl component="fieldset" required>
+                            <Typography type="body1" wrap style={{margin: 8}}> {this.title} </Typography>
+                            <Button onClick={this.handleAdd} raised color="default" style={{margin: 8}}>Add new
+                                server</Button>
+                            <Button onClick={this.handleDelete} raised color="default" style={{margin: 8}}>Delete
+                                selected</Button>
+                            <Divider/>
+                            <RadioGroup style={{display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between'}}
+                                        aria-label="obj"
+                                        name="objGroup"
+                                        value={this.state.currentSelection}
+                                        onChange={this.handleSelected}>
+                                {this.serverListAsFormLabels()};
+                            </RadioGroup>
+                        </FormControl>
+                    </Grid>
 
-                <Grid item xs={6}>
-                    <Grid item xs={12} sm={6}>
-                        {this.serverInfo()}
+                    <Grid item xs={6}>
+                        <Grid item xs={12} sm={6}>
+                            {this.serverInfo()}
+                        </Grid>
                     </Grid>
                 </Grid>
-            </Grid>
+
+                <Dialog open={this.state.open} transition={Slide} onRequestClose={this.handleRequestDialogClose}>
+                    <DialogTitle>{"Enter the server URL"}</DialogTitle>
+                    <DialogContent>
+                        <TextField style={{marginLeft: 8, width: 300}}
+                                   name="serverUrl"
+                                   type="text"
+                                   id="serverUrl"
+                                   label="server url"
+                                   value={this.state.currentSelection}
+                                   margin="normal"
+                                   onChange={this.handleDialogChange}
+                                   fullWidth
+                        />
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={this.handleRequestDialogCancel} color="primary">
+                            Cancel
+                        </Button>
+                        <Button onClick={this.handleRequestDialogOk} color="primary">
+                            Ok
+                        </Button>
+                    </DialogActions>
+                </Dialog>
+            </div>
         );
     };
 

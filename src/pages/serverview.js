@@ -40,7 +40,10 @@ export class ServerView extends Component {
 
     constructor(props) {
         super(props);
-        this.state = {value: 0, server: new Server("/taxii/", new TaxiiConnect("https://test.freetaxii.com:8000", "user-me", "user-password"))};
+        this.state = {
+            value: 0,
+            server: new Server("/taxii/", new TaxiiConnect("https://test.freetaxii.com:8000", "user-me", "user-password"))
+        };
     }
 
     handleChange = (event, value) => {
@@ -52,7 +55,7 @@ export class ServerView extends Component {
     };
 
     updateServer = (server, isDeleted) => {
-      //  this.setState({server: server});
+        this.setState({server: server});
     };
 
     render() {
