@@ -14,20 +14,11 @@ import AddIcon from 'material-ui-icons/Add';
 import ModeEditIcon from 'material-ui-icons/ModeEdit';
 import Cached from 'material-ui-icons/Cached';
 import uuidv4 from 'uuid/v4';
+import { labelsNames } from '../stix/stixutil.js';
 
 
-const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 12;
-
-const labelsNames = [
-    "anomalous-activity",
-    "anonymization",
-    "benign",
-    "organization",
-    "compromised",
-    "malicious-activity",
-    "attribution"
-];
+export const ITEM_HEIGHT = 48;
+export const ITEM_PADDING_TOP = 12;
 
 export const commonStix = (state, handler) => {
 
@@ -104,6 +95,18 @@ export const commonStix = (state, handler) => {
                             }}>
                         <Cached/>
                     </Button>
+
+                    <FormControlLabel
+                        control={
+                            <Switch
+                                checked={state.revoked}
+                                onChange={handler('revoked')}
+                                aria-label="revoked"
+                            />
+                        }
+                        label="revoked"
+                        style={{padding: 22}}
+                    />
                 </Grid>
 
                 <Grid key="a2" item>
@@ -127,47 +130,34 @@ export const commonStix = (state, handler) => {
                                onChange={handler('lang')}
                     />
 
-                    <FormControl >
-                    <InputLabel htmlFor="labels-multiple" style={{marginLeft: 20, top: 8}}>Labels</InputLabel>
-                    <Select
-                        style={{marginLeft: 20, top: 8, width: 450}}
-                        multiple
-                        value={state.labels}
-                        onChange={handler('labels')}
-                        input={<Input id="labels-multiple"/>}
-                        MenuProps={{
-                            PaperProps: {
-                                style: {
-                                    maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-                                    width: 200,
+                    <FormControl  style={{marginLeft: 20, top: 3}}>
+                        <InputLabel htmlFor="labels-multiple">Labels</InputLabel>
+                        <Select
+                            style={{width: 550}}
+                            multiple
+                            value={state.labels}
+                            onChange={handler('labels')}
+                            input={<Input id="labels-multiple"/>}
+                            MenuProps={{
+                                PaperProps: {
+                                    style: {
+                                        maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+                                        width: 200,
+                                    },
                                 },
-                            },
-                        }}
-                    >
-                        {labelsNames.map(name => (
-                            <MenuItem key={name} value={name}
-                                      style={{
-                                          fontWeight: state.labels.indexOf(name) !== -1 ? '500' : '400',
-                                      }}
-                            >
-                                {name}
-                            </MenuItem>
-                        ))}
-                    </Select>
+                            }}
+                        >
+                            {labelsNames.map(name => (
+                                <MenuItem key={name} value={name}
+                                          style={{
+                                              fontWeight: state.labels.indexOf(name) !== -1 ? '500' : '400',
+                                          }}
+                                >
+                                    {name}
+                                </MenuItem>
+                            ))}
+                        </Select>
                     </FormControl>
-
-                    <FormControlLabel
-                        control={
-                            <Switch
-                                checked={state.revoked}
-                                onChange={handler('revoked')}
-                                aria-label="revoked"
-                            />
-                        }
-                        label="revoked"
-                        style={{padding: 22}}
-                    />
-
 
                 </Grid>
 
@@ -185,6 +175,7 @@ export const commonStix = (state, handler) => {
                 </Grid>
                 <Grid key="a5" item>
                     <TextField style={{marginLeft: 8}}
+                               type="text"
                                name="external_references"
                                id="external_references"
                                label="external_references"
@@ -196,6 +187,7 @@ export const commonStix = (state, handler) => {
                 </Grid>
                 <Grid key="a6" item>
                     <TextField style={{marginLeft: 8}}
+                               type="text"
                                name="object_marking_refs"
                                id="object_marking_refs"
                                label="object_marking_refs"

@@ -11,6 +11,7 @@ import withStyles from 'material-ui/styles/withStyles';
 import { IndicatorPage } from '../stix/indicator.js';
 import { BundlePage } from '../stix/bundle.js';
 import { RelationsPage } from '../stix/relations.js';
+import { AttackPatternPage } from '../stix/attackpattern.js';
 import uuidv4 from 'uuid/v4';
 
 
@@ -68,10 +69,10 @@ export class StixView extends Component {
             scrollable
             scrollButtons="auto">
             <Tab label="Bundle" />
+            <Tab label="Attack Pattern" />
             <Tab label="Relations" />
             <Tab label="Indicator" />
             <Tab label="Malware" />
-            <Tab label="Attack Pattern" />
             <Tab label="Campaign" />
             <Tab label="Course of Action" />
             <Tab label="Identity" />
@@ -86,10 +87,10 @@ export class StixView extends Component {
 
         <div style={viewStyle.content} >
           {this.state.value === 0 && <TabContainer> <BundlePage server={this.server} bundle={this.state.bundle} /></TabContainer>}
-          {this.state.value === 1 && <TabContainer> <RelationsPage server={this.server} bundle={this.state.bundle} /> </TabContainer>}
-          {this.state.value === 2 && <TabContainer> <IndicatorPage server={this.server} bundle={this.state.bundle} /> </TabContainer>}
-          {this.state.value === 3 && <TabContainer>{'Malware'}</TabContainer>}
-          {this.state.value === 4 && <TabContainer>{'Attack Pattern'}</TabContainer>}
+          {this.state.value === 1 && <TabContainer> <AttackPatternPage server={this.server} bundle={this.state.bundle} /> </TabContainer>}
+          {this.state.value === 2 && <TabContainer> <RelationsPage server={this.server} bundle={this.state.bundle} /> </TabContainer>}
+          {this.state.value === 3 && <TabContainer> <IndicatorPage server={this.server} bundle={this.state.bundle} /> </TabContainer>}
+          {this.state.value === 4 && <TabContainer>{'Malware'}</TabContainer>}
           {this.state.value === 5 && <TabContainer>{'Campaign'}</TabContainer>}
           {this.state.value === 6 && <TabContainer>{'Course of Action'}</TabContainer>}
           {this.state.value === 7 && <TabContainer>{'Identity'}</TabContainer>}

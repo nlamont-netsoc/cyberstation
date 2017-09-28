@@ -4,6 +4,12 @@
  * and open the template in the editor.
  */
 
-  // find the object id in the bundle
-  findIn = (bundle, sdoid) => { bundle.objects.find(obj => obj.id === sdoid); };
-  
+export const labelsNames = [
+    "anomalous-activity",
+    "anonymization",
+    "benign",
+    "organization",
+    "compromised",
+    "malicious-activity",
+    "attribution"
+];
