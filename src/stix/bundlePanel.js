@@ -3,7 +3,6 @@
 /* global conn */
 // @flow weak
 
-import { TabsView } from '../pages/tabsView.js';
 import { TaxiiConnect, Server } from '../libs/taxii2lib.js';
 import Grid from 'material-ui/Grid';
 import React, { Component } from 'react';

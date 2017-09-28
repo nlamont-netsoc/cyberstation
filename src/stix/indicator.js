@@ -4,7 +4,6 @@
 // @flow weak
 import { commonStix } from '../stix/common.js';
 import { StixPage, styles } from '../stix/stixPage.js';
-import { TabsView } from '../pages/tabsView.js';
 import Grid from 'material-ui/Grid';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';

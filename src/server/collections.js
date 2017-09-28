@@ -4,7 +4,6 @@
 // @flow weak
 
 //import { Router, Route, Switch } from 'react-router'
-import { TabsView } from '../pages/tabsView.js';
 import { TaxiiConnect, Server, Collections, Collection } from '../libs/taxii2lib.js';
 import Grid from 'material-ui/Grid';
 import React, { Component } from 'react';
@@ -62,7 +61,7 @@ export class CollectionsPage extends Component {
     };
 
     componentDidMount() {
-        this.props.server.api_rootsMap().then(theMap => this.dataList(theMap));
+     //   this.props.server.api_rootsMap().then(theMap => this.dataList(theMap));
     };
 
     render() {

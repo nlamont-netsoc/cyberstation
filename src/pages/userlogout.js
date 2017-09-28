@@ -3,23 +3,12 @@
 /* global conn */
 // @flow weak
 
-//import { Router, Route, Switch } from 'react-router'
-import { viewStyle } from '../styles/viewStyle.js';
-import { TabsView } from '../pages/tabsView.js';
-import { TaxiiConnect, Server } from '../libs/taxii2lib.js';
 import Grid from 'material-ui/Grid';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import withRoot from '../components/withRoot';
 import withStyles from 'material-ui/styles/withStyles';
 import Typography from 'material-ui/Typography';
-import Divider from 'material-ui/Divider';
-import List, { ListItem, ListItemSecondaryAction, ListItemText } from 'material-ui/List';
-import Checkbox from 'material-ui/Checkbox';
-import Radio, { RadioGroup } from 'material-ui/Radio';
-import Paper from 'material-ui/Paper';
-import { FormLabel, FormControl, FormControlLabel } from 'material-ui/Form';
-import TextField from 'material-ui/TextField';
 import Button from 'material-ui/Button';
 
 

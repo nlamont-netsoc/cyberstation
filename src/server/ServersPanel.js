@@ -34,26 +34,24 @@ const styles = {
   }
 };
 
-export class BundleContent extends Component {
+export class ServersPanel extends Component {
 
   constructor(props) {
     super(props);
     this.state = { sdoId: '', objList: [] };
-    this.title = "Bundle " + this.props.stix.type;
-    if (this.props.stix.type !== '') { this.title = this.title + "s"; }
   }
 
   // fill the list with the filtered objects of the bundle
   componentDidMount() {
-    // an array of stix id  
+    // an array of sdo id  
     let objItems = [];
     if (this.props.bundle !== undefined) {
       // if have no filtering, take all
-      if (this.props.stix.type === undefined || this.props.stix.type === '') {
+      if (this.props.sdotype === undefined || this.props.sdotype === '') {
         objItems = this.props.bundle.objects;
       } else {
         // apply the type filter
-        objItems = this.props.bundle.objects.filter(obj => obj.type === this.props.stix.type);
+        objItems = this.props.bundle.objects.filter(obj => obj.type === this.props.sdotype);
       }
     }
     this.setState({ objList: objItems });
@@ -72,20 +70,9 @@ export class BundleContent extends Component {
     this.props.selected(sdoid, false);
   };
 
-  // add a new stix to the bundle
+  // send the bundle to the server
   handleAdd = (event) => {
-    let newName = (this.props.stix.type === undefined || this.props.stix.type === '') ? "new-object" : "new-" + this.props.stix.type;
-    // copy the clean stix
-    let newStix = Object.assign({}, this.props.stix);
-    // give it an id
-    newStix.id = this.props.stix.type + "--" + uuidv4();
-    newStix.name = newName;
-    // add to the object list
-    this.setState({ objList: [...this.state.objList, newStix] });
-    // add to the parent bundle
-    this.props.bundle.objects.push(newStix);
-    // select the newly added object
-    this.handleSelected(event, newStix.id);
+
   };
 
   // delete the selected sdo from the bundle
@@ -107,9 +94,9 @@ export class BundleContent extends Component {
       <Grid container className={this.props.root} justify="flex-start">
         <FormControl component="fieldset" required>
           <Typography type="body1" wrap style={{ margin: 8 }}> {this.title} </Typography>
-          <Button onClick={this.handleAdd} raised color="default" style={{ margin: 8 }}>Add new</Button>
+          <Button onClick={this.handleAdd} raised color="default" style={{ margin: 8 }}>Add a server</Button>
           <Button onClick={this.handleDelete} raised color="default" style={{ margin: 8 }}>Delete selected</Button>
-
+          <Divider />
           <RadioGroup style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between' }}
             aria-label="obj"
             name="objGroup"
@@ -124,10 +111,10 @@ export class BundleContent extends Component {
 
 };
 
-BundleContent.propTypes = {
-  stix: PropTypes.object.isRequired,
+ServersPanel.propTypes = {
+  sdotype: PropTypes.string.isRequired,
   bundle: PropTypes.object.isRequired,
   selected: PropTypes.func.isRequired
 };
 
-export default withRoot(withStyles(styles)(BundleContent));
+export default withRoot(withStyles(styles)(ServersPanel));

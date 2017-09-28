@@ -80,7 +80,7 @@ class MainPage extends Component {
     isLoggedin = (value) => {
         if (value) {
             this.setState({ isLogged: true, loglabel: "Logout" });
-            this.handleStix();
+            this.handleServer();
         } else {
             this.setState({ isLogged: false, loglabel: "Login" });
             this.setState({ view: <LoginPage conn={this.taxiCom} loggedin={this.isLoggedin} /> });
