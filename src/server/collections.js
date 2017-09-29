@@ -15,7 +15,8 @@ import Divider from 'material-ui/Divider';
 import List, {ListItem, ListItemSecondaryAction, ListItemText} from 'material-ui/List';
 import {FormLabel, FormControl, FormControlLabel} from 'material-ui/Form';
 import Radio, {RadioGroup} from 'material-ui/Radio';
-
+import green from 'material-ui/colors/green';
+import red from 'material-ui/colors/red';
 
 const styles = theme => ({
     root: {
@@ -33,6 +34,21 @@ const styles = theme => ({
     }
 });
 
+const labelStyles = {
+    canread: {
+        color: green[500],
+    },
+    cannotread: {
+        color: red[500],
+    },
+    canwrite: {
+        color: green[500],
+    },
+    cannotwrite: {
+        color: red[500],
+    }
+};
+
 export class CollectionsPage extends Component {
 
     constructor(props) {
@@ -48,8 +64,8 @@ export class CollectionsPage extends Component {
 
     // when a new props is received
     componentWillReceiveProps(newProps) {
-        //   let newServer = newProps.server;
-        this.setState({colSelection: '', apiroot: newProps.apiroot});
+        // newProps.server;
+        this.setState({colSelection: '', collectionList: [], objectList: [], apiroot: newProps.apiroot});
         this.dataCollectionList();
     };
 
@@ -64,11 +80,11 @@ export class CollectionsPage extends Component {
         }
     };
 
-    dataObjectList(colid) {
-        console.log("=======> in dataObjectList this.state.colSelection=" + this.state.colSelection);
+    dataObjectList(col) {
+        console.log("*****> in dataObjectList this.state.colSelection=" + this.state.colSelection);
         //  if (this.state.apiroot !== '' && this.state.colSelection !== '') {
-        if (this.state.apiroot !== '' && colid !== '') {
-            const theCollection = new Collection(colid, this.state.apiroot, this.props.server.conn);
+        if (this.state.apiroot !== '') {
+            const theCollection = new Collection(col, this.state.apiroot, this.props.server.conn);
             theCollection.getObjects().then(bundle => this.setState({objectList: bundle.objects}));
         }
     };
@@ -76,9 +92,15 @@ export class CollectionsPage extends Component {
     colsAsFormLabels() {
         let colItems = [];
         this.state.collectionList.map(col => {
+            let readVal = col.can_read ? 'can read' : 'cannot read';
+            let writeVal = col.can_write ? 'can write' : 'cannot write';
+            // todo remove this, col.can_write is required should not be undefined
+            let isWritable = (col.can_write === undefined) ? false : col.can_write;
+            let labelValue = col.title  + ' (' + readVal + ', ' + writeVal + ')';
             colItems.push(<FormControlLabel style={{margin: 8}}
+                                            disabled = {!col.can_read}
                                             key={col.id} value={col.id} control={<Radio/>}
-                                            label={col.title}/>);
+                                            label={labelValue} />);
         });
         return colItems;
     }
@@ -95,9 +117,14 @@ export class CollectionsPage extends Component {
     handleSelected = event => {
         let theValue = event.target.value;
         console.log("=======> in handleSelected theValue=" + theValue);
-        this.setState({colSelection: theValue});
-        console.log("===>in handleSelected this.state.colSelection=" + this.state.colSelection);
-        this.dataObjectList(theValue);
+        // find the collection info
+        let thiCol = this.state.collectionList.find(col => col.id === theValue);
+        if (thiCol !== undefined) {
+            console.log("=======> in handleSelected thiCol=" + JSON.stringify(thiCol));
+            this.setState({colSelection: theValue});
+            console.log("===>in handleSelected this.state.colSelection=" + this.state.colSelection);
+            this.dataObjectList(thiCol);
+        }
     };
 
     render() {
@@ -105,7 +132,7 @@ export class CollectionsPage extends Component {
             <Grid container className={this.props.root}>
 
                 <Grid item xs={3}>
-                    <Typography type="body1" wrap>Collection list</Typography>
+                    <Typography type="body1" wrap>Collections list</Typography>
                     <RadioGroup style={{display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between'}}
                                 aria-label="obj"
                                 name="objGroup"

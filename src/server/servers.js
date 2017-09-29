@@ -56,7 +56,6 @@ export class ServersPage extends Component {
     // update the selected api root url from the serverPanel
     updateApiRootSelection = value => {
         let theValue = value;
-        console.log("in servers apiroot=" + theValue);
         this.setState({currentApiroot: theValue});
         // tell the parent component
         this.props.apiroot(theValue);
