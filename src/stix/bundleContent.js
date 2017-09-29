@@ -115,7 +115,7 @@ export class BundleContent extends Component {
             name="objGroup"
             value={this.state.sdoId}
             onChange={this.handleSelected}>
-            {this.asFormLabels()};
+            {this.asFormLabels()}
           </RadioGroup>
         </FormControl>
       </Grid>

@@ -2,6 +2,7 @@
 
 /* global conn */
 // @flow weak
+import {ServerPanel} from '../server/serverPanel.js';
 import {StixPage, styles} from '../stix/stixPage.js';
 import {TaxiiConnect, Server} from '../libs/taxii2lib.js';
 import Grid from 'material-ui/Grid';
@@ -26,9 +27,10 @@ export class ServersPage extends Component {
         super(props);
         this.state = {
             open: false,    // for the url dialog
-            serverList: [], // the list of servers to choose from
+            serverList: [], // the list of server objects to choose from
             discovery: '',  // the current server discovery info
-            currentSelection: '' // the current selected server url
+            currentServer: '', // the current selected server url
+            currentApiroot: '' // the current selected api root url
         }
     };
 
@@ -37,10 +39,10 @@ export class ServersPage extends Component {
         let objItems = [];
         objItems.push(server);
         server.discovery().then(discovery => {
-            this.setState({discovery: discovery, serverList: objItems, currentSelection: server.conn.baseURL});
+            this.setState({discovery: discovery, serverList: objItems, currentServer: server.conn.baseURL});
         });
         let event = {target: {value: server.conn.baseURL}};
-        this.handleSelected(event);
+        this.handleServerSelection(event);
     };
 
     serverListAsFormLabels() {
@@ -51,26 +53,21 @@ export class ServersPage extends Component {
         return formItems;
     };
 
-    listOfApiRoots(arr) {
-        let items = [];
-        if (arr !== undefined) {
-            for (let j = 0; j < arr.length; j++) {
-                items.push(<ListItemText key={j} primary={arr[j]}/>);
-            }
-        }
-        return items;
+    // update the selected api root url from the serverPanel
+    updateApiRootSelection = value => {
+        this.setState({currentApiroot: value});
     };
 
     // change the selected server
-    handleSelected = event => {
+    handleServerSelection = event => {
         let url = event.target.value;
-        let sevr = this.state.serverList.find(s => s.conn.baseURL === url);
-        if (sevr !== undefined) {
+        let theServer = this.state.serverList.find(s => s.conn.baseURL === url);
+        if (theServer !== undefined) {
             // tell the parent component
-            this.props.update(sevr, false);
+            this.props.update(theServer, false);
             // get the discovery info
-            sevr.discovery().then(discovery => {
-                this.setState({discovery: discovery, currentSelection: url});
+            theServer.discovery().then(discovery => {
+                this.setState({discovery: discovery, currentServer: url});
             });
         }
     };
@@ -78,22 +75,10 @@ export class ServersPage extends Component {
     // delete the selected server
     handleDelete = (event) => {
         // delete the selected server from the list
-        let witoutSelected = this.state.serverList.filter(s => s.conn.baseURL !== this.state.currentSelection);
-        this.setState({serverList: witoutSelected, discovery: '', currentSelection: ''});
+        let witoutSelected = this.state.serverList.filter(s => s.conn.baseURL !== this.state.currentServer);
+        this.setState({serverList: witoutSelected, discovery: '', currentServer: ''});
         // tell the parent it has been deleted
-        this.props.update(this.state.currentSelection, true);
-    };
-
-    serverInfo() {
-        if (this.state.discovery !== undefined) {
-            return <List>
-                <ListItemText key="a1" primary={this.state.discovery.title}/>
-                <ListItemText key="a2" primary={this.state.discovery.description}/>
-                <ListItemText key="a3" primary={this.state.discovery.contact}/>
-                <ListItemText key="a4" primary={this.state.discovery.default}/>
-                <List> {this.listOfApiRoots(this.state.discovery.api_roots)} </List>
-            </List>;
-        }
+        this.props.update(this.state.currentServer, true);
     };
 
     // add a new server to the list
@@ -103,29 +88,39 @@ export class ServersPage extends Component {
 
     handleRequestDialogCancel = () => {
         this.setState({open: false});
-        this.setState({currentSelection: ''});
+        this.setState({currentServer: ''});
     };
 
     handleRequestDialogOk = () => {
         this.setState({open: false});
         // create a server, test it and add it to the list
         // should check the url first
-        let newServer = new Server("/taxii/", new TaxiiConnect(this.state.currentSelection, "user-me", "user-password"));
+        let newServer = new Server("/taxii/", new TaxiiConnect(this.state.currentServer, "user-me", "user-password"));
         newServer.discovery().then(discovery => {
             this.setState({
                 discovery: discovery,
                 serverList: [...this.state.serverList, newServer],
-                currentSelection: newServer.conn.baseURL
+                currentServer: newServer.conn.baseURL
             });
         });
         let event = {target: {value: newServer.conn.baseURL}};
-        this.handleSelected(event);
+        this.handleServerSelection(event);
     };
 
-    // dynamically change the url input text
+    // change the url input text of the dialog
     handleDialogChange = event => {
-        this.setState({currentSelection: event.target.value});
+        this.setState({currentServer: event.target.value});
     };
+
+    // display the server info including the api roots
+    serverInfo() {
+        let theServer = this.state.serverList.find(s => s.conn.baseURL === this.state.currentServer);
+        if (theServer === undefined) {
+            return <div>no server selected</div>
+        } else {
+            return <ServerPanel server={theServer} update={this.updateApiRootSelection} />
+        }
+    }
 
     render() {
         return (
@@ -142,17 +137,15 @@ export class ServersPage extends Component {
                             <RadioGroup style={{display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between'}}
                                         aria-label="obj"
                                         name="objGroup"
-                                        value={this.state.currentSelection}
-                                        onChange={this.handleSelected}>
-                                {this.serverListAsFormLabels()};
+                                        value={this.state.currentServer}
+                                        onChange={this.handleServerSelection}>
+                                {this.serverListAsFormLabels()}
                             </RadioGroup>
                         </FormControl>
                     </Grid>
 
                     <Grid item xs={6}>
-                        <Grid item xs={12} sm={6}>
-                            {this.serverInfo()}
-                        </Grid>
+                        {this.serverInfo()}
                     </Grid>
                 </Grid>
 
@@ -164,19 +157,15 @@ export class ServersPage extends Component {
                                    type="text"
                                    id="serverUrl"
                                    label="server url"
-                                   value={this.state.currentSelection}
+                                   value={this.state.currentServer}
                                    margin="normal"
                                    onChange={this.handleDialogChange}
                                    fullWidth
                         />
                     </DialogContent>
                     <DialogActions>
-                        <Button onClick={this.handleRequestDialogCancel} color="primary">
-                            Cancel
-                        </Button>
-                        <Button onClick={this.handleRequestDialogOk} color="primary">
-                            Ok
-                        </Button>
+                        <Button onClick={this.handleRequestDialogCancel} color="primary">Cancel</Button>
+                        <Button onClick={this.handleRequestDialogOk} color="primary">Ok</Button>
                     </DialogActions>
                 </Dialog>
             </div>

@@ -55,7 +55,7 @@ export class ServerView extends Component {
     };
 
     updateServer = (server, isDeleted) => {
-        this.setState({server: server});
+    //    this.setState({server: server});
     };
 
     render() {
