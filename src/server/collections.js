@@ -81,8 +81,6 @@ export class CollectionsPage extends Component {
     };
 
     dataObjectList(col) {
-        console.log("*****> in dataObjectList this.state.colSelection=" + this.state.colSelection);
-        //  if (this.state.apiroot !== '' && this.state.colSelection !== '') {
         if (this.state.apiroot !== '') {
             const theCollection = new Collection(col, this.state.apiroot, this.props.server.conn);
             theCollection.getObjects().then(bundle => this.setState({objectList: bundle.objects}));
@@ -114,15 +112,11 @@ export class CollectionsPage extends Component {
     }
 
     // change the selected collection
-    handleSelected = event => {
-        let theValue = event.target.value;
-        console.log("=======> in handleSelected theValue=" + theValue);
+    handleSelected = (event, colid) => {
+        this.setState({colSelection: colid});
         // find the collection info
-        let thiCol = this.state.collectionList.find(col => col.id === theValue);
+        let thiCol = this.state.collectionList.find(col => col.id === colid);
         if (thiCol !== undefined) {
-            console.log("=======> in handleSelected thiCol=" + JSON.stringify(thiCol));
-            this.setState({colSelection: theValue});
-            console.log("===>in handleSelected this.state.colSelection=" + this.state.colSelection);
             this.dataObjectList(thiCol);
         }
     };
