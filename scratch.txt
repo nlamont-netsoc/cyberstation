@@ -532,4 +532,6 @@ listOfServers() {
 
     export default withRoot(withStyles(styles)(CollectionsPage));
 
-
+                    <Grid item xs={12}>
+                        <Typography type="body1" wrap style={{margin: 12}}> {this.state.info} </Typography>
+                    </Grid>
