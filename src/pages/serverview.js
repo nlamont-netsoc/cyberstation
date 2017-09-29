@@ -35,19 +35,22 @@ const styles = theme => ({
     }
 });
 
+const testServer = new Server("/taxii/", new TaxiiConnect("https://test.freetaxii.com:8000", "user-me", "user-password"));
+
 export class ServerView extends Component {
 
     constructor(props) {
         super(props);
         this.state = {
             value: 0,
-            server: new Server("/taxii/", new TaxiiConnect("https://test.freetaxii.com:8000", "user-me", "user-password")),
+            server: testServer,
             apiroot: ''
         };
     }
 
     componentDidMount() {
-        this.setState({refresh: true});
+        this.setState({server: testServer});
+        this.updateServer(testServer, false)
     };
 
     handleChange = (event, value) => {
@@ -60,12 +63,12 @@ export class ServerView extends Component {
 
     updateServer = (server, isDeleted) => {
         this.setState({server: server});
+        // tell the parent about the selected server
+        this.props.update(server);
     };
 
     updateApiRoot = apiroot => {
-        //    console.log("in serverview apiroot=" + apiroot);
-        let theApiroot = apiroot;
-        this.setState({apiroot: theApiroot});
+        this.setState({apiroot: apiroot});
     };
 
     render() {
@@ -99,8 +102,7 @@ export class ServerView extends Component {
 };
 
 ServerView.propTypes = {
-    conn: PropTypes.object.isRequired
+    update: PropTypes.func.isRequired
 };
 
-//export default withStyles(styles)(ServerView);
 export default withRoot(withStyles(styles)(ServerView));

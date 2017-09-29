@@ -2,7 +2,7 @@
 
 /* global conn */
 // @flow weak
-import { TaxiiConnect } from '../libs/taxii2lib.js';
+import {Server, TaxiiConnect} from "../libs/taxii2lib";
 import { ServerView } from '../pages/serverview.js';
 import { StixView } from '../pages/stixview.js';
 import { LoginPage } from '../pages/userlogin.js';
@@ -16,6 +16,7 @@ import Toolbar from 'material-ui/Toolbar';
 import Typography from 'material-ui/Typography';
 import Button from 'material-ui/Button';
 import IconButton from 'material-ui/IconButton';
+
 
 function TabContainer(props) {
     return <div>{props.children}</div>;
@@ -68,13 +69,14 @@ const styles = theme => ({
     }
 });
 
+const testServer = new Server("/taxii/", new TaxiiConnect("https://test.freetaxii.com:8000", "user-me", "user-password"));
 
 class MainPage extends Component {
 
     constructor(props) {
         super(props);
         this.taxiCom = new TaxiiConnect("https://test.freetaxii.com:8000", "user-me", "user-password");
-        this.state = { view: "", isLogged: false, loglabel: "Login" }; 
+        this.state = { view: "", isLogged: false, loglabel: "Login", selectedServer: testServer };
     }
 
     isLoggedin = (value) => {
@@ -95,12 +97,17 @@ class MainPage extends Component {
         }
     };
 
+    // called by ServerView to update the selected server
+    updateServer = server => {
+        this.setState({selectedServer: server});
+    };
+
     handleServer = () => {
-        this.setState({ view: <ServerView conn={this.taxiCom} /> });
+        this.setState({ view: <ServerView update={this.updateServer} /> });
     };
 
     handleStix = () => {
-        this.setState({ view: <StixView conn={this.taxiCom} /> });
+        this.setState({ view: <StixView server={this.state.selectedServer} /> });
     };
 
     componentDidMount() {
