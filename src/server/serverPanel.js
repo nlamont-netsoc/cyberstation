@@ -32,6 +32,7 @@ export class ServerPanel extends Component {
 
     // change the selected api root
     handleSelection = event => {
+        event.persist();
         let value = event.target.value;
         this.setState({currentApiroot: value});
         // tell the parent component

@@ -1,7 +1,6 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
 /* eslint-disable react/no-multi-comp */
 import {viewStyle} from '../styles/viewStyle.js';
-import {ObjectsPage} from '../server/objects.js';
 import {CollectionsPage} from '../server/collections.js';
 import {ServersPage} from '../server/servers.js';
 import Tabs, {Tab} from 'material-ui/Tabs';
@@ -42,9 +41,14 @@ export class ServerView extends Component {
         super(props);
         this.state = {
             value: 0,
-            server: new Server("/taxii/", new TaxiiConnect("https://test.freetaxii.com:8000", "user-me", "user-password"))
+            server: new Server("/taxii/", new TaxiiConnect("https://test.freetaxii.com:8000", "user-me", "user-password")),
+            apiroot: ''
         };
     }
+
+    componentDidMount() {
+        this.setState({refresh: true});
+    };
 
     handleChange = (event, value) => {
         this.setState({value});
@@ -55,7 +59,13 @@ export class ServerView extends Component {
     };
 
     updateServer = (server, isDeleted) => {
-    //    this.setState({server: server});
+        this.setState({server: server});
+    };
+
+    updateApiRoot = apiroot => {
+        //    console.log("in serverview apiroot=" + apiroot);
+        let theApiroot = apiroot;
+        this.setState({apiroot: theApiroot});
     };
 
     render() {
@@ -75,8 +85,12 @@ export class ServerView extends Component {
 
                 <SwipeableViews style={viewStyle.content} index={this.state.value}
                                 onChangeIndex={this.handleChangeIndex}>
-                    <TabContainer> <ServersPage update={this.updateServer}/> </TabContainer>
-                    <TabContainer> <CollectionsPage server={this.state.server}/> </TabContainer>
+                    <TabContainer>
+                        <ServersPage update={this.updateServer} apiroot={this.updateApiRoot}/>
+                    </TabContainer>
+                    <TabContainer>
+                        <CollectionsPage server={this.state.server} apiroot={this.state.apiroot}/>
+                    </TabContainer>
                 </SwipeableViews>
             </div>
         );

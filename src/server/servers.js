@@ -55,7 +55,11 @@ export class ServersPage extends Component {
 
     // update the selected api root url from the serverPanel
     updateApiRootSelection = value => {
-        this.setState({currentApiroot: value});
+        let theValue = value;
+        console.log("in servers apiroot=" + theValue);
+        this.setState({currentApiroot: theValue});
+        // tell the parent component
+        this.props.apiroot(theValue);
     };
 
     // change the selected server
@@ -175,7 +179,8 @@ export class ServersPage extends Component {
 };
 
 ServersPage.propTypes = {
-    update: PropTypes.func.isRequired
+    update: PropTypes.func.isRequired,
+    apiroot: PropTypes.func.isRequired
 };
 
 export default withRoot(withStyles(styles)(ServersPage));
