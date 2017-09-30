@@ -114,18 +114,22 @@ export class ServersPage extends Component {
         if (this.isValidURL(this.state.currentServer)) {
             this.setState({loading: true, loadOpen: false});
             // create a server, test it and add it to the list
-            // should check the url first
             let newServer = new Server("/taxii/", new TaxiiConnect(this.state.currentServer, "user-me", "user-password"));
             newServer.discovery().then(discovery => {
+                console.log("--> discovery="+discovery);
                 this.setState({
                     loading: false,
                     discovery: discovery,
                     serverList: [...this.state.serverList, newServer],
                     currentServer: newServer.conn.baseURL
                 });
+                let event = {target: {value: newServer.conn.baseURL}};
+                this.handleServerSelection(event);
+            }).catch(err => {
+                console.log("--> error="+err);
+                this.setState({loading: false, currentServer: ''});
+                // todo --> add an alert here to say cannot connect
             });
-            let event = {target: {value: newServer.conn.baseURL}};
-            this.handleServerSelection(event);
         } else {
             this.setState({currentServer: ''});
         }

@@ -59,6 +59,7 @@ export class TaxiiConnect {
             return res.json();
         }).catch(err => {
             console.log('====> asyncFetch error: ', err);
+            throw new Error("cannot connect");
         })));
         return results;
     }
