@@ -94,20 +94,36 @@ export class ServersPage extends Component {
         this.setState({currentServer: ''});
     };
 
+    // vague attempt to check the url string
+    isValidURL(str) {
+        let pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
+            '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // domain name and extension
+            '((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR ip (v4) address
+            '(\\:\\d+)?'+ // port
+            '(\\/[-a-z\\d%_.~+&:]*)*'+ // path
+            '(\\?[;&a-z\\d%_.,~+&:=-]*)?'+ // query string
+            '(\\#[-a-z\\d_]*)?$','i'); // fragment locator
+        return pattern.test(str);
+    };
+
     handleRequestDialogOk = () => {
-        this.setState({open: false});
-        // create a server, test it and add it to the list
-        // should check the url first
-        let newServer = new Server("/taxii/", new TaxiiConnect(this.state.currentServer, "user-me", "user-password"));
-        newServer.discovery().then(discovery => {
-            this.setState({
-                discovery: discovery,
-                serverList: [...this.state.serverList, newServer],
-                currentServer: newServer.conn.baseURL
+        if (this.isValidURL(this.state.currentServer)) {
+            this.setState({open: false});
+            // create a server, test it and add it to the list
+            // should check the url first
+            let newServer = new Server("/taxii/", new TaxiiConnect(this.state.currentServer, "user-me", "user-password"));
+            newServer.discovery().then(discovery => {
+                this.setState({
+                    discovery: discovery,
+                    serverList: [...this.state.serverList, newServer],
+                    currentServer: newServer.conn.baseURL
+                });
             });
-        });
-        let event = {target: {value: newServer.conn.baseURL}};
-        this.handleServerSelection(event);
+            let event = {target: {value: newServer.conn.baseURL}};
+            this.handleServerSelection(event);
+        } else {
+            this.setState({currentServer: ''});
+        }
     };
 
     // change the url input text of the dialog
@@ -121,7 +137,7 @@ export class ServersPage extends Component {
         if (theServer === undefined) {
             return <div>no server selected</div>
         } else {
-            return <ServerPanel server={theServer} update={this.updateApiRootSelection} />
+            return <ServerPanel server={theServer} update={this.updateApiRootSelection}/>
         }
     }
 

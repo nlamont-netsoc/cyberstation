@@ -23,11 +23,13 @@ export class ServerPanel extends Component {
     };
 
     componentDidMount() {
-        this.props.server.discovery().then(discovery => {
-            this.setState({discovery: discovery, currentApiroot: discovery.default});
-            // tell the parent component
-            this.props.update(discovery.default);
-        });
+        if(typeof this.props.server === 'object') {
+            this.props.server.discovery().then(discovery => {
+                this.setState({discovery: discovery, currentApiroot: discovery.default});
+                // tell the parent component
+                this.props.update(discovery.default);
+            });
+        }
     };
 
     // change the selected api root
