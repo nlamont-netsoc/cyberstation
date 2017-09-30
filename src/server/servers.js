@@ -86,11 +86,11 @@ export class ServersPage extends Component {
 
     // add a new server to the list
     handleAdd = (event) => {
-        this.setState({open: true});
+        this.setState({loadOpen: true});
     };
 
     handleRequestDialogCancel = () => {
-        this.setState({open: false});
+        this.setState({loadOpen: false});
         this.setState({currentServer: ''});
     };
 
@@ -108,7 +108,7 @@ export class ServersPage extends Component {
 
     handleRequestDialogOk = () => {
         if (this.isValidURL(this.state.currentServer)) {
-            this.setState({open: false});
+            this.setState({loadOpen: false});
             // create a server, test it and add it to the list
             // should check the url first
             let newServer = new Server("/taxii/", new TaxiiConnect(this.state.currentServer, "user-me", "user-password"));
@@ -168,7 +168,7 @@ export class ServersPage extends Component {
                     </Grid>
                 </Grid>
 
-                <Dialog open={this.state.open} transition={Slide} onRequestClose={this.handleRequestDialogClose}>
+                <Dialog open={this.state.loadOpen} transition={Slide} onRequestClose={this.handleRequestDialogClose}>
                     <DialogTitle>{"Enter the server URL"}</DialogTitle>
                     <DialogContent>
                         <TextField style={{marginLeft: 8, width: 300}}

@@ -23,7 +23,7 @@ export class BundlePage extends Component {
         this.state = {
             objList: [],
             info: '',
-            bundle: {type: '', id: '', spec_version: '', objects: []}
+            bundle: {name: '', type: '', id: '', spec_version: '', objects: []}
         };
     }
 
@@ -106,7 +106,16 @@ export class BundlePage extends Component {
                     <Grid>
                         <form noValidate autoComplete="off">
                             <Grid key="bundle1" item>
-                                <TextField style={{marginLeft: 8}}
+                                <TextField style={{marginLeft: 8, width: 500}}
+                                           name="name"
+                                           id="name"
+                                           label="name"
+                                           className={this.props.textField}
+                                           value={this.state.bundle.name}
+                                           margin="normal"
+                                           onChange={this.handleChange('name')}
+                                />
+                                <TextField style={{marginLeft: 22, width: 40}}
                                            name="spec_version"
                                            id="spec_version"
                                            label="spec_version"

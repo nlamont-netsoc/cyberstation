@@ -3,7 +3,6 @@
 /* global conn */
 // @flow weak
 
-import {TaxiiConnect, Server} from '../libs/taxii2lib.js';
 import Grid from 'material-ui/Grid';
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
@@ -11,24 +10,13 @@ import withRoot from '../components/withRoot';
 import withStyles from 'material-ui/styles/withStyles';
 import Typography from 'material-ui/Typography';
 import Divider from 'material-ui/Divider';
-import List, {ListItem, ListItemSecondaryAction, ListItemText} from 'material-ui/List';
-import Paper from 'material-ui/Paper';
-import {FormLabel, FormControl, FormControlLabel} from 'material-ui/Form';
+import {FormControl, FormControlLabel} from 'material-ui/Form';
 import Radio, {RadioGroup} from 'material-ui/Radio';
 import Button from 'material-ui/Button';
 import uuidv4 from 'uuid/v4';
-import Dialog, {DialogActions, DialogContent, DialogContentText, DialogTitle,} from 'material-ui/Dialog';
+import Dialog, {DialogActions, DialogContent, DialogTitle,} from 'material-ui/Dialog';
 import Slide from 'material-ui/transitions/Slide';
 
-
-const options = [
-    'None',
-    'Atria',
-    'Callisto',
-    'Dione',
-    'Ganymede',
-    'Hangouts Call',
-    'Luna'];
 
 const styles = {
     tabs: {
@@ -49,7 +37,7 @@ export class BundlePanel extends Component {
 
     constructor(props) {
         super(props);
-        this.state = {open: false, loadSelection: '', sdoId: '', objList: []};
+        this.state = {loadOpen: false, loadSelection: '', sdoId: '', objList: []};
         this.title = "Bundle " + this.props.sdotype;
         if (this.props.sdotype !== '') {
             this.title = this.title + "s";
@@ -88,7 +76,13 @@ export class BundlePanel extends Component {
 
     // create a new bundle
     handleNew = (event) => {
-        let newBundle = {type: "bundle", id: "bundle--" + uuidv4(), spec_version: "2.0", objects: []};
+        let newBundle = {
+            name: "new bundle",
+            type: "bundle",
+            id: "bundle--" + uuidv4(),
+            spec_version: "2.0",
+            objects: []
+        };
         Object.assign(this.props.bundle, newBundle);
         this.props.update(newBundle);
         this.setState({objList: newBundle.objects});
@@ -96,11 +90,11 @@ export class BundlePanel extends Component {
 
     // send the bundle to the server
     handleSend = (event) => {
-
+        // must remove the name from the bundle object
     };
 
-    // retrieve all bundles from storage
-    getAllFromStorage2 = () => {
+    // retrieve all bundles from storage as a Map
+    getMapFromStorage = () => {
         let storeContent = new Map();
         let keys = Object.keys(localStorage);
         for (let key of keys) {
@@ -113,7 +107,8 @@ export class BundlePanel extends Component {
         let storeContent = [];
         let keys = Object.keys(localStorage);
         for (let key of keys) {
-            storeContent.push(key);
+            let bndl = JSON.parse(localStorage.getItem(key));
+            storeContent.push({name: bndl.name, key: key});
         }
         return storeContent;
     };
@@ -125,7 +120,7 @@ export class BundlePanel extends Component {
 
     // load a saved bundle
     handleLoad = (event) => {
-        this.setState({open: true});
+        this.setState({loadOpen: true});
     };
 
     // delete a bundle from storage
@@ -152,11 +147,11 @@ export class BundlePanel extends Component {
     };
 
     handleCancel = () => {
-        this.setState({open: false});
+        this.setState({loadOpen: false});
     };
 
     handleOk = () => {
-        this.setState({open: false});
+        this.setState({loadOpen: false});
         let theBundle = localStorage.getItem(this.state.loadSelection);
         if (theBundle !== null) {
             let bundleObj = JSON.parse(theBundle);
@@ -177,10 +172,19 @@ export class BundlePanel extends Component {
                     <Typography type="body1" wrap style={{margin: 8}}> {this.title} </Typography>
                     <Button disabled={!this.props.canSend} onClick={this.handleSend} raised color="default"
                             style={{margin: 8}}>Send to server</Button>
-                    <Button onClick={this.handleNew} raised color="default" style={{margin: 8}}>New bundle</Button>
-                    <Button onClick={this.handleLoad} raised color="default" style={{margin: 8}}>Load bundle</Button>
-                    <Button onClick={this.handleSave} raised color="default" style={{margin: 8}}>Save bundle</Button>
-                    <Button onClick={this.handleStoreDelete} raised color="default" style={{margin: 8}}>Delete from store</Button>
+
+                    <Grid key="kk">
+                        <Grid key="k1" >
+                            <Button onClick={this.handleNew} raised color="default" style={{margin: 8}}>New</Button>
+                            <Button onClick={this.handleLoad} raised color="default" style={{margin: 8}}>Load</Button>
+                        </Grid>
+                        <Grid key="k2">
+                            <Button onClick={this.handleSave} raised color="default" style={{margin: 8}}>Save</Button>
+                            <Button onClick={this.handleStoreDelete} raised color="default" style={{margin: 8}}>Delete</Button>
+                        </Grid>
+
+                    </Grid>
+
                     <Button onClick={this.handleDelete} raised color="default" style={{margin: 8}}>Delete
                         selected object</Button>
                     <Divider/>
@@ -194,7 +198,7 @@ export class BundlePanel extends Component {
                 </FormControl>
 
                 <Dialog
-                    open={this.state.open}
+                    open={this.state.loadOpen}
                     transition={Slide}
                     ignoreBackdropClick
                     ignoreEscapeKeyUp
@@ -212,8 +216,12 @@ export class BundlePanel extends Component {
                             value={this.state.loadSelection}
                             onChange={this.handleChange}
                         >
-                            {this.getAllFromStorage().map(option => (
-                                <FormControlLabel value={option} key={option} control={<Radio/>} label={option}/>
+                            {this.getAllFromStorage().map(bndl => (
+                                <FormControlLabel
+                                    value={bndl.key}
+                                    key={bndl.key}
+                                    control={<Radio/>}
+                                    label={bndl.name + " " + bndl.key}/>
                             ))}
                         </RadioGroup>
                     </DialogContent>
