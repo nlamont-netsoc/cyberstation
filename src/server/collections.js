@@ -65,7 +65,7 @@ export class CollectionsPage extends Component {
     // when a new props is received
     componentWillReceiveProps(newProps) {
         // newProps.server;
-        this.setState({colSelection: '', collectionList: [], objectList: [], apiroot: newProps.apiroot});
+        this.setState({collectionList: [], objectList: [], apiroot: newProps.apiroot});
         this.dataCollectionList();
     };
 
