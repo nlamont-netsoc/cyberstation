@@ -94,7 +94,7 @@ export class CollectionsPage extends Component {
             let readVal = col.can_read ? 'can read' : 'cannot read';
             let writeVal = col.can_write ? 'can write' : 'cannot write';
             let labelValue = col.title  + ' (' + readVal + ', ' + writeVal + ')';
-            let theColor = col.can_write ? green[500] : red[500];
+            let theColor = (col.can_write && col.can_read) ? green[500] : red[500];
             colItems.push(<FormControlLabel style={{margin: 8}}
                                             disabled = {!col.can_read}
                                             key={col.id} value={col.id}

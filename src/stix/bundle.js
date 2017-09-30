@@ -46,6 +46,13 @@ export class BundlePage extends Component {
 
     };
 
+    // from the BundlePanel when a bundle is loaded from localstore
+    updateBundle = (theBundle) => {
+        this.setState({bundle: theBundle});
+        this.handleChange('spec_version')({target: {value: theBundle.spec_version}});
+        this.handleChange('id')({target: {value: theBundle.id}});
+    };
+
     serverInfo() {
         if(typeof this.props.server === 'object') {
             this.props.server.discovery().then(discovery => {
@@ -87,7 +94,10 @@ export class BundlePage extends Component {
         return (
             <Grid container spacing={8}>
                 <Grid item xs={3}>
-                    <BundlePanel canSend={sendable} bundle={this.props.bundle} sdotype=''
+                    <BundlePanel canSend={sendable}
+                                 bundle={this.props.bundle}
+                                 sdotype=''
+                                 update={this.updateBundle}
                                  selected={this.selectedObject}/>
                 </Grid>
 
