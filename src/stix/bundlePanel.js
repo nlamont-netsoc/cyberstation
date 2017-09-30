@@ -170,23 +170,23 @@ export class BundlePanel extends Component {
             <Grid container className={this.props.root} justify="flex-start">
                 <FormControl component="fieldset" required>
                     <Typography type="body1" wrap style={{margin: 8}}> {this.title} </Typography>
-                    <Button disabled={!this.props.canSend} onClick={this.handleSend} raised color="default"
+                    <Button disabled={!this.props.canSend} onClick={this.handleSend} raised color="primary"
                             style={{margin: 8}}>Send to server</Button>
 
                     <Grid key="kk">
                         <Grid key="k1" >
-                            <Button onClick={this.handleNew} raised color="default" style={{margin: 8}}>New</Button>
-                            <Button onClick={this.handleLoad} raised color="default" style={{margin: 8}}>Load</Button>
+                            <Button onClick={this.handleNew} raised color="primary" style={{margin: 8}}>New</Button>
+                            <Button onClick={this.handleLoad} raised color="primary" style={{margin: 8}}>Load</Button>
                         </Grid>
                         <Grid key="k2">
-                            <Button onClick={this.handleSave} raised color="default" style={{margin: 8}}>Save</Button>
-                            <Button onClick={this.handleStoreDelete} raised color="default" style={{margin: 8}}>Delete</Button>
+                            <Button onClick={this.handleSave} raised color="primary" style={{margin: 8}}>Save</Button>
+                            <Button onClick={this.handleStoreDelete} raised color="primary" style={{margin: 8}}>Delete</Button>
                         </Grid>
 
                     </Grid>
 
-                    <Button onClick={this.handleDelete} raised color="default" style={{margin: 8}}>Delete
-                        selected object</Button>
+                    {/*<Button onClick={this.handleDelete} raised color="default" style={{margin: 8}}>Delete*/}
+                        {/*selected object</Button>*/}
                     <Divider/>
                     <RadioGroup style={{display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between'}}
                                 aria-label="obj"

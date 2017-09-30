@@ -148,9 +148,9 @@ export class ServersPage extends Component {
                     <Grid item xs={6}>
                         <FormControl component="fieldset" required>
                             <Typography type="body1" wrap style={{margin: 8}}> {this.title} </Typography>
-                            <Button onClick={this.handleAdd} raised color="default" style={{margin: 8}}>Add new
+                            <Button onClick={this.handleAdd} raised color="primary" style={{margin: 8}}>New
                                 server</Button>
-                            <Button onClick={this.handleDelete} raised color="default" style={{margin: 8}}>Delete
+                            <Button onClick={this.handleDelete} raised color="primary" style={{margin: 8}}>Delete
                                 selected</Button>
                             <Divider/>
                             <RadioGroup style={{display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between'}}

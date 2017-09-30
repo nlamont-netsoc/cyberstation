@@ -3,7 +3,12 @@
 /* global conn */
 // @flow weak
 
-import { TaxiiConnect, Server } from '../libs/taxii2lib.js';
+import Button from 'material-ui/Button';
+import AddIcon from 'material-ui-icons/Add';
+import RemoveCircleOutlineIcon from 'material-ui-icons/RemoveCircleOutline';
+import RemoveIcon from 'material-ui-icons/Remove';
+
+import blue from 'material-ui/colors/blue';
 import Grid from 'material-ui/Grid';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
@@ -15,7 +20,6 @@ import List, { ListItem, ListItemSecondaryAction, ListItemText } from 'material-
 import Paper from 'material-ui/Paper';
 import { FormLabel, FormControl, FormControlLabel } from 'material-ui/Form';
 import Radio, { RadioGroup } from 'material-ui/Radio';
-import Button from 'material-ui/Button';
 import uuidv4 from 'uuid/v4';
 
 
@@ -107,8 +111,10 @@ export class BundleContent extends Component {
       <Grid container className={this.props.root} justify="flex-start">
         <FormControl component="fieldset" required>
           <Typography type="body1" wrap style={{ margin: 8 }}> {this.title} </Typography>
-          <Button onClick={this.handleAdd} raised color="default" style={{ margin: 8 }}>Add new</Button>
-          <Button onClick={this.handleDelete} raised color="default" style={{ margin: 8 }}>Delete selected</Button>
+            <Grid key="k1" >
+              <Button fab color="primary" onClick={this.handleAdd} raised style={{ margin: 8 }}><AddIcon /></Button>
+              <Button fab color="primary" onClick={this.handleDelete} raised style={{ margin: 8 }}><RemoveIcon /></Button>
+          </Grid>
 
           <RadioGroup style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between' }}
             aria-label="obj"
