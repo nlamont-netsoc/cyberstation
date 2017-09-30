@@ -48,7 +48,14 @@ export class BundlePage extends Component {
 
     serverInfo() {
         this.props.server.discovery().then(discovery => {
-            let colInfo = this.props.collection === '' ? 'no endpoint' : this.props.collection.title;
+            let colEntry = 'no endpoint';
+            let writeVal = 'cannot write to';
+            let colInfo = 'Collection'+ " (" + writeVal + ")";
+            if (this.props.collection !== '') {
+                writeVal = this.props.collection.can_write ? 'can write to' : 'cannot write to';
+                colInfo = 'Collection' + " (" + writeVal + ")";
+                colEntry = this.props.collection.title;
+            }
             let serverInfo = <Table style={{marginLeft: 8}}>
                 <TableBody>
                     <TableRow key="Title">
@@ -64,8 +71,8 @@ export class BundlePage extends Component {
                         <TableCell>{discovery.contact}</TableCell>
                     </TableRow>
                     <TableRow key="Endpoint">
-                        <TableCell>Collection</TableCell>
                         <TableCell>{colInfo}</TableCell>
+                        <TableCell>{colEntry}</TableCell>
                     </TableRow>
                 </TableBody>
             </Table>;
@@ -74,10 +81,12 @@ export class BundlePage extends Component {
     };
 
     render() {
+        const sendable = this.props.collection === '' ? false : this.props.collection.can_write;
         return (
             <Grid container spacing={8}>
                 <Grid item xs={3}>
-                    <BundlePanel bundle={this.props.bundle} sdotype='' selected={this.selectedObject}/>
+                    <BundlePanel canSend={sendable} bundle={this.props.bundle} sdotype=''
+                                 selected={this.selectedObject}/>
                 </Grid>
 
                 <Grid item xs={9}>
@@ -112,7 +121,7 @@ export class BundlePage extends Component {
                     </Grid>
 
                     <Grid key="bundle3" item>
-                        <div style={{height: 20}} />
+                        <div style={{height: 20}}/>
                         <Typography type="body1" wrap style={{marginLeft: 8}}>Connected to</Typography>
                         {this.state.info}
                     </Grid>

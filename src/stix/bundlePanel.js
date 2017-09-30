@@ -109,7 +109,7 @@ export class BundlePanel extends Component {
             <Grid container className={this.props.root} justify="flex-start">
                 <FormControl component="fieldset" required>
                     <Typography type="body1" wrap style={{margin: 8}}> {this.title} </Typography>
-                    <Button onClick={this.handleSend} raised color="default" style={{margin: 8}}>Send to server</Button>
+                    <Button disabled={!this.props.canSend} onClick={this.handleSend} raised color="default" style={{margin: 8}}>Send to server</Button>
                     <Button onClick={this.handleLoad} raised color="default" style={{margin: 8}}>Load draft</Button>
                     <Button onClick={this.handleSave} raised color="default" style={{margin: 8}}>Save draft</Button>
                     <Button onClick={this.handleDelete} raised color="default" style={{margin: 8}}>Delete
@@ -132,7 +132,8 @@ export class BundlePanel extends Component {
 BundlePanel.propTypes = {
     sdotype: PropTypes.string.isRequired,
     bundle: PropTypes.object.isRequired,
-    selected: PropTypes.func.isRequired
+    selected: PropTypes.func.isRequired,
+    canSend: PropTypes.bool.isRequired
 };
 
 export default withRoot(withStyles(styles)(BundlePanel));
