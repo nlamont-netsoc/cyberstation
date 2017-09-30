@@ -99,7 +99,7 @@ export class StixView extends Component {
 
                 <div style={viewStyle.content}>
                     {this.state.value === 0 &&
-                    <TabContainer> <BundlePage server={this.state.server} bundle={this.state.bundle}/></TabContainer>}
+                    <TabContainer> <BundlePage collection={this.props.collection} server={this.state.server} bundle={this.state.bundle}/></TabContainer>}
                     {this.state.value === 1 &&
                     <TabContainer> <AttackPatternPage server={this.state.server} bundle={this.state.bundle}/>
                     </TabContainer>}
@@ -128,7 +128,8 @@ export class StixView extends Component {
 };
 
 StixView.propTypes = {
-    server: PropTypes.object.isRequired
+    server: PropTypes.object.isRequired,
+    collection: PropTypes.object.isRequired
 };
 
 export default withRoot(withStyles(styles)(StixView));

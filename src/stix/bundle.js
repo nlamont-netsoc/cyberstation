@@ -13,6 +13,8 @@ import Typography from 'material-ui/Typography';
 import {BundlePanel} from '../stix/bundlePanel.js';
 import TextField from 'material-ui/TextField';
 import List, {ListItemText} from 'material-ui/List';
+import Table, {TableBody, TableCell, TableHead, TableRow} from 'material-ui/Table';
+
 
 export class BundlePage extends Component {
 
@@ -28,16 +30,7 @@ export class BundlePage extends Component {
     // initialise this state with the prop.bundle
     componentDidMount() {
         Object.assign(this.state.bundle, this.props.bundle);
-        this.props.server.discovery().then(discovery => {
-            let serverInfo = <List>
-                <ListItemText key="a1" primary={'Title: ' + discovery.title}/>
-                <ListItemText key="a2" primary={'Description: ' + discovery.description}/>
-                <ListItemText key="a3" primary={'Contact: ' + discovery.contact}/>
-                <ListItemText key="a4" primary={'Default: ' + discovery.default}/>
-            </List>;
-            this.setState({info: serverInfo});
-        });
-        this.forceUpdate();
+        this.serverInfo();
     };
 
     handleChange = name => event => {
@@ -55,13 +48,33 @@ export class BundlePage extends Component {
 
     serverInfo() {
         this.props.server.discovery().then(discovery => {
-            return <List>
-                <ListItemText key="a1" primary={'Title: ' + discovery.title}/>
-                <ListItemText key="a2" primary={'Description: ' + discovery.description}/>
-                <ListItemText key="a3" primary={'Contact: ' + discovery.contact}/>
-                <ListItemText key="a4" primary={'Default: ' + discovery.default}/>
-            </List>;
-        });
+            let colInfo = this.props.collection === '' ? 'no endpoint' : this.props.collection.id;
+            let serverInfo = <Table style={{marginLeft: 8}}>
+                <TableBody>
+                    <TableRow key="Title">
+                        <TableCell>Title</TableCell>
+                        <TableCell>{discovery.title}</TableCell>
+                    </TableRow>
+                    <TableRow key="Description">
+                        <TableCell>Description</TableCell>
+                        <TableCell>{discovery.description}</TableCell>
+                    </TableRow>
+                    <TableRow key="Contact">
+                        <TableCell>Contact</TableCell>
+                        <TableCell>{discovery.contact}</TableCell>
+                    </TableRow>
+                    <TableRow key="Default">
+                        <TableCell>Default</TableCell>
+                        <TableCell>{discovery.default}</TableCell>
+                    </TableRow>
+                    <TableRow key="Endpoint">
+                        <TableCell>Collection</TableCell>
+                        <TableCell>{colInfo}</TableCell>
+                    </TableRow>
+                </TableBody>
+            </Table>;
+            this.setState({info: serverInfo});
+        })
     };
 
     render() {
@@ -103,7 +116,7 @@ export class BundlePage extends Component {
                     </Grid>
 
                     <Grid key="bundle3" item>
-                        <Typography type="body1" wrap style={{marginLeft: 8}}>Connected to server</Typography>
+                        <Typography type="body1" wrap style={{marginLeft: 8}}>Connected to</Typography>
                         {this.state.info}
                     </Grid>
 
@@ -116,6 +129,7 @@ export class BundlePage extends Component {
 
 BundlePage.propTypes = {
     server: PropTypes.object.isRequired,
+    collection: PropTypes.object.isRequired,
     bundle: PropTypes.object.isRequired
 };
 

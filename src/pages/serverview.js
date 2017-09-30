@@ -44,7 +44,8 @@ export class ServerView extends Component {
         this.state = {
             value: 0,
             server: testServer,
-            apiroot: ''
+            apiroot: '',
+            collection: ''
         };
     }
 
@@ -71,6 +72,12 @@ export class ServerView extends Component {
         this.setState({apiroot: apiroot});
     };
 
+    updateCollection = col => {
+        this.setState({collection: col});
+        // tell the parent about the selected collection
+        this.props.updateCollection(col);
+    };
+
     render() {
         return (
             <div className={this.props.root}>
@@ -92,7 +99,7 @@ export class ServerView extends Component {
                         <ServersPage update={this.updateServer} apiroot={this.updateApiRoot}/>
                     </TabContainer>
                     <TabContainer>
-                        <CollectionsPage server={this.state.server} apiroot={this.state.apiroot}/>
+                        <CollectionsPage collection={this.updateCollection} server={this.state.server} apiroot={this.state.apiroot}/>
                     </TabContainer>
                 </SwipeableViews>
             </div>
@@ -102,7 +109,8 @@ export class ServerView extends Component {
 };
 
 ServerView.propTypes = {
-    update: PropTypes.func.isRequired
+    update: PropTypes.func.isRequired,
+    updateCollection: PropTypes.func.isRequired
 };
 
 export default withRoot(withStyles(styles)(ServerView));

@@ -92,8 +92,6 @@ export class CollectionsPage extends Component {
         this.state.collectionList.map(col => {
             let readVal = col.can_read ? 'can read' : 'cannot read';
             let writeVal = col.can_write ? 'can write' : 'cannot write';
-            // todo remove this, col.can_write is required should not be undefined
-            let isWritable = (col.can_write === undefined) ? false : col.can_write;
             let labelValue = col.title  + ' (' + readVal + ', ' + writeVal + ')';
             colItems.push(<FormControlLabel style={{margin: 8}}
                                             disabled = {!col.can_read}
@@ -115,9 +113,11 @@ export class CollectionsPage extends Component {
     handleSelected = (event, colid) => {
         this.setState({colSelection: colid});
         // find the collection info
-        let thiCol = this.state.collectionList.find(col => col.id === colid);
-        if (thiCol !== undefined) {
-            this.dataObjectList(thiCol);
+        let thisCol = this.state.collectionList.find(col => col.id === colid);
+        if (thisCol !== undefined) {
+            this.dataObjectList(thisCol);
+            // tell the parent about the selected collection
+            this.props.collection(thisCol);
         }
     };
 
@@ -150,7 +150,8 @@ export class CollectionsPage extends Component {
 
 CollectionsPage.propTypes = {
     server: PropTypes.object.isRequired,
-    apiroot: PropTypes.string.isRequired
+    apiroot: PropTypes.string.isRequired,
+    collection: PropTypes.func.isRequired
 };
 
 export default withRoot(withStyles(styles)(CollectionsPage));

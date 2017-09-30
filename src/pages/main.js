@@ -76,7 +76,7 @@ class MainPage extends Component {
     constructor(props) {
         super(props);
         this.taxiCom = new TaxiiConnect("https://test.freetaxii.com:8000", "user-me", "user-password");
-        this.state = { view: "", isLogged: false, loglabel: "Login", selectedServer: testServer };
+        this.state = { view: "", isLogged: false, loglabel: "Login", selectedServer: testServer, selectedCollection: '' };
     }
 
     isLoggedin = (value) => {
@@ -102,12 +102,17 @@ class MainPage extends Component {
         this.setState({selectedServer: server});
     };
 
+    // called by ServerView -> Collections to update the selected collection endpoint
+    updateCollection = col => {
+        this.setState({selectedCollection: col});
+    };
+
     handleServer = () => {
-        this.setState({ view: <ServerView update={this.updateServer} /> });
+        this.setState({ view: <ServerView update={this.updateServer} updateCollection={this.updateCollection}/> });
     };
 
     handleStix = () => {
-        this.setState({ view: <StixView server={this.state.selectedServer} /> });
+        this.setState({ view: <StixView server={this.state.selectedServer} collection={this.state.selectedCollection} /> });
     };
 
     componentDidMount() {
