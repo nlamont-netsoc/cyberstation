@@ -16,7 +16,7 @@ import Button from 'material-ui/Button';
 import uuidv4 from 'uuid/v4';
 import Dialog, {DialogActions, DialogContent, DialogTitle,} from 'material-ui/Dialog';
 import Slide from 'material-ui/transitions/Slide';
-import { CircularProgress } from 'material-ui/Progress';
+import {CircularProgress} from 'material-ui/Progress';
 
 
 const styles = {
@@ -38,7 +38,7 @@ export class BundlePanel extends Component {
 
     constructor(props) {
         super(props);
-        this.state = {loading: false, loadOpen: false, loadSelection: '', sdoId: '', objList: []};
+        this.state = {storeDelete: false, loading: false, loadOpen: false, loadSelection: '', sdoId: '', objList: []};
         this.title = "Bundle " + this.props.sdotype;
         if (this.props.sdotype !== '') {
             this.title = this.title + "s";
@@ -128,7 +128,9 @@ export class BundlePanel extends Component {
 
     // delete a bundle from storage
     handleStoreDelete = (event) => {
-        localStorage.clear();
+        this.setState({loadOpen: true, storeDelete: true});
+
+        //  localStorage.clear();
     };
 
     // delete the selected sdo from the bundle
@@ -150,7 +152,7 @@ export class BundlePanel extends Component {
     };
 
     handleCancel = () => {
-        this.setState({loadOpen: false});
+        this.setState({loadOpen: false, storeDelete: false});
     };
 
     handleOk = () => {
@@ -158,9 +160,14 @@ export class BundlePanel extends Component {
         let theBundle = localStorage.getItem(this.state.loadSelection);
         if (theBundle !== null) {
             let bundleObj = JSON.parse(theBundle);
-            Object.assign(this.props.bundle, bundleObj);
-            this.props.update(bundleObj);
-            this.setState({objList: bundleObj.objects});
+            if (this.state.storeDelete) {
+                this.setState({storeDelete: false});
+                localStorage.removeItem(bundleObj.id)
+            } else {
+                Object.assign(this.props.bundle, bundleObj);
+                this.props.update(bundleObj);
+                this.setState({objList: bundleObj.objects});
+            }
         }
     };
 
@@ -169,6 +176,7 @@ export class BundlePanel extends Component {
     };
 
     render() {
+        const dialogTitle = this.state.storeDelete ? "Select a bundle to delete" : "Select a bundle to load";
         return (
             <Grid container className={this.props.root} justify="flex-start">
                 <FormControl component="fieldset" required>
@@ -177,19 +185,20 @@ export class BundlePanel extends Component {
                             style={{margin: 8}}>Send to server</Button>
 
                     <Grid key="kk">
-                        <Grid key="k1" >
+                        <Grid key="k1">
                             <Button onClick={this.handleNew} raised color="primary" style={{margin: 8}}>New</Button>
                             <Button onClick={this.handleLoad} raised color="primary" style={{margin: 8}}>Load</Button>
                         </Grid>
                         <Grid key="k2">
                             <Button onClick={this.handleSave} raised color="primary" style={{margin: 8}}>Save</Button>
-                            <Button onClick={this.handleStoreDelete} raised color="primary" style={{margin: 8}}>Delete</Button>
+                            <Button onClick={this.handleStoreDelete} raised color="primary"
+                                    style={{margin: 8}}>Delete</Button>
                         </Grid>
 
                     </Grid>
 
                     {/*<Button onClick={this.handleDelete} raised color="default" style={{margin: 8}}>Delete*/}
-                        {/*selected object</Button>*/}
+                    {/*selected object</Button>*/}
                     <Divider/>
                     <RadioGroup style={{display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between'}}
                                 aria-label="obj"
@@ -208,7 +217,7 @@ export class BundlePanel extends Component {
                     maxWidth="md"
                     onEntering={this.handleEntering}
                 >
-                    <DialogTitle>Select a bundle</DialogTitle>
+                    <DialogTitle>{dialogTitle}</DialogTitle>
                     <DialogContent>
                         <RadioGroup
                             innerRef={node => {
@@ -235,7 +244,7 @@ export class BundlePanel extends Component {
                 </Dialog>
 
                 <div style={{marginLeft: 400, marginTop: 40}}>
-                    {this.state.loading && <CircularProgress size={40}  />}
+                    {this.state.loading && <CircularProgress size={40}/>}
                 </div>
 
             </Grid>
