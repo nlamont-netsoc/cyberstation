@@ -112,6 +112,7 @@ export class BundlePage extends Component {
                     </Grid>
 
                     <Grid key="bundle3" item>
+                        <div style={{height: 20}} />
                         <Typography type="body1" wrap style={{marginLeft: 8}}>Connected to</Typography>
                         {this.state.info}
                     </Grid>
