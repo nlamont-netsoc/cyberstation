@@ -86,7 +86,7 @@ export class ServerView extends Component {
                         value={this.state.value}
                         onChange={this.handleChange}
                         indicatorColor="orchid"
-                        textColor="accent"
+                        textColor="inherit"
                         fullWidth>
                         <Tab label="Servers"/>
                         <Tab label="Collections"/>
