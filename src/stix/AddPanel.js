@@ -16,7 +16,6 @@ import Button from 'material-ui/Button';
 import uuidv4 from 'uuid/v4';
 import Dialog, {DialogActions, DialogContent, DialogTitle,} from 'material-ui/Dialog';
 import Slide from 'material-ui/transitions/Slide';
-import { CircularProgress } from 'material-ui/Progress';
 
 
 const styles = {
@@ -34,31 +33,15 @@ const styles = {
     }
 };
 
-export class BundlePanel extends Component {
+export class AddPanel extends Component {
 
     constructor(props) {
         super(props);
-        this.state = {loading: false, loadOpen: false, loadSelection: '', sdoId: '', objList: []};
-        this.title = "Bundle " + this.props.sdotype;
-        if (this.props.sdotype !== '') {
-            this.title = this.title + "s";
-        }
+        this.state = {success: false, loading: true, objList: []};
     }
 
     // fill the list with the filtered objects of the bundle
     componentDidMount() {
-        // an array of sdo id
-        let objItems = [];
-        if (this.props.bundle !== undefined) {
-            // if have no filtering, take all
-            if (this.props.sdotype === undefined || this.props.sdotype === '') {
-                objItems = this.props.bundle.objects;
-            } else {
-                // apply the type filter
-                objItems = this.props.bundle.objects.filter(obj => obj.type === this.props.sdotype);
-            }
-        }
-        this.setState({objList: objItems});
     };
 
     asFormLabels() {
@@ -91,9 +74,7 @@ export class BundlePanel extends Component {
 
     // send the bundle to the server
     handleSend = (event) => {
-        this.setState({loading: true});
         // must remove the name from the bundle object
-        this.setState({loading: false});
     };
 
     // retrieve all bundles from storage as a Map
@@ -234,22 +215,22 @@ export class BundlePanel extends Component {
                     </DialogActions>
                 </Dialog>
 
-                <div style={{marginLeft: 400, marginTop: 40}}>
-                    {this.state.loading && <CircularProgress size={40}  />}
-                </div>
-
             </Grid>
         );
     };
 
 };
-
-BundlePanel.propTypes = {
+/*
+// fo scrolling the list
+<Paper style={{maxHeight: 200, overflow: 'auto'}}>
+  <List>
+   ...
+  </List>
+</Paper>
+ */
+AddPanel.propTypes = {
     sdotype: PropTypes.string.isRequired,
-    bundle: PropTypes.object.isRequired,
-    selected: PropTypes.func.isRequired,
-    canSend: PropTypes.bool.isRequired,
     update: PropTypes.func.isRequired
 };
 
-export default withRoot(withStyles(styles)(BundlePanel));
+export default withRoot(withStyles(styles)(AddPanel));

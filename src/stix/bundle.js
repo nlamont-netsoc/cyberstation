@@ -21,6 +21,7 @@ export class BundlePage extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            loading: false,
             objList: [],
             info: '',
             bundle: {name: '', type: '', id: '', spec_version: '', objects: []}

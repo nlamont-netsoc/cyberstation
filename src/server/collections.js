@@ -17,6 +17,7 @@ import {FormLabel, FormControl, FormControlLabel} from 'material-ui/Form';
 import Radio, {RadioGroup} from 'material-ui/Radio';
 import green from 'material-ui/colors/green';
 import red from 'material-ui/colors/red';
+import { CircularProgress } from 'material-ui/Progress';
 
 
 const styles = theme => ({
@@ -54,7 +55,12 @@ export class CollectionsPage extends Component {
 
     constructor(props) {
         super(props);
-        this.state = {colSelection: '', collectionList: [], objectList: [], apiroot: ''};
+        this.state = {
+            loading: false,
+            colSelection: '',
+            collectionList: [],
+            objectList: [],
+            apiroot: ''};
     }
 
     // load the collections of the api root
@@ -73,18 +79,21 @@ export class CollectionsPage extends Component {
     dataCollectionList() {
         let colList = [];
         if (this.state.apiroot !== '') {
+            this.setState({loading: true});
             const theCollections = new Collections(this.state.apiroot, this.props.server.conn);
             theCollections.get().then(collections => {
                 collections.map(col => colList.push(col));
-                this.setState({collectionList: colList});
+                this.setState({collectionList: colList, loading: false});
             });
         }
     };
 
     dataObjectList(col) {
         if (this.state.apiroot !== '') {
+            this.setState({loading: true});
             const theCollection = new Collection(col, this.state.apiroot, this.props.server.conn);
-            theCollection.getObjects().then(bundle => this.setState({objectList: bundle.objects}));
+            theCollection.getObjects().then(bundle =>
+                this.setState({objectList: bundle.objects, loading: false}));
         }
     };
 
@@ -146,6 +155,9 @@ export class CollectionsPage extends Component {
                     <List> {this.objsAsFormLabels()} </List>
                 </Grid>
 
+                <div style={{marginLeft: 400, marginTop: 40}}>
+                    {this.state.loading && <CircularProgress size={40}  />}
+                </div>
             </Grid>
         );
     };

@@ -19,6 +19,7 @@ import TextField from 'material-ui/TextField';
 import Button from 'material-ui/Button';
 import Dialog, {DialogActions, DialogContent, DialogContentText, DialogTitle,} from 'material-ui/Dialog';
 import Slide from 'material-ui/transitions/Slide';
+import { CircularProgress } from 'material-ui/Progress';
 
 
 export class ServersPage extends Component {
@@ -26,6 +27,7 @@ export class ServersPage extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            loading: false,
             open: false,    // for the url dialog
             serverList: [], // the list of server objects to choose from
             discovery: '',  // the current server discovery info
@@ -35,11 +37,12 @@ export class ServersPage extends Component {
     };
 
     componentDidMount() {
+        this.setState({loading: true});
         let server = new Server("/taxii/", new TaxiiConnect("https://test.freetaxii.com:8000", "user-me", "user-password"));
         let objItems = [];
         objItems.push(server);
         server.discovery().then(discovery => {
-            this.setState({discovery: discovery, serverList: objItems, currentServer: server.conn.baseURL});
+            this.setState({loading: false, discovery: discovery, serverList: objItems, currentServer: server.conn.baseURL});
         });
         let event = {target: {value: server.conn.baseURL}};
         this.handleServerSelection(event);
@@ -69,8 +72,9 @@ export class ServersPage extends Component {
             // tell the parent component
             this.props.update(theServer, false);
             // get the discovery info
+            this.setState({loading: true});
             theServer.discovery().then(discovery => {
-                this.setState({discovery: discovery, currentServer: url});
+                this.setState({loading: false, discovery: discovery, currentServer: url});
             });
         }
     };
@@ -108,12 +112,13 @@ export class ServersPage extends Component {
 
     handleRequestDialogOk = () => {
         if (this.isValidURL(this.state.currentServer)) {
-            this.setState({loadOpen: false});
+            this.setState({loading: true, loadOpen: false});
             // create a server, test it and add it to the list
             // should check the url first
             let newServer = new Server("/taxii/", new TaxiiConnect(this.state.currentServer, "user-me", "user-password"));
             newServer.discovery().then(discovery => {
                 this.setState({
+                    loading: false,
                     discovery: discovery,
                     serverList: [...this.state.serverList, newServer],
                     currentServer: newServer.conn.baseURL
@@ -187,6 +192,11 @@ export class ServersPage extends Component {
                         <Button onClick={this.handleRequestDialogOk} color="primary">Ok</Button>
                     </DialogActions>
                 </Dialog>
+
+                <div style={{marginLeft: 400, marginTop: 40}}>
+                    {this.state.loading && <CircularProgress size={40}  />}
+                </div>
+
             </div>
         );
     };

@@ -14,7 +14,7 @@ import AddIcon from 'material-ui-icons/Add';
 import ModeEditIcon from 'material-ui-icons/ModeEdit';
 import Cached from 'material-ui-icons/Cached';
 import uuidv4 from 'uuid/v4';
-import { labelsNames } from '../stix/stixutil.js';
+import {labelsNames} from '../stix/stixutil.js';
 
 
 export const ITEM_HEIGHT = 48;
@@ -130,7 +130,7 @@ export const commonStix = (state, handler) => {
                                onChange={handler('lang')}
                     />
 
-                    <FormControl  style={{marginLeft: 20, top: 3}}>
+                    <FormControl style={{marginLeft: 20, top: 3}}>
                         <InputLabel htmlFor="labels-multiple">Labels</InputLabel>
                         <Select
                             style={{width: 550}}
