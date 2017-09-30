@@ -126,7 +126,7 @@ class MainPage extends Component {
 
                     <AppBar className={this.props.classes.appBar}>
                         <Toolbar>
-                            <Typography type="title" color="inherit" className={this.props.classes.flex}>CyberStation 1.0</Typography>
+                            <Typography type="title" color="inherit" className={this.props.classes.flex}>CyberStation 0.1</Typography>
                             <Button color="contrast" onClick={this.handleLogin}>{this.state.loglabel}</Button>
                             <Button disabled={!this.state.isLogged} color="contrast" onClick={this.handleServer}>Server</Button>
                             <Button disabled={!this.state.isLogged} color="contrast" onClick={this.handleStix}>Stix</Button>

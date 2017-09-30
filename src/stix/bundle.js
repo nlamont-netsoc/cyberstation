@@ -47,37 +47,39 @@ export class BundlePage extends Component {
     };
 
     serverInfo() {
-        this.props.server.discovery().then(discovery => {
-            let colEntry = 'no endpoint';
-            let writeVal = 'cannot write to';
-            let colInfo = 'Collection'+ " (" + writeVal + ")";
-            if (this.props.collection !== '') {
-                writeVal = this.props.collection.can_write ? 'can write to' : 'cannot write to';
-                colInfo = 'Collection' + " (" + writeVal + ")";
-                colEntry = this.props.collection.title;
-            }
-            let serverInfo = <Table style={{marginLeft: 8}}>
-                <TableBody>
-                    <TableRow key="Title">
-                        <TableCell>Title</TableCell>
-                        <TableCell>{discovery.title}</TableCell>
-                    </TableRow>
-                    <TableRow key="Description">
-                        <TableCell>Description</TableCell>
-                        <TableCell>{discovery.description}</TableCell>
-                    </TableRow>
-                    <TableRow key="Contact">
-                        <TableCell>Contact</TableCell>
-                        <TableCell>{discovery.contact}</TableCell>
-                    </TableRow>
-                    <TableRow key="Endpoint">
-                        <TableCell>{colInfo}</TableCell>
-                        <TableCell>{colEntry}</TableCell>
-                    </TableRow>
-                </TableBody>
-            </Table>;
-            this.setState({info: serverInfo});
-        })
+        if(typeof this.props.server === 'object') {
+            this.props.server.discovery().then(discovery => {
+                let colEntry = 'no endpoint';
+                let writeVal = 'cannot write to';
+                let colInfo = 'Collection' + " (" + writeVal + ")";
+                if (this.props.collection !== '') {
+                    writeVal = this.props.collection.can_write ? 'can write to' : 'cannot write to';
+                    colInfo = 'Collection' + " (" + writeVal + ")";
+                    colEntry = this.props.collection.title;
+                }
+                let serverInfo = <Table style={{marginLeft: 8}}>
+                    <TableBody>
+                        <TableRow key="Title">
+                            <TableCell>Title</TableCell>
+                            <TableCell>{discovery.title}</TableCell>
+                        </TableRow>
+                        <TableRow key="Description">
+                            <TableCell>Description</TableCell>
+                            <TableCell>{discovery.description}</TableCell>
+                        </TableRow>
+                        <TableRow key="Contact">
+                            <TableCell>Contact</TableCell>
+                            <TableCell>{discovery.contact}</TableCell>
+                        </TableRow>
+                        <TableRow key="Endpoint">
+                            <TableCell>{colInfo}</TableCell>
+                            <TableCell>{colEntry}</TableCell>
+                        </TableRow>
+                    </TableBody>
+                </Table>;
+                this.setState({info: serverInfo});
+            })
+        }
     };
 
     render() {
