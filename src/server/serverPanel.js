@@ -12,7 +12,7 @@ import Divider from 'material-ui/Divider';
 import List, {ListItemText} from 'material-ui/List';
 import {FormLabel, FormControl, FormControlLabel} from 'material-ui/Form';
 import Radio, {RadioGroup} from 'material-ui/Radio';
-
+import Table, {TableBody, TableCell, TableHead, TableRow} from 'material-ui/Table';
 
 
 export class ServerPanel extends Component {
@@ -57,12 +57,26 @@ export class ServerPanel extends Component {
 
     serverInfo() {
         if (this.state.discovery !== undefined) {
-            return <List>
-                <ListItemText key="a1" primary={'Title: ' + this.state.discovery.title}/>
-                <ListItemText key="a2" primary={'Description: ' + this.state.discovery.description}/>
-                <ListItemText key="a3" primary={'Contact: ' + this.state.discovery.contact}/>
-                <ListItemText key="a4" primary={'Default: ' + this.state.discovery.default}/>
-            </List>;
+            return <Table>
+            <TableBody>
+                <TableRow key="Title">
+                    <TableCell>Title</TableCell>
+                    <TableCell>{this.state.discovery.title}</TableCell>
+                </TableRow>
+                <TableRow key="Description">
+                    <TableCell>Description</TableCell>
+                    <TableCell>{this.state.discovery.description}</TableCell>
+                </TableRow>
+                <TableRow key="Contact">
+                    <TableCell>Contact</TableCell>
+                    <TableCell>{this.state.discovery.contact}</TableCell>
+                </TableRow>
+                <TableRow key="Default">
+                    <TableCell>Default</TableCell>
+                    <TableCell>{this.state.discovery.default}</TableCell>
+                </TableRow>
+            </TableBody>
+            </Table>;
         }
     };
 

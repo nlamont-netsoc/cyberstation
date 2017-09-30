@@ -48,7 +48,7 @@ export class BundlePage extends Component {
 
     serverInfo() {
         this.props.server.discovery().then(discovery => {
-            let colInfo = this.props.collection === '' ? 'no endpoint' : this.props.collection.id;
+            let colInfo = this.props.collection === '' ? 'no endpoint' : this.props.collection.title;
             let serverInfo = <Table style={{marginLeft: 8}}>
                 <TableBody>
                     <TableRow key="Title">
@@ -62,10 +62,6 @@ export class BundlePage extends Component {
                     <TableRow key="Contact">
                         <TableCell>Contact</TableCell>
                         <TableCell>{discovery.contact}</TableCell>
-                    </TableRow>
-                    <TableRow key="Default">
-                        <TableCell>Default</TableCell>
-                        <TableCell>{discovery.default}</TableCell>
                     </TableRow>
                     <TableRow key="Endpoint">
                         <TableCell>Collection</TableCell>
