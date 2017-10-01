@@ -19,8 +19,8 @@ import TextField from 'material-ui/TextField';
 import Button from 'material-ui/Button';
 import Dialog, {DialogActions, DialogContent, DialogContentText, DialogTitle,} from 'material-ui/Dialog';
 import Slide from 'material-ui/transitions/Slide';
-import { CircularProgress } from 'material-ui/Progress';
-
+import {CircularProgress} from 'material-ui/Progress';
+import {AlertSlide} from '../server/alertSlide.js';
 
 export class ServersPage extends Component {
 
@@ -28,7 +28,8 @@ export class ServersPage extends Component {
         super(props);
         this.state = {
             loading: false,
-            open: false,    // for the url dialog
+            alert: false,   // for the alert dialog
+            open: false,    // for the new server dialog
             serverList: [], // the list of server objects to choose from
             discovery: '',  // the current server discovery info
             currentServer: '', // the current selected server url
@@ -42,7 +43,12 @@ export class ServersPage extends Component {
         let objItems = [];
         objItems.push(server);
         server.discovery().then(discovery => {
-            this.setState({loading: false, discovery: discovery, serverList: objItems, currentServer: server.conn.baseURL});
+            this.setState({
+                loading: false,
+                discovery: discovery,
+                serverList: objItems,
+                currentServer: server.conn.baseURL
+            });
         });
         let event = {target: {value: server.conn.baseURL}};
         this.handleServerSelection(event);
@@ -100,13 +106,13 @@ export class ServersPage extends Component {
 
     // vague attempt to check the url string
     isValidURL(str) {
-        let pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
-            '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // domain name and extension
-            '((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR ip (v4) address
-            '(\\:\\d+)?'+ // port
-            '(\\/[-a-z\\d%_.~+&:]*)*'+ // path
-            '(\\?[;&a-z\\d%_.,~+&:=-]*)?'+ // query string
-            '(\\#[-a-z\\d_]*)?$','i'); // fragment locator
+        let pattern = new RegExp('^(https?:\\/\\/)?' + // protocol
+            '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // domain name and extension
+            '((\\d{1,3}\\.){3}\\d{1,3}))' + // OR ip (v4) address
+            '(\\:\\d+)?' + // port
+            '(\\/[-a-z\\d%_.~+&:]*)*' + // path
+            '(\\?[;&a-z\\d%_.,~+&:=-]*)?' + // query string
+            '(\\#[-a-z\\d_]*)?$', 'i'); // fragment locator
         return pattern.test(str);
     };
 
@@ -115,20 +121,27 @@ export class ServersPage extends Component {
             this.setState({loading: true, loadOpen: false});
             // create a server, test it and add it to the list
             let newServer = new Server("/taxii/", new TaxiiConnect(this.state.currentServer, "user-me", "user-password"));
-            newServer.discovery().then(discovery => {
-                console.log("--> discovery="+discovery);
-                this.setState({
-                    loading: false,
-                    discovery: discovery,
-                    serverList: [...this.state.serverList, newServer],
-                    currentServer: newServer.conn.baseURL
-                });
-                let event = {target: {value: newServer.conn.baseURL}};
-                this.handleServerSelection(event);
-            }).catch(err => {
-                console.log("--> error="+err);
-                this.setState({loading: false, currentServer: ''});
-                // todo --> add an alert here to say cannot connect
+            let timeout = 5000;
+            Promise.race([
+                newServer.discovery().then(discovery => {
+                    this.setState({
+                        loading: false,
+                        discovery: discovery,
+                        serverList: [...this.state.serverList, newServer],
+                        currentServer: newServer.conn.baseURL
+                    });
+                    let event = {target: {value: newServer.conn.baseURL}};
+                    this.handleServerSelection(event);
+                }).catch(err => {
+                    console.log("--> error=" + err);
+                    this.setState({loading: false, currentServer: ''});
+                }),
+                new Promise((_, reject) =>
+                    setTimeout(() => reject(new Error('Timeout')), timeout)
+                )
+            ]).catch(err => {
+                console.log("--> err=" + err);
+                this.setState({loading: false, alert: true});
             });
         } else {
             this.setState({currentServer: ''});
@@ -149,6 +162,10 @@ export class ServersPage extends Component {
             return <ServerPanel server={theServer} update={this.updateApiRootSelection}/>
         }
     }
+
+    handleAlertRequestClose = () => {
+        this.setState({alert: false});
+    };
 
     render() {
         return (
@@ -198,8 +215,12 @@ export class ServersPage extends Component {
                 </Dialog>
 
                 <div style={{marginLeft: 400, marginTop: 40}}>
-                    {this.state.loading && <CircularProgress size={40}  />}
+                    {this.state.loading && <CircularProgress size={40}/>}
                 </div>
+
+                <AlertSlide open={this.state.alert}
+                            onClose={this.handleAlertRequestClose}
+                            url={this.state.currentServer}/>
 
             </div>
         );

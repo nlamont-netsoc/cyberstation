@@ -62,6 +62,13 @@ export class TaxiiConnect {
         return results;
     }
 
+    async asyncFetch2(path, config, filter, timeout) {
+        Promise.race([
+            this.asyncFetch(path, config, filter),
+            new Promise((_, reject) => setTimeout(() => reject(new Error('Timeout')), timeout))
+        ]);
+    }
+
     /**
      * send a GET async request to the taxii2 server.
      *
