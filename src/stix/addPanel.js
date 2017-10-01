@@ -7,8 +7,6 @@ import RemoveIcon from 'material-ui-icons/Remove';
 import Grid from 'material-ui/Grid';
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import withRoot from '../components/withRoot';
-import withStyles from 'material-ui/styles/withStyles';
 import Typography from 'material-ui/Typography';
 import Divider from 'material-ui/Divider';
 import {FormControl, FormControlLabel} from 'material-ui/Form';
@@ -16,7 +14,6 @@ import Radio, {RadioGroup} from 'material-ui/Radio';
 import Button from 'material-ui/Button';
 import Dialog, {DialogActions, DialogContent, DialogTitle,} from 'material-ui/Dialog';
 import Slide from 'material-ui/transitions/Slide';
-import List, {ListItem, ListItemSecondaryAction, ListItemText} from 'material-ui/List';
 import Paper from 'material-ui/Paper';
 import TextField from 'material-ui/TextField';
 
@@ -51,11 +48,11 @@ export default class AddPanel extends Component {
         return formItems;
     };
 
-    // change the selected object
+    // change the selected item
     handleSelected = (event, value) => {
         this.setState({selection: value});
         // tell the parent component
-        //    this.props.selected(selection, false);
+       // this.props.update(selection);
     };
 
     // create a new item
@@ -63,10 +60,9 @@ export default class AddPanel extends Component {
         this.setState({openDialog: true});
     };
 
-    // delete the selected sdo from the bundle
+    // delete the selected item
     handleDelete = (event) => {
-        console.log("--> this.state.selection="+this.state.selection);
-        // delete the selected entry from the objList
+        // delete the selected item from the objList
         let indexToDelete = this.state.objList.findIndex(obj => obj.id === this.state.selection);
         if (indexToDelete !== -1) {
             this.state.objList.splice(indexToDelete, 1);
@@ -84,10 +80,9 @@ export default class AddPanel extends Component {
         this.setState({openDialog: false});
     };
 
-    handleChange = (event, value) => {
-        let theValue = event.target.value;
-        console.log("--> theValue="+theValue+" value="+value);
-        this.setState({addition: theValue});
+    // entering a new item in the dialog
+    handleChange = event => {
+        this.setState({addition: event.target.value});
     };
 
     render() {
@@ -124,7 +119,7 @@ export default class AddPanel extends Component {
                     ignoreEscapeKeyUp
                     maxWidth="md"
                 >
-                    <DialogTitle>Select an item</DialogTitle>
+                    <DialogTitle>Add a new item</DialogTitle>
                     <DialogContent>
                         <TextField style={{marginLeft: 8}}
                                    name="name"
