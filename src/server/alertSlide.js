@@ -26,7 +26,7 @@ export class AlertSlide extends Component {
 
     constructor(props) {
         super(props);
-        this.state = { open: this.props.open, url: this.props.url };
+        this.state = { open: this.props.open, url: this.props.url};
     };
 
     // when a new props is received
@@ -41,13 +41,14 @@ export class AlertSlide extends Component {
     };
 
     render() {
-        const msg = "Could not connect to the specified server " + this.state.url;
+        const msg = "Could not connect to the specified server ";
         return (
             <div>
                 <Dialog open={this.state.open} transition={Slide} onRequestClose={this.handleRequestClose}>
                     <DialogTitle>{"Connection problem"}</DialogTitle>
                     <DialogContent>
                         <DialogContentText> {msg} </DialogContentText>
+                        <DialogContentText> {this.state.url} </DialogContentText>
                     </DialogContent>
                     <DialogActions>
                         <Button onClick={this.handleRequestClose} color="primary">Ok</Button>

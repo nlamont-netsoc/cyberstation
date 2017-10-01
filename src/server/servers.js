@@ -133,19 +133,23 @@ export class ServersPage extends Component {
                     let event = {target: {value: newServer.conn.baseURL}};
                     this.handleServerSelection(event);
                 }).catch(err => {
-                    console.log("--> error=" + err);
                     this.setState({loading: false, currentServer: ''});
+                    new Error('fetch error')
                 }),
                 new Promise((_, reject) =>
-                    setTimeout(() => reject(new Error('Timeout')), timeout)
+                    setTimeout(() => reject(new Error('timeout')), timeout)
                 )
             ]).catch(err => {
-                console.log("--> err=" + err);
                 this.setState({loading: false, alert: true});
             });
         } else {
             this.setState({currentServer: ''});
         }
+    };
+
+    // close the alert dialog
+    handleAlertRequestClose = () => {
+        this.setState({alert: false});
     };
 
     // change the url input text of the dialog
@@ -162,10 +166,6 @@ export class ServersPage extends Component {
             return <ServerPanel server={theServer} update={this.updateApiRootSelection}/>
         }
     }
-
-    handleAlertRequestClose = () => {
-        this.setState({alert: false});
-    };
 
     render() {
         return (
