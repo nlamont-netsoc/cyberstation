@@ -76,7 +76,7 @@ export class LogoutPage extends Component {
     );
   };
 
-};
+}
 
 LogoutPage.propTypes = {
   conn: PropTypes.object.isRequired,

@@ -134,12 +134,11 @@ export class CollectionsPage extends Component {
     };
 
     render() {
-        const { classes } = this.props;
         return (
             <Grid container className={this.props.root}>
 
                 <Grid item xs={3}>
-                    <Typography type="body1" wrap>Collections list</Typography>
+                    <Typography type="body1" >Collections list</Typography>
                     <RadioGroup style={{display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between'}}
                                 aria-label="obj"
                                 name="objGroup"
@@ -151,7 +150,7 @@ export class CollectionsPage extends Component {
                 </Grid>
 
                 <Grid item xs={9}>
-                    <Typography type="body1" wrap>Objects list</Typography>
+                    <Typography type="body1" >Objects list</Typography>
                     <List> {this.objsAsFormLabels()} </List>
                 </Grid>
 
@@ -162,7 +161,7 @@ export class CollectionsPage extends Component {
         );
     };
 
-};
+}
 
 CollectionsPage.propTypes = {
     server: PropTypes.object.isRequired,

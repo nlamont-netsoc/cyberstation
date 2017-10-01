@@ -110,7 +110,7 @@ export class BundleContent extends Component {
     return (
       <Grid container className={this.props.root} justify="flex-start">
         <FormControl component="fieldset" required>
-          <Typography type="body1" wrap style={{ margin: 8 }}> {this.title} </Typography>
+          <Typography type="body1" style={{ margin: 8 }}> {this.title} </Typography>
             <Grid key="k1" >
               <Button fab color="primary" onClick={this.handleAdd} raised style={{ margin: 8 }}><AddIcon /></Button>
               <Button fab color="primary" onClick={this.handleDelete} raised style={{ margin: 8 }}><RemoveIcon /></Button>
@@ -128,7 +128,7 @@ export class BundleContent extends Component {
     );
   };
 
-};
+}
 
 BundleContent.propTypes = {
   stix: PropTypes.object.isRequired,

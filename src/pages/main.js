@@ -69,6 +69,7 @@ const styles = theme => ({
     }
 });
 
+// for testing --> todo to be removed
 const testServer = new Server("/taxii/", new TaxiiConnect("https://test.freetaxii.com:8000", "user-me", "user-password"));
 
 class MainPage extends Component {
@@ -141,7 +142,7 @@ class MainPage extends Component {
             </div>
         );
     }
-};
+}
 
 MainPage.propTypes = {
     classes: PropTypes.object.isRequired

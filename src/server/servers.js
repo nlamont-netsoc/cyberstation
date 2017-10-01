@@ -3,7 +3,6 @@
 /* global conn */
 // @flow weak
 import {ServerPanel} from '../server/serverPanel.js';
-import {StixPage, styles} from '../stix/stixPage.js';
 import {TaxiiConnect, Server} from '../libs/taxii2lib.js';
 import Grid from 'material-ui/Grid';
 import React, {Component} from 'react';
@@ -21,6 +20,11 @@ import Dialog, {DialogActions, DialogContent, DialogContentText, DialogTitle,} f
 import Slide from 'material-ui/transitions/Slide';
 import {CircularProgress} from 'material-ui/Progress';
 import {AlertSlide} from '../server/alertSlide.js';
+
+
+const styles = {
+
+};
 
 export class ServersPage extends Component {
 
@@ -57,8 +61,12 @@ export class ServersPage extends Component {
     serverListAsFormLabels() {
         let formItems = [];
         this.state.serverList.map(serv =>
-            formItems.push(<FormControlLabel style={{margin: 8}} key={serv.conn.baseURL} value={serv.conn.baseURL}
-                                             control={<Radio/>} label={serv.conn.baseURL}/>));
+            formItems.push(<FormControlLabel
+                style={{margin: 8}}
+                key={serv.conn.baseURL}
+                value={serv.conn.baseURL}
+                control={<Radio/>}
+                label={serv.conn.baseURL}/>));
         return formItems;
     };
 
@@ -173,7 +181,6 @@ export class ServersPage extends Component {
                 <Grid container spacing={8}>
                     <Grid item xs={6}>
                         <FormControl component="fieldset" required>
-                            <Typography type="body1" wrap style={{margin: 8}}> {this.title} </Typography>
                             <Button onClick={this.handleAdd} raised color="primary" style={{margin: 8}}>New
                                 server</Button>
                             <Button onClick={this.handleDelete} raised color="primary" style={{margin: 8}}>Delete
@@ -226,7 +233,7 @@ export class ServersPage extends Component {
         );
     };
 
-};
+}
 
 ServersPage.propTypes = {
     update: PropTypes.func.isRequired,

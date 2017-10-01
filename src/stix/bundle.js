@@ -2,8 +2,6 @@
 
 /* global conn */
 // @flow weak
-import {StixPage, styles} from '../stix/stixPage.js';
-import {TaxiiConnect, Server} from '../libs/taxii2lib.js';
 import Grid from 'material-ui/Grid';
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
@@ -15,6 +13,10 @@ import TextField from 'material-ui/TextField';
 import List, {ListItemText} from 'material-ui/List';
 import Table, {TableBody, TableCell, TableHead, TableRow} from 'material-ui/Table';
 
+
+const styles = {
+
+};
 
 export class BundlePage extends Component {
 
@@ -144,7 +146,7 @@ export class BundlePage extends Component {
 
                     <Grid key="bundle3" item>
                         <div style={{height: 20}}/>
-                        <Typography type="body1" wrap style={{marginLeft: 8}}>Connected to</Typography>
+                        <Typography type="body1" style={{marginLeft: 8}}>Connected to</Typography>
                         {this.state.info}
                     </Grid>
 
@@ -153,7 +155,7 @@ export class BundlePage extends Component {
         );
     };
 
-};
+}
 
 BundlePage.propTypes = {
     server: PropTypes.object.isRequired,

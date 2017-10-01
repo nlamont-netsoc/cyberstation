@@ -11,6 +11,7 @@ import withRoot from '../components/withRoot';
 import withStyles from 'material-ui/styles/withStyles';
 import {Server, TaxiiConnect} from "../libs/taxii2lib";
 
+
 function TabContainer(props) {
     return <div style={{padding: 6}}>{props.children}</div>;
 }
@@ -35,6 +36,7 @@ const styles = theme => ({
     }
 });
 
+// for testing --> todo to be removed
 const testServer = new Server("/taxii/", new TaxiiConnect("https://test.freetaxii.com:8000", "user-me", "user-password"));
 
 export class ServerView extends Component {
@@ -106,7 +108,7 @@ export class ServerView extends Component {
         );
     };
 
-};
+}
 
 ServerView.propTypes = {
     update: PropTypes.func.isRequired,

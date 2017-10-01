@@ -109,7 +109,7 @@ export class LoginPage extends Component {
     );
   };
 
-};
+}
 
 LoginPage.propTypes = {
   conn: PropTypes.object.isRequired,

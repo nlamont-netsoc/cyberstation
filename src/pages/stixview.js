@@ -125,7 +125,7 @@ export class StixView extends Component {
         );
     };
 
-};
+}
 
 StixView.propTypes = {
     server: PropTypes.object.isRequired,

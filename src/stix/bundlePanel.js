@@ -106,6 +106,7 @@ export class BundlePanel extends Component {
         return storeContent;
     };
 
+    // retrieve all bundles from storage as an array of objects
     getAllFromStorage = () => {
         let storeContent = [];
         let keys = Object.keys(localStorage);
@@ -129,8 +130,6 @@ export class BundlePanel extends Component {
     // delete a bundle from storage
     handleStoreDelete = (event) => {
         this.setState({loadOpen: true, storeDelete: true});
-
-        //  localStorage.clear();
     };
 
     // delete the selected sdo from the bundle
@@ -180,7 +179,7 @@ export class BundlePanel extends Component {
         return (
             <Grid container className={this.props.root} justify="flex-start">
                 <FormControl component="fieldset" required>
-                    <Typography type="body1" wrap style={{margin: 8}}> {this.title} </Typography>
+                    <Typography type="body1" style={{margin: 8}}> {this.title} </Typography>
                     <Button disabled={!this.props.canSend} onClick={this.handleSend} raised color="primary"
                             style={{margin: 8}}>Send to server</Button>
 
@@ -197,8 +196,6 @@ export class BundlePanel extends Component {
 
                     </Grid>
 
-                    {/*<Button onClick={this.handleDelete} raised color="default" style={{margin: 8}}>Delete*/}
-                    {/*selected object</Button>*/}
                     <Divider/>
                     <RadioGroup style={{display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between'}}
                                 aria-label="obj"
@@ -251,7 +248,7 @@ export class BundlePanel extends Component {
         );
     };
 
-};
+}
 
 BundlePanel.propTypes = {
     sdotype: PropTypes.string.isRequired,

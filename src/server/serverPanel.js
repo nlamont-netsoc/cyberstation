@@ -2,7 +2,6 @@
 
 /* global conn */
 // @flow weak
-import {StixPage, styles} from '../stix/stixPage.js';
 import Grid from 'material-ui/Grid';
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
@@ -14,6 +13,10 @@ import {FormLabel, FormControl, FormControlLabel} from 'material-ui/Form';
 import Radio, {RadioGroup} from 'material-ui/Radio';
 import Table, {TableBody, TableCell, TableHead, TableRow} from 'material-ui/Table';
 
+
+const styles = {
+
+};
 
 export class ServerPanel extends Component {
 
@@ -98,7 +101,7 @@ export class ServerPanel extends Component {
         );
     };
 
-};
+}
 
 ServerPanel.propTypes = {
     server: PropTypes.object.isRequired,

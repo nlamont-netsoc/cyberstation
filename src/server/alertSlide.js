@@ -22,6 +22,8 @@ const styles = theme => ({
     }
 });
 
+// todo --> generalise this
+// used in ServersPage
 export class AlertSlide extends Component {
 
     constructor(props) {
@@ -31,11 +33,11 @@ export class AlertSlide extends Component {
 
     // when a new props is received
     componentWillReceiveProps(newProps) {
-        this.setState({open: newProps.open, url: newProps.url});
+        this.setState({open: newProps.openDialog, url: newProps.url});
     };
 
     handleRequestClose = () => {
-        this.setState({ open: false });
+        this.setState({ openDialog: false });
         // tell the parent component
         this.props.onClose();
     };
@@ -44,7 +46,7 @@ export class AlertSlide extends Component {
         const msg = "Could not connect to the specified server ";
         return (
             <div>
-                <Dialog open={this.state.open} transition={Slide} onRequestClose={this.handleRequestClose}>
+                <Dialog open={this.state.openDialog} transition={Slide} onRequestClose={this.handleRequestClose}>
                     <DialogTitle>{"Connection problem"}</DialogTitle>
                     <DialogContent>
                         <DialogContentText> {msg} </DialogContentText>
@@ -57,7 +59,7 @@ export class AlertSlide extends Component {
             </div>
         );
     };
-};
+}
 
 AlertSlide.propTypes = {
     open: PropTypes.bool.isRequired,

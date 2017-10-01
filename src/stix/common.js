@@ -15,12 +15,22 @@ import ModeEditIcon from 'material-ui-icons/ModeEdit';
 import Cached from 'material-ui-icons/Cached';
 import uuidv4 from 'uuid/v4';
 import {labelsNames} from '../stix/stixutil.js';
-
+import AddPanel from './addPanel.js';
 
 export const ITEM_HEIGHT = 48;
 export const ITEM_PADDING_TOP = 12;
 
+
 export const commonStix = (state, handler) => {
+
+    let testTitle = "external references";
+    let testList = [{id:"item1", name:"name1xxxxxxxxxxxxxxxxxxxxx"}, {id:"item2", name:"name2"},{id:"item3", name:"name3"},
+        {id:"item4", name:"name4"},{id:"item5", name:"name5"},{id:"item6", name:"name6"},
+        {id:"item7", name:"name7"},{id:"item8", name:"name8"},{id:"item9", name:"name9"},
+        {id:"item10", name:"name10"},{id:"item11", name:"name11"},{id:"item12", name:"name12"}];
+     let updateExternalRef = e => {
+       console.log("---> in commonStix updateExternalRef ");
+    };
 
     //  let redoId = e => {
     //    let event = {target: {value: state.type + "--" + uuidv4()}};
@@ -197,6 +207,12 @@ export const commonStix = (state, handler) => {
                                fullWidth
                     />
                 </Grid>
+
+                <Grid key="a7" item>
+                    <AddPanel title={testTitle} itemList={testList} update={updateExternalRef} />
+                </Grid>
+
+
             </form>
         </Grid>
     );

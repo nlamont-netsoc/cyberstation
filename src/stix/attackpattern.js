@@ -3,7 +3,6 @@
 /* global conn */
 // @flow weak
 import { commonStix } from '../stix/common.js';
-import { StixPage, styles } from '../stix/stixPage.js';
 import Grid from 'material-ui/Grid';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
@@ -17,6 +16,11 @@ import AddIcon from 'material-ui-icons/Add';
 import ModeEditIcon from 'material-ui-icons/ModeEdit';
 import Cached from 'material-ui-icons/Cached';
 import uuidv4 from 'uuid/v4';
+
+
+const styles = {
+
+};
 
 const SDOTYPE = "attack-pattern";
 
@@ -194,7 +198,7 @@ export class AttackPatternPage extends Component {
     }
   };
 
-};
+}
 
 AttackPatternPage.propTypes = {
   server: PropTypes.object.isRequired,

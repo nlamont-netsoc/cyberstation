@@ -4,7 +4,6 @@
 // @flow weak
 
 //import { Router, Route, Switch } from 'react-router'
-import { TaxiiConnect, Server } from '../libs/taxii2lib.js';
 import Grid from 'material-ui/Grid';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
@@ -54,18 +53,16 @@ export class ObjectsPage extends Component {
   render() {
     return (
       <Grid container className={this.props.root}>
-
         <Grid item xs={6}>
           <Grid container className={this.props.root} justify="center">
             <List> {this.listOfItems(22)} </List>
           </Grid>
         </Grid>
-
       </Grid>
     );
   };
 
-};
+}
 
 ObjectsPage.propTypes = {
   server: PropTypes.object.isRequired
