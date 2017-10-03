@@ -31,33 +31,12 @@
 <div id="root"></div>
 
 <script>
-    window.onbeforeunload = function () {
-        return "WARNING ---> your work will be lost.";
-    }
+    // to disable the browser back button
+    history.pushState(null, null, document.URL);
+    window.addEventListener('popstate', function () {
+        history.pushState(null, null, document.URL);
+    });
 </script>
-
-<!--<script>-->
-<!--// It works without the History API, but will clutter up the history-->
-<!--var history_api = typeof history.pushState !== 'undefined';-->
-
-<!--// The previous page asks that it not be returned to-->
-<!--if (location.hash === '#no-back') {-->
-<!--// Push "#no-back" onto the history, making it the most recent "page"-->
-<!--if (history_api) history.pushState(null, '', '#stay');-->
-<!--else location.hash = '#stay';-->
-
-<!--// When the back button is pressed, it will harmlessly change the url-->
-<!--// hash from "#stay" to "#no-back", which triggers this function-->
-<!--window.onhashchange = function () {-->
-<!--// User tried to go back; warn user, rinse and repeat-->
-<!--if (location.hash === '#no-back') {-->
-<!--alert("You shall not pass!");-->
-<!--if (history_api) history.pushState(null, '', '#stay');-->
-<!--else location.hash = '#stay'-->
-<!--}-->
-<!--}-->
-<!--}-->
-<!--</script>-->
 
 <!--
   This HTML file is a template.
