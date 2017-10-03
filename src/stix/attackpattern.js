@@ -13,28 +13,18 @@ import TextField from 'material-ui/TextField';
 import moment from 'moment';
 import Button from 'material-ui/Button';
 import Cached from 'material-ui-icons/Cached';
-
+import AddKillPhase from './addKillPhase.js';
 
 const styles = {};
 
 const SDOTYPE = "attack-pattern";
 
-//  kill_chain_phases: Option[List[KillChainPhase]] = None,
-//  KillChainPhase(kill_chain_name: String, phase_name: String)
-
-var theStix = {
+let theStix = {
     name: '', type: SDOTYPE, id: '', created: '', modified: '', revoked: '',
     created_by_ref: '', labels: [], confidence: '', external_references: [], lang: '',
     object_marking_refs: [], granular_markings: '',
-    pattern: '', valid_from: '', valid_until: '', description: ''
+    pattern: '', valid_from: '', valid_until: '', description: '', kill_chain_phases: []
 };
-
-// const stixDefault = {
-//     name: '', type: '', id: '', created: moment().toISOString(), modified: moment().toISOString(), revoked: false,
-//     created_by_ref: '', labels: [], confidence: 1, external_references: [], lang: 'en',
-//     object_marking_refs: [], granular_markings: '',
-//     pattern: '', valid_from: '', valid_until: '', description: ''
-// };
 
 export class AttackPatternPage extends Component {
 
@@ -68,6 +58,7 @@ export class AttackPatternPage extends Component {
     // change the state value of the given fieldName
     handleChange = fieldName => (event, checked) => {
         let theValue = event.target.value;
+        console.log("--> handleChange fieldName="+fieldName+" theValue="+JSON.stringify(theValue));
         // if event came from some switch
         if (checked === true || checked === false) theValue = checked;
         // change the individual field value of the stix
@@ -186,6 +177,10 @@ export class AttackPatternPage extends Component {
                                    multiline
                                    rows="4"
                         />
+                    </Grid>
+                    <Grid key="a9" item>
+                        <AddKillPhase title="Kill chain phases" itemList={this.state.stix.kill_chain_phases}
+                                  update={this.handleChange('kill_chain_phases')}/>
                     </Grid>
                 </form>
             </Grid>

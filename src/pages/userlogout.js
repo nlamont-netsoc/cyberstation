@@ -55,7 +55,7 @@ export class LogoutPage extends Component {
 
         <Grid item xs={12}>
           <Grid container className={this.props.container} justify="center" spacing={16}>
-            <Typography type="body1" wrap>logged out</Typography>
+            <Typography type="body1">logged out</Typography>
           </Grid>
         </Grid>
 

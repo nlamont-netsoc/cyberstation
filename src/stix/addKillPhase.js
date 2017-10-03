@@ -8,7 +8,7 @@ import Grid from 'material-ui/Grid';
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import Typography from 'material-ui/Typography';
-import {FormControl, FormControlLabel} from 'material-ui/Form';
+import {FormControlLabel} from 'material-ui/Form';
 import Radio, {RadioGroup} from 'material-ui/Radio';
 import Button from 'material-ui/Button';
 import Dialog, {DialogActions, DialogContent, DialogTitle,} from 'material-ui/Dialog';
@@ -19,37 +19,43 @@ import TextField from 'material-ui/TextField';
 
 const styles = {};
 
-export default class AddPanel extends Component {
+export default class AddKillPhase extends Component {
 
     constructor(props) {
         super(props);
-        this.state = {title: '', selection: '', openDialog: false,
+        this.state = {
+            title: '', selection: '', openDialog: false,
             add: false, delete: false, objList: [],
-            addition: ''};
+            kill_chain_name: '', phase_name: ''
+        };
     }
 
     // fill the list
     componentDidMount() {
-        this.setState({title: this.props.title, selection: '',
+        this.setState({
+            title: this.props.title, selection: '',
             openDialog: false, add: false, delete: false,
-            objList: this.props.itemList, addition: ''})
+            objList: this.props.itemList, kill_chain_name: '', phase_name: ''
+        })
     };
 
     // when a new props is received
     componentWillReceiveProps(newProps) {
-        this.setState({title: newProps.title, selection: '',
+        this.setState({
+            title: newProps.title, selection: '',
             openDialog: false, add: false, delete: false,
-            objList: newProps.itemList, addition: ''})
+            objList: newProps.itemList, kill_chain_name: '', phase_name: ''
+        })
     };
 
     asFormLabels() {
         let formItems = [];
         this.state.objList.map(obj => formItems.push(<FormControlLabel
             style={{margin: 2}}
-            key={obj}
-            value={obj}
+            key={obj.kill_chain_name + ", " + obj.phase_name}
+            value={JSON.stringify({kill_chain_name: obj.kill_chain_name, phase_name: obj.phase_name})}
             control={<Radio/>}
-            label={obj}/>));
+            label={obj.kill_chain_name + ", " + obj.phase_name}/>));
         return formItems;
     };
 
@@ -60,13 +66,15 @@ export default class AddPanel extends Component {
 
     // show the add dialog
     handleAddToList = (event) => {
-        this.setState({openDialog: true, addition: ''});
+        this.setState({openDialog: true, kill_chain_name: '', phase_name: ''});
     };
 
     // delete the selected item
     handleDeleteFromList = (event) => {
         // delete the selected item from the objList
-        let indexToDelete = this.state.objList.findIndex(obj => obj === this.state.selection);
+        let selectedObj = JSON.parse(this.state.selection);
+        let indexToDelete = this.state.objList.findIndex(obj =>
+            (obj.kill_chain_name === selectedObj.kill_chain_name && obj.phase_name === selectedObj.phase_name));
         if (indexToDelete !== -1) {
             this.state.objList.splice(indexToDelete, 1);
             this.forceUpdate();
@@ -80,21 +88,15 @@ export default class AddPanel extends Component {
     };
 
     handleDialogOk = () => {
-        if(this.state.addition.trim() !== '') {
-            this.state.objList.push(this.state.addition);
-            this.setState({openDialog: false});
-            let event = {target: {value: this.state.objList}};
-            this.props.update(event);
-        }
+        let newObj = {kill_chain_name: this.state.kill_chain_name, phase_name: this.state.phase_name};
+        this.state.objList.push(newObj);
+        this.setState({openDialog: false});
+        let event = {target: {value: this.state.objList}};
+        this.props.update(event);
     };
 
-    // entering a new item in the dialog
-    // handleChange = event => {
-    //     this.setState({addition: event.target.value});
-    // };
-
     handleDialogChange = name => event => {
-        this.setState({ [name]: event.target.value});
+        this.setState({[name]: event.target.value});
     };
 
     render() {
@@ -105,15 +107,15 @@ export default class AddPanel extends Component {
                     <Grid key="k3" item style={{margin: 12}}>
                         <Typography type="body1">{this.state.title}</Typography>
                     </Grid>
-                        <Grid key="k4" item >
-                            <Button fab color="primary" onClick={this.handleAddToList} raised
-                                    style={{width: 34, height: 12, margin: 4}}><AddIcon/></Button>
-                            <Button fab color="primary" onClick={this.handleDeleteFromList} raised
-                                    style={{width: 34, height: 12, margin: 4}}><RemoveIcon/></Button>
+                    <Grid key="k4" item>
+                        <Button fab color="primary" onClick={this.handleAddToList} raised
+                                style={{width: 34, height: 12, margin: 4}}><AddIcon/></Button>
+                        <Button fab color="primary" onClick={this.handleDeleteFromList} raised
+                                style={{width: 34, height: 12, margin: 4}}><RemoveIcon/></Button>
                     </Grid>
                 </Grid>
                 <Grid key="k6" container>
-                    <Grid key="k5" item >
+                    <Grid key="k5" item>
                         <Paper style={{marginTop: 6, maxHeight: 200, minWidth: 400, maxWidth: 600, overflow: 'auto'}}>
                             <RadioGroup style={{display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between'}}
                                         aria-label="obj"
@@ -138,12 +140,22 @@ export default class AddPanel extends Component {
                         <TextField autoFocus={true}
                                    fullWidth
                                    margin="normal"
-                                   name="addition"
+                                   name="kill_chain_name"
                                    type="text"
-                                   id="addition"
-                                   label="addition"
-                                   value={this.state.addition}
-                                   onChange={this.handleDialogChange('addition')}
+                                   id="kill_chain_name"
+                                   label="kill_chain_name"
+                                   value={this.state.kill_chain_name}
+                                   onChange={this.handleDialogChange('kill_chain_name')}
+                        />
+                        <TextField autoFocus={true}
+                                   fullWidth
+                                   margin="normal"
+                                   name="phase_name"
+                                   type="text"
+                                   id="phase_name"
+                                   label="phase_name"
+                                   value={this.state.phase_name}
+                                   onChange={this.handleDialogChange('phase_name')}
                         />
                     </DialogContent>
                     <DialogActions>
@@ -158,7 +170,7 @@ export default class AddPanel extends Component {
 
 }
 
-AddPanel.propTypes = {
+AddKillPhase.propTypes = {
     title: PropTypes.string.isRequired,
     itemList: PropTypes.array.isRequired,
     update: PropTypes.func.isRequired
