@@ -27,20 +27,35 @@ export class TaxiiConnect {
         this.password = password;
         this.hash = btoa(this.user + ":" + this.password);
 
-        this.headers = new Headers({
-            'Accept': 'application/vnd.oasis.taxii+json',
-            'version': '2.0',
-            'Authorization': 'Basic ' + this.hash
-        });
-
+        // default configuration
         this.getConfig = {
             'method': 'get',
-            'headers': this.headers
+            'headers': new Headers({
+                'Accept': 'application/vnd.oasis.taxii+json',
+                'version': '2.0',
+                'Authorization': 'Basic ' + this.hash,
+                'Content-Type': 'application/vnd.oasis.taxii+json'
+            })
         };
 
         this.postConfig = {
             'method': 'post',
-            'headers': this.headers
+            'headers': new Headers({
+                'Accept': 'application/vnd.oasis.taxii+json',
+                'version': '2.0',
+                'Authorization': 'Basic ' + this.hash,
+                'Content-Type': 'application/vnd.oasis.stix+json'
+            })
+        };
+
+        this.getStixConfig = {
+            'method': 'get',
+            'headers': new Headers({
+                'Accept': 'application/vnd.oasis.stix+json',
+                'version': '2.0',
+                'Authorization': 'Basic ' + this.hash,
+                'Content-Type': 'application/vnd.oasis.stix+json'
+            })
         };
     }
 
@@ -81,11 +96,13 @@ export class TaxiiConnect {
      * @param {String} path - the path to connect to.
      * @param {Object} options - an option object of the form: { "cache": {}, "flag": false }
      * @param {Object} filter - the filter object describing the filtering requested, this is added to the path as a query string
+     * @param {Object} config - the request configuration
      * @returns {Promise} the server response object
      */
-    async fetchThis(path, options, filter) {
+    async fetchThis(path, options, filter, config) {
+        let conf = config === undefined ? this.getConfig : config;
         if (!options.flag) {
-            options.cache = await (this.asyncFetch(path, this.getConfig, filter));
+            options.cache = await (this.asyncFetch(path, conf, filter));
             options.flag = true;
             return options.cache;
         } else {
@@ -383,7 +400,7 @@ export class Collection {
      * @returns {Promise} the Bundle with the STIX-2 objects of this collection
      */
     async getObjects(filter) {
-        return this.ifCanRead(this.conn.fetchThis(this.path + "objects/", this.objsOptions, filter));
+        return this.ifCanRead(this.conn.fetchThis(this.path + "objects/", this.objsOptions, filter, this.getStixConfig));
     }
 
     /**
@@ -394,7 +411,7 @@ export class Collection {
      * For example: {"version": "2016-01-01T01:01:01.000Z"}
      */
     async getObject(obj_id, filter) {
-        let result = await (await (this.ifCanRead(this.conn.fetchThis(this.path + "objects/" + obj_id + "/", this.objOptions, filter).then(bundle => {
+        let result = await (await (this.ifCanRead(this.conn.fetchThis(this.path + "objects/" + obj_id + "/", this.objOptions, filter, this.getStixConfig).then(bundle => {
             return bundle.objects.find(obj => obj.id === obj_id);
         }))));
         return result;

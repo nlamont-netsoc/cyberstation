@@ -17,7 +17,7 @@ import uuidv4 from 'uuid/v4';
 import Dialog, {DialogActions, DialogContent, DialogTitle,} from 'material-ui/Dialog';
 import Slide from 'material-ui/transitions/Slide';
 import {CircularProgress} from 'material-ui/Progress';
-
+import Tooltip from 'material-ui/Tooltip';
 
 const styles = {
     tabs: {
@@ -92,7 +92,9 @@ export class BundlePanel extends Component {
     // send the bundle to the server
     handleSend = (event) => {
         this.setState({loading: true});
-        // must remove the name from the bundle object
+
+        // must remove the name from the bundle object before sending
+
         this.setState({loading: false});
     };
 
@@ -185,15 +187,17 @@ export class BundlePanel extends Component {
 
                     <Grid key="kk">
                         <Grid key="k1">
-                            <Button onClick={this.handleNew} raised color="primary" style={{margin: 8}}>New</Button>
-                            <Button onClick={this.handleLoad} raised color="primary" style={{margin: 8}}>Load</Button>
+                            <Button aria-labelledby="new" onClick={this.handleNew} raised color="primary"
+                                    style={{margin: 8}}>New</Button>
+                            <Button aria-labelledby="load" onClick={this.handleLoad} raised color="primary"
+                                    style={{margin: 8}}>Load</Button>
                         </Grid>
                         <Grid key="k2">
-                            <Button onClick={this.handleSave} raised color="primary" style={{margin: 8}}>Save</Button>
-                            <Button onClick={this.handleStoreDelete} raised color="primary"
+                            <Button aria-labelledby="save" onClick={this.handleSave} raised color="primary"
+                                    style={{margin: 8}}>Save</Button>
+                            <Button aria-labelledby="del" onClick={this.handleStoreDelete} raised color="primary"
                                     style={{margin: 8}}>Delete</Button>
                         </Grid>
-
                     </Grid>
 
                     <Divider/>

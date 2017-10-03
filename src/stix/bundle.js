@@ -32,7 +32,8 @@ export class BundlePage extends Component {
 
     // initialise this state with the prop.bundle
     componentDidMount() {
-        Object.assign(this.state.bundle, this.props.bundle);
+        this.state.bundle = JSON.parse(JSON.stringify(this.props.bundle));
+    //    Object.assign(this.state.bundle, this.props.bundle);
         this.serverInfo();
     };
 

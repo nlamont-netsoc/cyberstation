@@ -11,7 +11,6 @@ import withRoot from '../components/withRoot';
 import withStyles from 'material-ui/styles/withStyles';
 import Typography from 'material-ui/Typography';
 import Divider from 'material-ui/Divider';
-import List, {ListItemText} from 'material-ui/List';
 import {FormLabel, FormControl, FormControlLabel} from 'material-ui/Form';
 import Radio, {RadioGroup} from 'material-ui/Radio';
 import TextField from 'material-ui/TextField';
@@ -20,10 +19,19 @@ import Dialog, {DialogActions, DialogContent, DialogContentText, DialogTitle,} f
 import Slide from 'material-ui/transitions/Slide';
 import {CircularProgress} from 'material-ui/Progress';
 import {AlertSlide} from '../server/alertSlide.js';
+import Tooltip from 'material-ui/Tooltip';
 
 
 const styles = {
-
+    root: {
+        textAlign: 'center',
+        paddingTop: 200
+    },
+    addButton: {
+        position: 'absolute',
+        bottom: 32,
+        right: 32
+    }
 };
 
 export class ServersPage extends Component {
@@ -174,17 +182,17 @@ export class ServersPage extends Component {
             return <ServerPanel server={theServer} update={this.updateApiRootSelection}/>
         }
     }
-
+// className={this.props.classes.addButton}
     render() {
         return (
             <div>
                 <Grid container spacing={8}>
                     <Grid item xs={6}>
                         <FormControl component="fieldset" required>
-                            <Button onClick={this.handleAdd} raised color="primary" style={{margin: 8}}>New
-                                server</Button>
-                            <Button onClick={this.handleDelete} raised color="primary" style={{margin: 8}}>Delete
-                                selected</Button>
+                                <Button onClick={this.handleAdd} raised color="primary" style={{margin: 8}}>New
+                                    server</Button>
+                                <Button onClick={this.handleDelete} raised color="primary" style={{margin: 8}}>Delete
+                                    selected</Button>
                             <Divider/>
                             <RadioGroup style={{display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between'}}
                                         aria-label="obj"

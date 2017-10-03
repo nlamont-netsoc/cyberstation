@@ -23,14 +23,9 @@ export const ITEM_PADDING_TOP = 12;
 
 export const commonStix = (state, handler) => {
 
-    let testTitle = "external references";
-    let testList = [{id:"item1", name:"name1xxxxxxxxxxxxxxxxxxxxx"}, {id:"item2", name:"name2"},{id:"item3", name:"name3"},
-        {id:"item4", name:"name4"},{id:"item5", name:"name5"},{id:"item6", name:"name6"},
-        {id:"item7", name:"name7"},{id:"item8", name:"name8"},{id:"item9", name:"name9"},
-        {id:"item10", name:"name10"},{id:"item11", name:"name11"},{id:"item12", name:"name12"}];
-     let updateExternalRef = e => {
-       console.log("---> in commonStix updateExternalRef ");
-    };
+    //  let updateExternalRef = e => {
+    //    console.log("---> in commonStix updateExternalRef ");
+    // };
 
     //  let redoId = e => {
     //    let event = {target: {value: state.type + "--" + uuidv4()}};
@@ -140,7 +135,7 @@ export const commonStix = (state, handler) => {
                                onChange={handler('lang')}
                     />
 
-                    <FormControl style={{marginLeft: 20, top: 3}}>
+                    <FormControl style={{marginLeft: 8, top: 3}}>
                         <InputLabel htmlFor="labels-multiple">Labels</InputLabel>
                         <Select
                             style={{width: 550}}
@@ -158,11 +153,7 @@ export const commonStix = (state, handler) => {
                             }}
                         >
                             {labelsNames.map(name => (
-                                <MenuItem key={name} value={name}
-                                          style={{
-                                              fontWeight: state.labels.indexOf(name) !== -1 ? '500' : '400',
-                                          }}
-                                >
+                                <MenuItem key={name} value={name} style={{fontWeight: '500'}}>
                                     {name}
                                 </MenuItem>
                             ))}
@@ -183,33 +174,14 @@ export const commonStix = (state, handler) => {
                                fullWidth
                     />
                 </Grid>
-                <Grid key="a5" item>
-                    <TextField style={{marginLeft: 8}}
-                               type="text"
-                               name="external_references"
-                               id="external_references"
-                               label="external_references"
-                               value={state.external_references}
-                               margin="normal"
-                               onChange={handler('external_references')}
-                               fullWidth
-                    />
-                </Grid>
-                <Grid key="a6" item>
-                    <TextField style={{marginLeft: 8}}
-                               type="text"
-                               name="object_marking_refs"
-                               id="object_marking_refs"
-                               label="object_marking_refs"
-                               value={state.object_marking_refs}
-                               margin="normal"
-                               onChange={handler('object_marking_refs')}
-                               fullWidth
-                    />
-                </Grid>
 
-                <Grid key="a7" item>
-                    <AddPanel title={testTitle} itemList={testList} update={updateExternalRef} />
+                <Grid key="a9" item>
+
+                    <AddPanel title="Object marking refs" itemList={state.object_marking_refs}
+                              update={handler('object_marking_refs')}/>
+
+                    <AddPanel title="External references" itemList={state.external_references}
+                              update={handler('external_references')}/>
                 </Grid>
 
 
@@ -218,4 +190,3 @@ export const commonStix = (state, handler) => {
     );
 };
 
-export default commonStix;
