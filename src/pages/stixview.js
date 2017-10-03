@@ -9,7 +9,7 @@ import withRoot from '../components/withRoot';
 import withStyles from 'material-ui/styles/withStyles';
 import {IndicatorPage} from '../stix/indicator.js';
 import {BundlePage} from '../stix/bundle.js';
-import {RelationsPage} from '../stix/relations.js';
+import {RelationShipPage} from '../stix/relations.js';
 import {AttackPatternPage} from '../stix/attackpattern.js';
 import uuidv4 from 'uuid/v4';
 
@@ -104,7 +104,7 @@ export class StixView extends Component {
                     <TabContainer> <AttackPatternPage server={this.state.server} bundle={this.state.bundle}/>
                     </TabContainer>}
                     {this.state.value === 2 &&
-                    <TabContainer> <RelationsPage server={this.state.server} bundle={this.state.bundle}/>
+                    <TabContainer> <RelationShipPage server={this.state.server} bundle={this.state.bundle}/>
                     </TabContainer>}
                     {this.state.value === 3 &&
                     <TabContainer> <IndicatorPage server={this.state.server} bundle={this.state.bundle}/>

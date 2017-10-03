@@ -13,20 +13,17 @@ import TextField from 'material-ui/TextField';
 import moment from 'moment';
 import Button from 'material-ui/Button';
 import Cached from 'material-ui-icons/Cached';
-
+import AddKillPhase from './addKillPhase.js';
 
 const styles = {};
 
 const SDOTYPE = "indicator";
 
-//  kill_chain_phases: Option[List[KillChainPhase]] = None,
-//  KillChainPhase(kill_chain_name: String, phase_name: String)
-
-var theStix = {
+let theStix = {
     name: '', type: SDOTYPE, id: '', created: '', modified: '', revoked: '',
     created_by_ref: '', labels: [], confidence: '', external_references: [], lang: '',
     object_marking_refs: [], granular_markings: '',
-    pattern: '', valid_from: '', valid_until: '', description: ''
+    pattern: '', valid_from: '', valid_until: '', description: '', kill_chain_phases: []
 };
 
 export class IndicatorPage extends Component {
@@ -93,21 +90,21 @@ export class IndicatorPage extends Component {
         if (this.state.display === true) {
             return (
                 <Grid container className={this.props.root}>
-                  <Grid item xs={3}>
-                    <BundleContent selected={this.selectedObject} bundle={this.props.bundle} stix={defaultStix}/>
-                  </Grid>
-                  <Grid item xs={9}>
-                      {commonStix(this.state.stix, this.handleChange)}
-                      {this.specific()}
-                  </Grid>
+                    <Grid item xs={3}>
+                        <BundleContent selected={this.selectedObject} bundle={this.props.bundle} stix={defaultStix}/>
+                    </Grid>
+                    <Grid item xs={9}>
+                        {commonStix(this.state.stix, this.handleChange)}
+                        {this.specific()}
+                    </Grid>
                 </Grid>
             );
         } else {
             return (
                 <Grid container className={this.props.root}>
-                  <Grid item xs={3}>
-                    <BundleContent selected={this.selectedObject} bundle={this.props.bundle} stix={defaultStix}/>
-                  </Grid>
+                    <Grid item xs={3}>
+                        <BundleContent selected={this.selectedObject} bundle={this.props.bundle} stix={defaultStix}/>
+                    </Grid>
                 </Grid>
             );
         }
@@ -117,70 +114,74 @@ export class IndicatorPage extends Component {
     specific() {
         return (
             <Grid>
-              <form noValidate autoComplete="off">
-                <Grid key="b1" item>
-                  <TextField style={{marginLeft: 8}}
-                             type="text"
-                             name="pattern"
-                             id="pattern"
-                             label="pattern"
-                             value={this.state.stix.pattern}
-                             margin="normal"
-                             onChange={this.handleChange('pattern')}
-                             fullWidth
-                             multiline
-                             rows="2"
-                  />
-                </Grid>
-                <Grid key="b2" item>
+                <form noValidate autoComplete="off">
+                    <Grid key="b1" item>
+                        <TextField style={{marginLeft: 8}}
+                                   type="text"
+                                   name="pattern"
+                                   id="pattern"
+                                   label="pattern"
+                                   value={this.state.stix.pattern}
+                                   margin="normal"
+                                   onChange={this.handleChange('pattern')}
+                                   fullWidth
+                                   multiline
+                                   rows="2"
+                        />
+                    </Grid>
+                    <Grid key="b2" item>
 
-                  <TextField style={{marginLeft: 8, width: 210}}
-                             type="text"
-                             name="valid_from"
-                             id="valid_from"
-                             label="valid_from"
-                             value={this.state.stix.valid_from}
-                             margin="normal"
-                             onChange={this.handleChange('valid_from')}
-                  />
-                  <Button fab dense color="primary" aria-label="redo" style={{width: 33, height: 22}}
-                          onClick={(e) => {
-                              this.handleChange('valid_from')({target: {value: moment().toISOString()}})
-                          }}>
-                    <Cached/>
-                  </Button>
-                  <TextField style={{marginLeft: 26, width: 210}}
-                             type="text"
-                             name="valid_until"
-                             id="valid_until"
-                             label="valid_until"
-                             value={this.state.stix.valid_until}
-                             margin="normal"
-                             onChange={this.handleChange('valid_until')}
-                  />
-                  <Button fab dense color="primary" aria-label="redo" style={{width: 33, height: 22}}
-                          onClick={(e) => {
-                              this.handleChange('valid_until')({target: {value: moment().toISOString()}})
-                          }}>
-                    <Cached/>
-                  </Button>
+                        <TextField style={{marginLeft: 8, width: 210}}
+                                   type="text"
+                                   name="valid_from"
+                                   id="valid_from"
+                                   label="valid_from"
+                                   value={this.state.stix.valid_from}
+                                   margin="normal"
+                                   onChange={this.handleChange('valid_from')}
+                        />
+                        <Button fab dense color="primary" aria-label="redo" style={{width: 33, height: 22}}
+                                onClick={(e) => {
+                                    this.handleChange('valid_from')({target: {value: moment().toISOString()}})
+                                }}>
+                            <Cached/>
+                        </Button>
+                        <TextField style={{marginLeft: 26, width: 210}}
+                                   type="text"
+                                   name="valid_until"
+                                   id="valid_until"
+                                   label="valid_until"
+                                   value={this.state.stix.valid_until}
+                                   margin="normal"
+                                   onChange={this.handleChange('valid_until')}
+                        />
+                        <Button fab dense color="primary" aria-label="redo" style={{width: 33, height: 22}}
+                                onClick={(e) => {
+                                    this.handleChange('valid_until')({target: {value: moment().toISOString()}})
+                                }}>
+                            <Cached/>
+                        </Button>
 
-                </Grid>
-                <Grid key="b4" item>
-                  <TextField style={{marginLeft: 8}}
-                             type="text"
-                             name="description"
-                             id="description"
-                             label="description"
-                             value={this.state.stix.description}
-                             margin="normal"
-                             onChange={this.handleChange('description')}
-                             fullWidth
-                             multiline
-                             rows="4"
-                  />
-                </Grid>
-              </form>
+                    </Grid>
+                    <Grid key="b4" item>
+                        <TextField style={{marginLeft: 8}}
+                                   type="text"
+                                   name="description"
+                                   id="description"
+                                   label="description"
+                                   value={this.state.stix.description}
+                                   margin="normal"
+                                   onChange={this.handleChange('description')}
+                                   fullWidth
+                                   multiline
+                                   rows="4"
+                        />
+                    </Grid>
+                    <Grid key="a9" item>
+                        <AddKillPhase title="Kill chain phases" itemList={this.state.stix.kill_chain_phases}
+                                      update={this.handleChange('kill_chain_phases')}/>
+                    </Grid>
+                </form>
             </Grid>
         );
     };
