@@ -11,12 +11,11 @@ import withStyles from 'material-ui/styles/withStyles';
 import {BundleContent} from '../stix/bundleContent.js';
 import TextField from 'material-ui/TextField';
 import moment from 'moment';
-import {relationshipsNames} from "./stixutil";
+import Button from 'material-ui/Button';
+import Cached from 'material-ui-icons/Cached';
+import AddPanel from './addPanel.js';
+import Switch from 'material-ui/Switch';
 import {FormControlLabel} from 'material-ui/Form';
-import Input, {InputLabel} from 'material-ui/Input';
-import {FormControl, FormHelperText} from 'material-ui/Form';
-import Select from 'material-ui/Select';
-import {MenuItem} from 'material-ui/Menu';
 
 
 export const ITEM_HEIGHT = 48;
@@ -109,7 +108,7 @@ export class SightingPage extends Component {
                     </Grid>
                     <Grid item xs={9}>
                         {commonStix(this.state.stix, this.handleChange)}
-                        {/*{this.specific()}*/}
+                        {this.specific()}
                     </Grid>
                 </Grid>
             );
@@ -125,76 +124,87 @@ export class SightingPage extends Component {
     };
 
     // attributes specific to sighting objects
-    // first_seen: '', last_seen: '', sighting_of_ref: '', observed_data_refs: [],
-    // where_sighted_refs: [], summary: false, count: 0
     specific() {
         return (
             <Grid>
                 <form noValidate autoComplete="off">
                     <Grid key="b4" item>
-                        <TextField style={{marginLeft: 8}}
+                        <TextField style={{marginLeft: 8, width: 210}}
                                    type="text"
-                                   name="description"
-                                   id="description"
-                                   label="description"
-                                   value={this.state.stix.description}
+                                   name="first_seen"
+                                   id="first_seen"
+                                   label="first_seen"
+                                   value={this.state.stix.first_seen}
                                    margin="normal"
-                                   onChange={this.handleChange('description')}
-                                   fullWidth
-                                   multiline
-                                   rows="4"
+                                   onChange={this.handleChange('first_seen')}
                         />
-                    </Grid>
-                    <Grid key="b5" item>
-                        <TextField style={{marginLeft: 8}}
+                        <Button fab dense color="primary" style={{width: 33, height: 22}}
+                                onClick={(e) => {
+                                    this.handleChange('first_seen')({target: {value: moment().toISOString()}})
+                                }}>
+                            <Cached/>
+                        </Button>
+
+                        <TextField style={{marginLeft: 8, width: 210}}
                                    type="text"
-                                   name="source_ref"
-                                   id="source_ref"
-                                   label="source_ref"
-                                   value={this.state.stix.source_ref}
+                                   name="last_seen"
+                                   id="last_seen"
+                                   label="last_seen"
+                                   value={this.state.stix.last_seen}
                                    margin="normal"
-                                   onChange={this.handleChange('source_ref')}
-                                   fullWidth
+                                   onChange={this.handleChange('last_seen')}
                         />
+                        <Button fab dense color="primary" style={{width: 33, height: 22}}
+                                onClick={(e) => {
+                                    this.handleChange('last_seen')({target: {value: moment().toISOString()}})
+                                }}>
+                            <Cached/>
+                        </Button>
                     </Grid>
                     <Grid key="b6" item>
-                        <FormControl style={{marginLeft: 8, top: 3}}>
-                            <InputLabel htmlFor="relationships">Relationship type</InputLabel>
-                            <Select
-                                style={{width: 200}}
-                                value={this.state.stix.relationship_type}
-                                onChange={this.handleChange('relationship_type')}
-                                input={<Input id="relationships"/>}
-                                MenuProps={{
-                                    PaperProps: {
-                                        style: {
-                                            maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-                                            width: 200,
-                                        },
-                                    },
-                                }}
-                            >
-                                {relationshipsNames.map(name => (
-                                    <MenuItem key={name} value={name} style={{fontWeight: '500'}}>
-                                        {name}
-                                    </MenuItem>
-                                ))}
-                            </Select>
-                        </FormControl>
-                    </Grid>
-                    <Grid key="b7" item>
                         <TextField style={{marginLeft: 8}}
                                    type="text"
-                                   name="target_ref"
-                                   id="target_ref"
-                                   label="target_ref"
-                                   value={this.state.stix.target_ref}
+                                   name="sighting_of_ref"
+                                   id="sighting_of_ref"
+                                   label="sighting_of_ref"
+                                   value={this.state.stix.sighting_of_ref}
                                    margin="normal"
-                                   onChange={this.handleChange('target_ref')}
+                                   onChange={this.handleChange('sighting_of_ref')}
                                    fullWidth
                         />
                     </Grid>
                 </form>
+
+                <Grid key="a9" item>
+
+                    <AddPanel title="Observed data refs" itemList={this.state.stix.observed_data_refs}
+                              update={this.handleChange('observed_data_refs')}/>
+
+                    <AddPanel title="Where sighted refs" itemList={this.state.stix.where_sighted_refs}
+                              update={this.handleChange('where_sighted_refs')}/>
+                </Grid>
+
+                <FormControlLabel
+                    control={
+                        <Switch
+                            checked={this.state.stix.summary}
+                            onChange={this.handleChange('summary')}
+                            aria-label="summary"
+                        />
+                    }
+                    label="summary"
+                    style={{padding: 22}}
+                />
+                <TextField style={{marginLeft: 8, width: 50}}
+                           type="number"
+                           name="count"
+                           id="count"
+                           label="count"
+                           value={this.state.stix.count}
+                           margin="normal"
+                           onChange={this.handleChange('count')}
+                           InputLabelProps={{shrink: true}}
+                />
             </Grid>
         );
     };

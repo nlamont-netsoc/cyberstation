@@ -29,35 +29,6 @@ export const ITEM_PADDING_TOP = 12;
  */
 export const commonStix = (state, handler) => {
 
-    //  let updateExternalRef = e => {
-    //    console.log("---> in commonStix updateExternalRef ");
-    // };
-
-    //  let redoId = e => {
-    //    let event = {target: {value: state.type + "--" + uuidv4()}};
-    //    handler('id')(event);
-    // };
-
-    // let redoTime = fieldName => {
-    //     let event = {target: {value: moment().toISOString()}};
-    //     handler(fieldName)(event);
-    // };
-    //
-    // let handleDateTime = fieldName => (event) => {
-    //     // let newEvent = {target: {value: state.type + "--" + uuidv4()}};
-    //     let v = moment().toISOString();
-    //     console.log("-->v=" + v);
-    //     event.target.value = v;
-    //     console.log("-->event.target.value=" + event.target.value);
-    //     handler('fieldName')(event);
-    // };
-    //
-    // let asLocalDateTime = (iso) => {
-    //     let theValue = moment(iso).toLocaleString();
-    //     console.log("-->theValue=" + theValue);
-    //     return theValue;
-    // };
-
     /**
      * name, created, modify, revoked, confidence, lang, labels, created_by_ref,
      * object_marking_refs, external_references

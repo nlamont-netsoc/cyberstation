@@ -46,7 +46,7 @@ export class StixView extends Component {
         this.state = {
             value: 0,
             server: this.props.server,
-            bundle: {name: "new bundle", type: "bundle", id: "bundle--" + uuidv4(), spec_version: "2.0", objects: []}
+            bundle: {name: "new bundle", type: "bundle", id: "bundle--" + uuidv4(), spec_version: "2.1", objects: []}
         };
     }
 
