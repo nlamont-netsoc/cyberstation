@@ -535,3 +535,62 @@ listOfServers() {
                     <Grid item xs={12}>
                         <Typography type="body1" wrap style={{margin: 12}}> {this.state.info} </Typography>
                     </Grid>
+
+
+
+
+                    {
+                      "name": "cyberstation",
+                      "version": "1.0.0",
+                      "license": "ISC",
+                      "description": "",
+                      "keywords": [
+                        "cyber",
+                        "threat",
+                        "taxii2",
+                        "client",
+                        "browser"
+                      ],
+                      "author": "R Wathelet",
+                      "dependencies": {
+                        "babel-cli": "6.26.0",
+                        "babel-preset-es2015": "6.24.1",
+                        "babel-preset-es2015-loose": "8.0.0",
+                        "babel-preset-react": "6.24.1",
+                        "jss": "9.0.0",
+                        "jss-camel-case": "6.0.0",
+                        "jss-compose": "latest",
+                        "jss-default-unit": "8.0.0",
+                        "jss-expand": "5.0.0",
+                        "jss-extend": "6.0.1",
+                        "jss-global": "3.0.0",
+                        "jss-nested": "6.0.0",
+                        "jss-preset-default": "4.0.0",
+                        "jss-props-sort": "6.0.0",
+                        "jss-vendor-prefixer": "7.0.0",
+                        "material-ui": "^1.0.0-beta.10",
+                        "material-ui-icons": "^1.0.0-beta.10",
+                        "moment": "2.18.1",
+                        "prop-types": "15.6.0",
+                        "react": "16.0.0",
+                        "react-dom": "16.0.0",
+                        "react-jss": "7.2.0",
+                        "react-popper": "0.7.3",
+                        "react-scripts": "latest",
+                        "react-scrollbar-size": "2.0.1",
+                        "react-swipeable-views": "0.12.8",
+                        "react-tap-event-plugin": "3.0.2",
+                        "react-transition-group": "2.2.1",
+                        "recompose": "latest",
+                        "uuid": "3.1.0",
+                        "webpack": "3.6.0"
+                      },
+                      "scripts": {
+                        "start": "react-scripts start",
+                        "build": "react-scripts build",
+                        "test": "react-scripts test --env=jsdom",
+                        "eject": "react-scripts eject",
+                        "babel": "babel src --presets babel-preset-es2015-loose --out-dir gen",
+                        "webpack": "webpack src/index.js public/bundle.js"
+                      }
+                    }

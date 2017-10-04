@@ -15,7 +15,6 @@ import AppBar from 'material-ui/AppBar';
 import Toolbar from 'material-ui/Toolbar';
 import Typography from 'material-ui/Typography';
 import Button from 'material-ui/Button';
-import IconButton from 'material-ui/IconButton';
 
 
 function TabContainer(props) {
@@ -72,10 +71,16 @@ const styles = theme => ({
 // for testing --> todo to be removed
 const testServer = new Server("/taxii/", new TaxiiConnect("https://test.freetaxii.com:8000", "user-me", "user-password"));
 
+/**
+ * main entry point into CyberStation app.
+ * Provide a single page consisting of a AppBar with login/logout and
+ * a server and stix view buttons.
+ */
 class MainPage extends Component {
 
     constructor(props) {
         super(props);
+        // for testing--> todo to be removed
         this.taxiCom = new TaxiiConnect("https://test.freetaxii.com:8000", "user-me", "user-password");
         this.state = { view: "", isLogged: false, loglabel: "Login", selectedServer: testServer, selectedCollection: '' };
     }

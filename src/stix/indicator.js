@@ -19,6 +19,14 @@ const styles = {};
 
 const SDOTYPE = "indicator";
 
+/**
+ * common:
+ * name, created, modify, revoked, confidence, lang, labels, created_by_ref,
+ * object_marking_refs, external_references
+ *
+ * todo granular_markings
+ */
+
 let theStix = {
     name: '', type: SDOTYPE, id: '', created: '', modified: '', revoked: '',
     created_by_ref: '', labels: [], confidence: '', external_references: [], lang: '',

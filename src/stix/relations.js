@@ -11,17 +11,23 @@ import withStyles from 'material-ui/styles/withStyles';
 import {BundleContent} from '../stix/bundleContent.js';
 import TextField from 'material-ui/TextField';
 import moment from 'moment';
-import AddKillPhase from './addKillPhase.js';
 
 const styles = {};
 
 const SDOTYPE = "relationship";
 
-
+/**
+ * common:
+ * name, created, modify, revoked, confidence, lang, labels, created_by_ref,
+ * object_marking_refs, external_references
+ *
+ * todo granular_markings
+ */
 let theStix = {
     name: '', type: SDOTYPE, id: '', created: '', modified: '', revoked: '',
     created_by_ref: '', labels: [], confidence: '', external_references: [], lang: '',
-    object_marking_refs: [], granular_markings: '', description: ''
+    object_marking_refs: [], granular_markings: '', description: '',
+    source_ref: '', relationship_type: '', target_ref: ''
 };
 
 export class RelationShipPage extends Component {
@@ -107,6 +113,7 @@ export class RelationShipPage extends Component {
     };
 
     // attributes specific to indicator objects
+    // source_ref: '', relationship_type: '', target_ref: ''
     specific() {
         return (
             <Grid>
@@ -125,7 +132,41 @@ export class RelationShipPage extends Component {
                                    rows="4"
                         />
                     </Grid>
-
+                    <Grid key="b5" item>
+                        <TextField style={{marginLeft: 8}}
+                                   type="text"
+                                   name="source_ref"
+                                   id="source_ref"
+                                   label="source_ref"
+                                   value={this.state.stix.source_ref}
+                                   margin="normal"
+                                   onChange={this.handleChange('source_ref')}
+                                   fullWidth
+                        />
+                    </Grid>
+                    <Grid key="b6" item>
+                        <TextField style={{marginLeft: 8}}
+                                   type="text"
+                                   name="relationship_type"
+                                   id="relationship_type"
+                                   label="relationship_type"
+                                   value={this.state.stix.relationship_type}
+                                   margin="normal"
+                                   onChange={this.handleChange('relationship_type')}
+                        />
+                    </Grid>
+                    <Grid key="b7" item>
+                        <TextField style={{marginLeft: 8}}
+                                   type="text"
+                                   name="target_ref"
+                                   id="target_ref"
+                                   label="target_ref"
+                                   value={this.state.stix.target_ref}
+                                   margin="normal"
+                                   onChange={this.handleChange('target_ref')}
+                                   fullWidth
+                        />
+                    </Grid>
                 </form>
             </Grid>
         );

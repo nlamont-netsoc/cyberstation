@@ -39,6 +39,9 @@ const styles = theme => ({
 // for testing --> todo to be removed
 const testServer = new Server("/taxii/", new TaxiiConnect("https://test.freetaxii.com:8000", "user-me", "user-password"));
 
+/**
+ * presenting the server and collections tabs
+ */
 export class ServerView extends Component {
 
     constructor(props) {

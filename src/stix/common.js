@@ -20,7 +20,13 @@ import AddPanel from './addPanel.js';
 export const ITEM_HEIGHT = 48;
 export const ITEM_PADDING_TOP = 12;
 
-
+/**
+ * common:
+ * name, created, modify, revoked, confidence, lang, labels, created_by_ref,
+ * object_marking_refs, external_references
+ *
+ * todo granular_markings
+ */
 export const commonStix = (state, handler) => {
 
     //  let updateExternalRef = e => {
@@ -52,6 +58,10 @@ export const commonStix = (state, handler) => {
     //     return theValue;
     // };
 
+    /**
+     * name, created, modify, revoked, confidence, lang, labels, created_by_ref,
+     * object_marking_refs, external_references
+     */
     return (
         <Grid>
             <form noValidate autoComplete="off">

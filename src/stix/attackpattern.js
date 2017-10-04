@@ -16,7 +16,13 @@ import AddKillPhase from './addKillPhase.js';
 const styles = {};
 
 const SDOTYPE = "attack-pattern";
-
+/**
+ * common:
+ * name, created, modify, revoked, confidence, lang, labels, created_by_ref,
+ * object_marking_refs, external_references
+ *
+ * todo granular_markings
+ */
 
 let theStix = {
     name: '', type: SDOTYPE, id: '', created: '', modified: '', revoked: '',
