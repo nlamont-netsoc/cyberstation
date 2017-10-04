@@ -11,8 +11,8 @@ import {IndicatorPage} from '../stix/indicator.js';
 import {BundlePage} from '../stix/bundle.js';
 import {RelationShipPage} from '../stix/relations.js';
 import {AttackPatternPage} from '../stix/attackpattern.js';
+import {SightingPage} from '../stix/sighting.js';
 import uuidv4 from 'uuid/v4';
-
 
 
 function TabContainer(props) {
@@ -100,17 +100,24 @@ export class StixView extends Component {
 
                 <div style={viewStyle.content}>
                     {this.state.value === 0 &&
-                    <TabContainer> <BundlePage collection={this.props.collection} server={this.state.server} bundle={this.state.bundle}/></TabContainer>}
+                    <TabContainer>
+                        <BundlePage collection={this.props.collection} server={this.state.server}
+                                    bundle={this.state.bundle}/></TabContainer>}
                     {this.state.value === 1 &&
-                    <TabContainer> <AttackPatternPage server={this.state.server} bundle={this.state.bundle}/>
+                    <TabContainer>
+                        <AttackPatternPage server={this.state.server} bundle={this.state.bundle}/>
                     </TabContainer>}
                     {this.state.value === 2 &&
-                    <TabContainer> <RelationShipPage server={this.state.server} bundle={this.state.bundle}/>
+                    <TabContainer>
+                        <RelationShipPage server={this.state.server} bundle={this.state.bundle}/>
                     </TabContainer>}
                     {this.state.value === 3 &&
-                    <TabContainer> <IndicatorPage server={this.state.server} bundle={this.state.bundle}/>
+                    <TabContainer>
+                        <IndicatorPage server={this.state.server} bundle={this.state.bundle}/>
                     </TabContainer>}
-                    {this.state.value === 4 && <TabContainer>{'Sighting'}</TabContainer>}
+                    {this.state.value === 4 && <TabContainer>
+                        <SightingPage server={this.state.server} bundle={this.state.bundle}/>
+                    </TabContainer>}
                     {this.state.value === 5 && <TabContainer>{'Malware'}</TabContainer>}
                     {this.state.value === 6 && <TabContainer>{'Campaign'}</TabContainer>}
                     {this.state.value === 7 && <TabContainer>{'Course of Action'}</TabContainer>}
