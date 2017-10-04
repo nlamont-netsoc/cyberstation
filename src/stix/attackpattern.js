@@ -112,7 +112,7 @@ export class AttackPatternPage extends Component {
         }
     };
 
-    // attributes specific to indicator objects
+    // attributes specific to attack-pattern objects
     specific() {
         return (
             <Grid>

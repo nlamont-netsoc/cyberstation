@@ -11,6 +11,16 @@ import withStyles from 'material-ui/styles/withStyles';
 import {BundleContent} from '../stix/bundleContent.js';
 import TextField from 'material-ui/TextField';
 import moment from 'moment';
+import {relationshipsNames} from "./stixutil";
+import {FormControlLabel} from 'material-ui/Form';
+import Input, {InputLabel} from 'material-ui/Input';
+import {FormControl, FormHelperText} from 'material-ui/Form';
+import Select from 'material-ui/Select';
+import {MenuItem} from 'material-ui/Menu';
+
+
+export const ITEM_HEIGHT = 48;
+export const ITEM_PADDING_TOP = 12;
 
 const styles = {};
 
@@ -112,8 +122,7 @@ export class RelationShipPage extends Component {
         }
     };
 
-    // attributes specific to indicator objects
-    // source_ref: '', relationship_type: '', target_ref: ''
+    // attributes specific to relationship objects
     specific() {
         return (
             <Grid>
@@ -145,15 +154,29 @@ export class RelationShipPage extends Component {
                         />
                     </Grid>
                     <Grid key="b6" item>
-                        <TextField style={{marginLeft: 8}}
-                                   type="text"
-                                   name="relationship_type"
-                                   id="relationship_type"
-                                   label="relationship_type"
-                                   value={this.state.stix.relationship_type}
-                                   margin="normal"
-                                   onChange={this.handleChange('relationship_type')}
-                        />
+                        <FormControl style={{marginLeft: 8, top: 3}}>
+                            <InputLabel htmlFor="relationships">Relationship type</InputLabel>
+                            <Select
+                                style={{width: 200}}
+                                value={this.state.stix.relationship_type}
+                                onChange={this.handleChange('relationship_type')}
+                                input={<Input id="relationships"/>}
+                                MenuProps={{
+                                    PaperProps: {
+                                        style: {
+                                            maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+                                            width: 200,
+                                        },
+                                    },
+                                }}
+                            >
+                                {relationshipsNames.map(name => (
+                                    <MenuItem key={name} value={name} style={{fontWeight: '500'}}>
+                                        {name}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
                     </Grid>
                     <Grid key="b7" item>
                         <TextField style={{marginLeft: 8}}

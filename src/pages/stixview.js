@@ -82,8 +82,9 @@ export class StixView extends Component {
                         scrollButtons="auto">
                         <Tab label="Bundle"/>
                         <Tab label="Attack Pattern"/>
-                        <Tab label="Relations"/>
+                        <Tab label="Relationship"/>
                         <Tab label="Indicator"/>
+                        <Tab label="Sighting"/>
                         <Tab label="Malware"/>
                         <Tab label="Campaign"/>
                         <Tab label="Course of Action"/>
@@ -109,16 +110,17 @@ export class StixView extends Component {
                     {this.state.value === 3 &&
                     <TabContainer> <IndicatorPage server={this.state.server} bundle={this.state.bundle}/>
                     </TabContainer>}
-                    {this.state.value === 4 && <TabContainer>{'Malware'}</TabContainer>}
-                    {this.state.value === 5 && <TabContainer>{'Campaign'}</TabContainer>}
-                    {this.state.value === 6 && <TabContainer>{'Course of Action'}</TabContainer>}
-                    {this.state.value === 7 && <TabContainer>{'Identity'}</TabContainer>}
-                    {this.state.value === 8 && <TabContainer>{'Intrusion Set'}</TabContainer>}
-                    {this.state.value === 9 && <TabContainer>{'Observed Data'}</TabContainer>}
-                    {this.state.value === 10 && <TabContainer>{'Report'}</TabContainer>}
-                    {this.state.value === 11 && <TabContainer>{'Threat Actor'}</TabContainer>}
-                    {this.state.value === 12 && <TabContainer>{'Tool'}</TabContainer>}
-                    {this.state.value === 13 && <TabContainer>{'Vulnerability'}</TabContainer>}
+                    {this.state.value === 4 && <TabContainer>{'Sighting'}</TabContainer>}
+                    {this.state.value === 5 && <TabContainer>{'Malware'}</TabContainer>}
+                    {this.state.value === 6 && <TabContainer>{'Campaign'}</TabContainer>}
+                    {this.state.value === 7 && <TabContainer>{'Course of Action'}</TabContainer>}
+                    {this.state.value === 8 && <TabContainer>{'Identity'}</TabContainer>}
+                    {this.state.value === 9 && <TabContainer>{'Intrusion Set'}</TabContainer>}
+                    {this.state.value === 10 && <TabContainer>{'Observed Data'}</TabContainer>}
+                    {this.state.value === 11 && <TabContainer>{'Report'}</TabContainer>}
+                    {this.state.value === 12 && <TabContainer>{'Threat Actor'}</TabContainer>}
+                    {this.state.value === 13 && <TabContainer>{'Tool'}</TabContainer>}
+                    {this.state.value === 14 && <TabContainer>{'Vulnerability'}</TabContainer>}
                 </div>
 
             </div>
