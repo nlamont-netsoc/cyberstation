@@ -10,7 +10,6 @@ import withStyles from 'material-ui/styles/withStyles';
 import Typography from 'material-ui/Typography';
 import {BundlePanel} from '../stix/bundlePanel.js';
 import TextField from 'material-ui/TextField';
-import List, {ListItemText} from 'material-ui/List';
 import Table, {TableBody, TableCell, TableHead, TableRow} from 'material-ui/Table';
 
 
@@ -18,6 +17,10 @@ const styles = {
 
 };
 
+/**
+ * control add/delete/save/load and send bundles to the server,
+ * display the bundle info and its objects list
+ */
 export class BundlePage extends Component {
 
     constructor(props) {
@@ -30,7 +33,7 @@ export class BundlePage extends Component {
         };
     }
 
-    // initialise this state with the prop.bundle
+    // initialise the state with the prop.bundle
     componentDidMount() {
         this.state.bundle = JSON.parse(JSON.stringify(this.props.bundle));
         this.serverInfo();
@@ -99,6 +102,7 @@ export class BundlePage extends Component {
                 <Grid item xs={3}>
                     <BundlePanel canSend={sendable}
                                  bundle={this.props.bundle}
+                                 collection={this.props.collection}
                                  sdotype=''
                                  update={this.updateBundle}
                                  selected={this.selectedObject}/>

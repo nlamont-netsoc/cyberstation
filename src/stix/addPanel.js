@@ -19,6 +19,10 @@ import TextField from 'material-ui/TextField';
 
 const styles = {};
 
+/**
+ * general component to add/delete string items to an array.
+ *
+ */
 export default class AddPanel extends Component {
 
     constructor(props) {
@@ -87,11 +91,6 @@ export default class AddPanel extends Component {
             this.props.update(event);
         }
     };
-
-    // entering a new item in the dialog
-    // handleChange = event => {
-    //     this.setState({addition: event.target.value});
-    // };
 
     handleDialogChange = name => event => {
         this.setState({ [name]: event.target.value});

@@ -23,7 +23,7 @@ const styles = theme => ({
 });
 
 // todo --> generalise this
-// used in ServersPage
+// used in ServersPage when connection to the server cannot be established
 export class AlertSlide extends Component {
 
     constructor(props) {

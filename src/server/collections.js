@@ -3,17 +3,15 @@
 /* global conn */
 // @flow weak
 
-//import { Router, Route, Switch } from 'react-router'
-import {TaxiiConnect, Server, Collections, Collection} from '../libs/taxii2lib.js';
+import {Collections, Collection} from '../libs/taxii2lib.js';
 import Grid from 'material-ui/Grid';
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import withRoot from '../components/withRoot';
 import withStyles from 'material-ui/styles/withStyles';
 import Typography from 'material-ui/Typography';
-import Divider from 'material-ui/Divider';
-import List, {ListItem, ListItemSecondaryAction, ListItemText} from 'material-ui/List';
-import {FormLabel, FormControl, FormControlLabel} from 'material-ui/Form';
+import List, {ListItemText} from 'material-ui/List';
+import {FormControlLabel} from 'material-ui/Form';
 import Radio, {RadioGroup} from 'material-ui/Radio';
 import green from 'material-ui/colors/green';
 import red from 'material-ui/colors/red';
@@ -51,6 +49,10 @@ const labelStyles = {
     }
 };
 
+/**
+ * list all collections from the selected server and api root.
+ * Display the objects of the selected collection.
+ */
 export class CollectionsPage extends Component {
 
     constructor(props) {
@@ -76,6 +78,7 @@ export class CollectionsPage extends Component {
         this.dataCollectionList();
     };
 
+    // get the list of all collections
     dataCollectionList() {
         let colList = [];
         if (this.state.apiroot !== '') {
@@ -88,6 +91,7 @@ export class CollectionsPage extends Component {
         }
     };
 
+    // get the objects of the selected collection
     dataObjectList(col) {
         if (this.state.apiroot !== '') {
             this.setState({loading: true});

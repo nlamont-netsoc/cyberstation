@@ -19,6 +19,9 @@ import TextField from 'material-ui/TextField';
 
 const styles = {};
 
+/**
+ * allow for adding/deleting kill phases to an array of kill phases
+ */
 export default class AddKillPhase extends Component {
 
     constructor(props) {
@@ -147,7 +150,7 @@ export default class AddKillPhase extends Component {
                                    value={this.state.kill_chain_name}
                                    onChange={this.handleDialogChange('kill_chain_name')}
                         />
-                        <TextField autoFocus={true}
+                        <TextField
                                    fullWidth
                                    margin="normal"
                                    name="phase_name"

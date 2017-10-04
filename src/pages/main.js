@@ -73,8 +73,8 @@ const testServer = new Server("/taxii/", new TaxiiConnect("https://test.freetaxi
 
 /**
  * main entry point into CyberStation app.
- * Provide a single page consisting of a AppBar with login/logout and
- * a server and stix view buttons.
+ * Provide a single page application consisting of a AppBar with login/logout and
+ * a server and stix views buttons.
  */
 class MainPage extends Component {
 

@@ -1,7 +1,6 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
 /* eslint-disable react/no-multi-comp */
 import {viewStyle} from '../styles/viewStyle.js';
-import {Server, TaxiiConnect} from "../libs/taxii2lib";
 import Tabs, {Tab} from 'material-ui/Tabs';
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';

@@ -17,7 +17,7 @@ import uuidv4 from 'uuid/v4';
 import Dialog, {DialogActions, DialogContent, DialogTitle,} from 'material-ui/Dialog';
 import Slide from 'material-ui/transitions/Slide';
 import {CircularProgress} from 'material-ui/Progress';
-import Tooltip from 'material-ui/Tooltip';
+
 
 const styles = {
     tabs: {
@@ -34,6 +34,9 @@ const styles = {
     }
 };
 
+/**
+ * to add/delete/save/load and send bundles to the server.
+ */
 export class BundlePanel extends Component {
 
     constructor(props) {
@@ -81,7 +84,7 @@ export class BundlePanel extends Component {
             name: "new bundle",
             type: "bundle",
             id: "bundle--" + uuidv4(),
-            spec_version: "2.0",
+            spec_version: "2.1",
             objects: []
         };
         Object.assign(this.props.bundle, newBundle);
@@ -92,9 +95,15 @@ export class BundlePanel extends Component {
     // send the bundle to the server
     handleSend = (event) => {
         this.setState({loading: true});
-
-        // must remove the name from the bundle object before sending
-
+        // must remove the name attribute from the bundle object before sending
+        // make a deep copy of the bundle
+        let bundleCopy = JSON.parse(JSON.stringify(this.props.bundle));
+        // remove the name attribute from it, because its no part of the bundle specs
+        delete bundleCopy.name
+        //    console.log("----> handleSend bundleCopy=" + JSON.stringify(bundleCopy));
+        this.props.collection.addObject(bundleCopy).then(status => {
+            console.log("---->  theCollection.addObject() \n" + JSON.stringify(status));
+        });
         this.setState({loading: false});
     };
 
@@ -137,8 +146,8 @@ export class BundlePanel extends Component {
     // delete the selected sdo from the bundle
     handleDelete = (event) => {
         // delete the selected sdoid from the objList
-        let witoutSdoid = this.state.objList.filter(sdo => sdo.id !== this.state.sdoId);
-        this.setState({objList: witoutSdoid});
+        let withoutSdoid = this.state.objList.filter(sdo => sdo.id !== this.state.sdoId);
+        this.setState({objList: withoutSdoid});
         // delete the selected sdoid from the parent bundle
         let indexToDelete = this.props.bundle.objects.findIndex(sdo => sdo.id === this.state.sdoId);
         if (indexToDelete !== -1) {
@@ -250,13 +259,15 @@ export class BundlePanel extends Component {
 
             </Grid>
         );
-    };
+    }
+    ;
 
 }
 
 BundlePanel.propTypes = {
     sdotype: PropTypes.string.isRequired,
     bundle: PropTypes.object.isRequired,
+    collection: PropTypes.object.isRequired,
     selected: PropTypes.func.isRequired,
     canSend: PropTypes.bool.isRequired,
     update: PropTypes.func.isRequired

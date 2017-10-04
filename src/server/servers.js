@@ -9,17 +9,16 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import withRoot from '../components/withRoot';
 import withStyles from 'material-ui/styles/withStyles';
-import Typography from 'material-ui/Typography';
 import Divider from 'material-ui/Divider';
-import {FormLabel, FormControl, FormControlLabel} from 'material-ui/Form';
+import {FormControl, FormControlLabel} from 'material-ui/Form';
 import Radio, {RadioGroup} from 'material-ui/Radio';
 import TextField from 'material-ui/TextField';
 import Button from 'material-ui/Button';
-import Dialog, {DialogActions, DialogContent, DialogContentText, DialogTitle,} from 'material-ui/Dialog';
+import Dialog, {DialogActions, DialogContent, DialogTitle,} from 'material-ui/Dialog';
 import Slide from 'material-ui/transitions/Slide';
 import {CircularProgress} from 'material-ui/Progress';
 import {AlertSlide} from '../server/alertSlide.js';
-import Tooltip from 'material-ui/Tooltip';
+
 
 
 const styles = {
@@ -34,6 +33,10 @@ const styles = {
     }
 };
 
+/**
+ * Allows for adding new servers and deleting selected servers.
+ * Display the list of servers and the selected server information and its api roots.
+ */
 export class ServersPage extends Component {
 
     constructor(props) {
@@ -104,8 +107,8 @@ export class ServersPage extends Component {
     // delete the selected server
     handleDelete = (event) => {
         // delete the selected server from the list
-        let witoutSelected = this.state.serverList.filter(s => s.conn.baseURL !== this.state.currentServer);
-        this.setState({serverList: witoutSelected, discovery: '', currentServer: ''});
+        let withoutSelected = this.state.serverList.filter(s => s.conn.baseURL !== this.state.currentServer);
+        this.setState({serverList: withoutSelected, discovery: '', currentServer: ''});
         // tell the parent it has been deleted
         this.props.update(this.state.currentServer, true);
     };
@@ -120,7 +123,7 @@ export class ServersPage extends Component {
         this.setState({currentServer: ''});
     };
 
-    // vague attempt to check the url string
+    // basic check of the url string
     isValidURL(str) {
         let pattern = new RegExp('^(https?:\\/\\/)?' + // protocol
             '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // domain name and extension
@@ -135,9 +138,11 @@ export class ServersPage extends Component {
     handleRequestDialogOk = () => {
         if (this.isValidURL(this.state.currentServer)) {
             this.setState({loading: true, loadOpen: false});
-            // create a server, test it and add it to the list
+            // create a server, get its discovery info and add it to the list
             let newServer = new Server("/taxii/", new TaxiiConnect(this.state.currentServer, "user-me", "user-password"));
+            // timeout for connecting to the server
             let timeout = 5000;
+            // fancy foot work
             Promise.race([
                 newServer.discovery().then(discovery => {
                     this.setState({
@@ -156,6 +161,7 @@ export class ServersPage extends Component {
                     setTimeout(() => reject(new Error('timeout')), timeout)
                 )
             ]).catch(err => {
+                // show the alert about cannot connect to the server
                 this.setState({loading: false, alert: true});
             });
         } else {
@@ -182,7 +188,7 @@ export class ServersPage extends Component {
             return <ServerPanel server={theServer} update={this.updateApiRootSelection}/>
         }
     }
-// className={this.props.classes.addButton}
+
     render() {
         return (
             <div>

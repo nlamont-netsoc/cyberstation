@@ -17,7 +17,7 @@ const styles = {};
 
 const SDOTYPE = "attack-pattern";
 /**
- * common:
+ * common attributes:
  * name, created, modify, revoked, confidence, lang, labels, created_by_ref,
  * object_marking_refs, external_references
  *
@@ -30,6 +30,9 @@ let theStix = {
     object_marking_refs: [], granular_markings: '', description: '', kill_chain_phases: []
 };
 
+/**
+ * allows for add/delete/edit of attack patterns.
+ */
 export class AttackPatternPage extends Component {
 
     constructor(props) {

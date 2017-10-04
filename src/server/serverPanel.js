@@ -8,16 +8,18 @@ import PropTypes from 'prop-types';
 import withRoot from '../components/withRoot';
 import withStyles from 'material-ui/styles/withStyles';
 import Divider from 'material-ui/Divider';
-import List, {ListItemText} from 'material-ui/List';
-import {FormLabel, FormControl, FormControlLabel} from 'material-ui/Form';
+import {FormControlLabel} from 'material-ui/Form';
 import Radio, {RadioGroup} from 'material-ui/Radio';
-import Table, {TableBody, TableCell, TableHead, TableRow} from 'material-ui/Table';
+import Table, {TableBody, TableCell, TableRow} from 'material-ui/Table';
 
 
 const styles = {
 
 };
 
+/**
+ * used by ServersPage to display the selected server info (discovery) and the api roots url.
+ */
 export class ServerPanel extends Component {
 
     constructor(props) {

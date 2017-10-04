@@ -18,9 +18,6 @@ import Switch from 'material-ui/Switch';
 import {FormControlLabel} from 'material-ui/Form';
 
 
-export const ITEM_HEIGHT = 48;
-export const ITEM_PADDING_TOP = 12;
-
 const styles = {};
 
 const SDOTYPE = "sighting";

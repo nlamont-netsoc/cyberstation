@@ -5,34 +5,27 @@ import Input, {InputLabel} from 'material-ui/Input';
 import {FormControl, FormHelperText} from 'material-ui/Form';
 import Select from 'material-ui/Select';
 import {MenuItem} from 'material-ui/Menu';
-import green from 'material-ui/colors/green';
 import Switch from 'material-ui/Switch';
 import {FormControlLabel} from 'material-ui/Form';
 import moment from 'moment';
 import Button from 'material-ui/Button';
-import AddIcon from 'material-ui-icons/Add';
-import ModeEditIcon from 'material-ui-icons/ModeEdit';
 import Cached from 'material-ui-icons/Cached';
-import uuidv4 from 'uuid/v4';
 import {labelsNames} from '../stix/stixutil.js';
 import AddPanel from './addPanel.js';
+
+
 
 export const ITEM_HEIGHT = 48;
 export const ITEM_PADDING_TOP = 12;
 
 /**
- * common:
+ * common attribute of all sdo:
  * name, created, modify, revoked, confidence, lang, labels, created_by_ref,
  * object_marking_refs, external_references
  *
  * todo granular_markings
  */
 export const commonStix = (state, handler) => {
-
-    /**
-     * name, created, modify, revoked, confidence, lang, labels, created_by_ref,
-     * object_marking_refs, external_references
-     */
     return (
         <Grid>
             <form noValidate autoComplete="off">
