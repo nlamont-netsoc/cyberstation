@@ -136,8 +136,8 @@ export class StixView extends Component {
 }
 
 StixView.propTypes = {
-    server: PropTypes.object.isRequired,
-    collection: PropTypes.object.isRequired
+    server: PropTypes.object,
+    collection: PropTypes.object
 };
 
 export default withRoot(withStyles(styles)(StixView));

@@ -44,7 +44,7 @@ export class BundleContent extends Component {
         super(props);
         this.state = {sdoId: '', objList: []};
         this.title = "Bundle " + this.props.stix.type;
-        if (this.props.stix.type !== '') {
+        if (this.props.stix.type) {
             this.title = this.title + "s";
         }
         // make a deep copy of the stix template
@@ -77,13 +77,13 @@ export class BundleContent extends Component {
     componentDidMount() {
         // an array of stix id
         let objItems = [];
-        if (this.props.bundle !== undefined) {
+        if (this.props.bundle) {
             // if have no filtering, take all
-            if (this.props.stix.type === undefined || this.props.stix.type === '') {
-                objItems = this.props.bundle.objects;
-            } else {
+            if (this.props.stix.type) {
                 // apply the type filter
                 objItems = this.props.bundle.objects.filter(obj => obj.type === this.props.stix.type);
+            } else {
+                objItems = this.props.bundle.objects;
             }
         }
         this.setState({objList: objItems});

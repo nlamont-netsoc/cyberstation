@@ -67,9 +67,8 @@ export class ServerView extends Component {
         this.setState({value: index});
     };
 
-    updateServer = (server, isDeleted) => {
-        this.setState({server: server});
-        // tell the parent about the selected server
+    updateServer = (server) => {
+        // tell the parent about the selected server, could be undefined
         this.props.update(server);
     };
 

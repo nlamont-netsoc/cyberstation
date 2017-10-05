@@ -28,7 +28,7 @@ export class ServerPanel extends Component {
     };
 
     componentDidMount() {
-        if(typeof this.props.server === 'object') {
+        if(this.props.server) {
             this.props.server.discovery().then(discovery => {
                 this.setState({discovery: discovery, currentApiroot: discovery.default});
                 // tell the parent component
@@ -49,9 +49,9 @@ export class ServerPanel extends Component {
     // the api roots url as form labels
     apiRootsAsFormLabels() {
         let items = [];
-        if (this.state.discovery !== '') {
+        if (this.state.discovery) {
             let arr = this.state.discovery.api_roots;
-            if (arr !== undefined) {
+            if (arr) {
                 for (let j = 0; j < arr.length; j++) {
                     items.push(<FormControlLabel
                         style={{margin: 8}} key={j} value={arr[j]}
@@ -63,7 +63,7 @@ export class ServerPanel extends Component {
     };
 
     serverInfo() {
-        if (this.state.discovery !== undefined) {
+        if (this.state.discovery) {
             return <Table>
             <TableBody>
                 <TableRow key="Title">
@@ -106,7 +106,7 @@ export class ServerPanel extends Component {
 }
 
 ServerPanel.propTypes = {
-    server: PropTypes.object.isRequired,
+    server: PropTypes.object,
     update: PropTypes.func.isRequired
 };
 

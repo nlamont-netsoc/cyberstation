@@ -59,7 +59,7 @@ export class CollectionsPage extends Component {
         super(props);
         this.state = {
             loading: false,
-            colSelection: '',
+            colSelection: undefined,
             collectionList: [],
             objectList: [],
             apiroot: ''};
@@ -81,7 +81,7 @@ export class CollectionsPage extends Component {
     // get the list of all collections
     dataCollectionList() {
         let colList = [];
-        if (this.state.apiroot !== '') {
+        if (this.state.apiroot) {
             this.setState({loading: true});
             const theCollections = new Collections(this.state.apiroot, this.props.server.conn);
             theCollections.get().then(collections => {
@@ -93,7 +93,7 @@ export class CollectionsPage extends Component {
 
     // get the objects of the selected collection
     dataObjectList(col) {
-        if (this.state.apiroot !== '') {
+        if (this.state.apiroot) {
             this.setState({loading: true});
             const theCollection = new Collection(col, this.state.apiroot, this.props.server.conn);
             theCollection.getObjects().then(bundle =>
@@ -130,7 +130,7 @@ export class CollectionsPage extends Component {
         this.setState({colSelection: colid});
         // find the collection info
         let thisCol = this.state.collectionList.find(col => col.id === colid);
-        if (thisCol !== undefined) {
+        if (thisCol) {
             this.dataObjectList(thisCol);
             // tell the parent about the selected collection
             this.props.collection(thisCol);
@@ -168,8 +168,8 @@ export class CollectionsPage extends Component {
 }
 
 CollectionsPage.propTypes = {
-    server: PropTypes.object.isRequired,
-    apiroot: PropTypes.string.isRequired,
+    server: PropTypes.object,
+    apiroot: PropTypes.string,
     collection: PropTypes.func.isRequired
 };
 

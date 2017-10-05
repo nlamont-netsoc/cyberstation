@@ -60,12 +60,12 @@ export class BundlePage extends Component {
     };
 
     serverInfo() {
-        if(typeof this.props.server === 'object') {
+        if(this.props.server) {
             this.props.server.discovery().then(discovery => {
                 let colEntry = 'no endpoint';
                 let writeVal = 'cannot write to';
                 let colInfo = 'Collection' + " (" + writeVal + ")";
-                if (this.props.collection !== '') {
+                if (this.props.collection) {
                     writeVal = this.props.collection.can_write ? 'can write to' : 'cannot write to';
                     colInfo = 'Collection' + " (" + writeVal + ")";
                     colEntry = this.props.collection.title;
@@ -92,11 +92,13 @@ export class BundlePage extends Component {
                 </Table>;
                 this.setState({info: serverInfo});
             })
+        } else {
+            this.setState({info: "no server"});
         }
     };
 
     render() {
-        const sendable = this.props.collection === '' ? false : this.props.collection.can_write;
+        const sendable = this.props.collection ? this.props.collection.can_write : false;
         return (
             <Grid container spacing={8}>
                 <Grid item xs={3}>
@@ -162,8 +164,8 @@ export class BundlePage extends Component {
 }
 
 BundlePage.propTypes = {
-    server: PropTypes.object.isRequired,
-    collection: PropTypes.object.isRequired,
+    server: PropTypes.object,
+    collection: PropTypes.object,
     bundle: PropTypes.object.isRequired
 };
 

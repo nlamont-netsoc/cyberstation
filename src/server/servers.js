@@ -93,7 +93,7 @@ export class ServersPage extends Component {
     handleServerSelection = event => {
         let url = event.target.value;
         let theServer = this.state.serverList.find(s => s.conn.baseURL === url);
-        if (theServer !== undefined) {
+        if (theServer) {
             // tell the parent component
             this.props.update(theServer, false);
             // get the discovery info
@@ -110,7 +110,8 @@ export class ServersPage extends Component {
         let withoutSelected = this.state.serverList.filter(s => s.conn.baseURL !== this.state.currentServer);
         this.setState({serverList: withoutSelected, discovery: '', currentServer: ''});
         // tell the parent it has been deleted
-        this.props.update(this.state.currentServer, true);
+        this.props.update(undefined);
+        this.props.apiroot(undefined);
     };
 
     // add a new server to the list
@@ -125,14 +126,18 @@ export class ServersPage extends Component {
 
     // basic check of the url string
     isValidURL(str) {
-        let pattern = new RegExp('^(https?:\\/\\/)?' + // protocol
-            '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // domain name and extension
-            '((\\d{1,3}\\.){3}\\d{1,3}))' + // OR ip (v4) address
-            '(\\:\\d+)?' + // port
-            '(\\/[-a-z\\d%_.~+&:]*)*' + // path
-            '(\\?[;&a-z\\d%_.,~+&:=-]*)?' + // query string
-            '(\\#[-a-z\\d_]*)?$', 'i'); // fragment locator
-        return pattern.test(str);
+        if(str) {
+            let pattern = new RegExp('^(https?:\\/\\/)?' + // protocol
+                '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // domain name and extension
+                '((\\d{1,3}\\.){3}\\d{1,3}))' + // OR ip (v4) address
+                '(\\:\\d+)?' + // port
+                '(\\/[-a-z\\d%_.~+&:]*)*' + // path
+                '(\\?[;&a-z\\d%_.,~+&:=-]*)?' + // query string
+                '(\\#[-a-z\\d_]*)?$', 'i'); // fragment locator
+            return pattern.test(str);
+        } else {
+            return false;
+        }
     };
 
     handleRequestDialogOk = () => {
@@ -182,10 +187,10 @@ export class ServersPage extends Component {
     // display the server info including the api roots
     serverInfo() {
         let theServer = this.state.serverList.find(s => s.conn.baseURL === this.state.currentServer);
-        if (theServer === undefined) {
-            return <div>no server selected</div>
-        } else {
+        if (theServer) {
             return <ServerPanel server={theServer} update={this.updateApiRootSelection}/>
+        } else {
+            return <div>no server selected</div>
         }
     }
 

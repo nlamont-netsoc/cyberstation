@@ -84,7 +84,7 @@ export default class AddPanel extends Component {
     };
 
     handleDialogOk = () => {
-        if(this.state.addition.trim() !== '') {
+        if(this.state.addition.trim()) {
             this.state.objList.push(this.state.addition);
             this.setState({openDialog: false});
             let event = {target: {value: this.state.objList}};

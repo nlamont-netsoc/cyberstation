@@ -55,7 +55,7 @@ export class AttackPatternPage extends Component {
     updateBundleObject = (fieldName, value) => {
         // find the object in the bundle
         let objFound = this.props.bundle.objects.find(obj => obj.id === this.state.stix.id);
-        if (objFound !== undefined) {
+        if (objFound) {
             objFound[fieldName] = value;
         }
     };
@@ -79,10 +79,10 @@ export class AttackPatternPage extends Component {
         if (isDeleted) {
             this.setState({display: false, stix: JSON.parse(JSON.stringify(theStix))});
         } else {
-            if (sdoid !== undefined && sdoid !== '') {
+            if (sdoid) {
                 // find the object with id=sdoid in the bundle
                 let objFound = this.props.bundle.objects.find(obj => obj.id === sdoid);
-                if (objFound !== undefined) {
+                if (objFound) {
                     this.setState({display: true, stix: objFound});
                 }
             }
@@ -146,7 +146,6 @@ export class AttackPatternPage extends Component {
 }
 
 AttackPatternPage.propTypes = {
-    server: PropTypes.object.isRequired,
     bundle: PropTypes.object.isRequired
 };
 

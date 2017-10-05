@@ -43,7 +43,7 @@ export class BundlePanel extends Component {
         super(props);
         this.state = {storeDelete: false, loading: false, loadOpen: false, loadSelection: '', sdoId: '', objList: []};
         this.title = "Bundle " + this.props.sdotype;
-        if (this.props.sdotype !== '') {
+        if (this.props.sdotype) {
             this.title = this.title + "s";
         }
     }
@@ -52,13 +52,13 @@ export class BundlePanel extends Component {
     componentDidMount() {
         // an array of sdo id
         let objItems = [];
-        if (this.props.bundle !== undefined) {
-            // if have no filtering, take all
-            if (this.props.sdotype === undefined || this.props.sdotype === '') {
-                objItems = this.props.bundle.objects;
-            } else {
+        if (this.props.bundle) {
+            if (this.props.sdotype) {
                 // apply the type filter
                 objItems = this.props.bundle.objects.filter(obj => obj.type === this.props.sdotype);
+            } else {
+                // if have no filtering, take all
+                objItems = this.props.bundle.objects;
             }
         }
         this.setState({objList: objItems});
@@ -92,19 +92,21 @@ export class BundlePanel extends Component {
         this.setState({objList: newBundle.objects});
     };
 
-    // send the bundle to the server
+    // send the bundle to the server collection endpoint
     handleSend = (event) => {
-        this.setState({loading: true});
-        // must remove the name attribute from the bundle object before sending
-        // make a deep copy of the bundle
-        let bundleCopy = JSON.parse(JSON.stringify(this.props.bundle));
-        // remove the name attribute from it, because its no part of the bundle specs
-        delete bundleCopy.name
-        //    console.log("----> handleSend bundleCopy=" + JSON.stringify(bundleCopy));
-        this.props.collection.addObject(bundleCopy).then(status => {
-            console.log("---->  theCollection.addObject() \n" + JSON.stringify(status));
-        });
-        this.setState({loading: false});
+        if (this.props.collection) {
+            this.setState({loading: true});
+            // must remove the name attribute from the bundle object before sending
+            // make a deep copy of the bundle
+            let bundleCopy = JSON.parse(JSON.stringify(this.props.bundle));
+            // remove the name attribute from it, because its no part of the bundle specs
+            delete bundleCopy.name
+            //    console.log("----> handleSend bundleCopy=" + JSON.stringify(bundleCopy));
+            this.props.collection.addObject(bundleCopy).then(status => {
+                console.log("---->  theCollection.addObject() \n" + JSON.stringify(status));
+            });
+            this.setState({loading: false});
+        }
     };
 
     // retrieve all bundles from storage as a Map
@@ -168,7 +170,7 @@ export class BundlePanel extends Component {
     handleOk = () => {
         this.setState({loadOpen: false});
         let theBundle = localStorage.getItem(this.state.loadSelection);
-        if (theBundle !== null) {
+        if (theBundle) {
             let bundleObj = JSON.parse(theBundle);
             if (this.state.storeDelete) {
                 this.setState({storeDelete: false});
@@ -267,7 +269,7 @@ export class BundlePanel extends Component {
 BundlePanel.propTypes = {
     sdotype: PropTypes.string.isRequired,
     bundle: PropTypes.object.isRequired,
-    collection: PropTypes.object.isRequired,
+    collection: PropTypes.object,
     selected: PropTypes.func.isRequired,
     canSend: PropTypes.bool.isRequired,
     update: PropTypes.func.isRequired
