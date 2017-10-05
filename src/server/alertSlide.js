@@ -29,15 +29,16 @@ export class AlertSlide extends Component {
     constructor(props) {
         super(props);
         this.state = { open: this.props.open, url: this.props.url};
+        console.log("---> AlertSlide");
     };
 
     // when a new props is received
     componentWillReceiveProps(newProps) {
-        this.setState({open: newProps.openDialog, url: newProps.url});
+        this.setState({open: newProps.open, url: newProps.url});
     };
 
     handleRequestClose = () => {
-        this.setState({ openDialog: false });
+        this.setState({ open: false });
         // tell the parent component
         this.props.onClose();
     };
@@ -46,7 +47,7 @@ export class AlertSlide extends Component {
         const msg = "Could not connect to the specified server ";
         return (
             <div>
-                <Dialog open={this.state.openDialog} transition={Slide} onRequestClose={this.handleRequestClose}>
+                <Dialog open={this.state.open} transition={Slide} onRequestClose={this.handleRequestClose}>
                     <DialogTitle>{"Connection problem"}</DialogTitle>
                     <DialogContent>
                         <DialogContentText> {msg} </DialogContentText>
@@ -63,7 +64,7 @@ export class AlertSlide extends Component {
 
 AlertSlide.propTypes = {
     open: PropTypes.bool.isRequired,
-    url: PropTypes.string.isRequired,
+    url: PropTypes.string,
     onClose: PropTypes.func.isRequired
 };
 

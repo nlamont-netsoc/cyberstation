@@ -12,7 +12,6 @@ import {BundleContent} from '../stix/bundleContent.js';
 import TextField from 'material-ui/TextField';
 import moment from 'moment';
 import {relationshipsNames} from "./stixutil";
-import {FormControlLabel} from 'material-ui/Form';
 import Input, {InputLabel} from 'material-ui/Input';
 import {FormControl, FormHelperText} from 'material-ui/Form';
 import Select from 'material-ui/Select';

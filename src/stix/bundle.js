@@ -62,9 +62,9 @@ export class BundlePage extends Component {
     serverInfo() {
         if(this.props.server) {
             this.props.server.discovery().then(discovery => {
-                let colEntry = 'no endpoint';
-                let writeVal = 'cannot write to';
-                let colInfo = 'Collection' + " (" + writeVal + ")";
+                let colEntry = 'no collection selected';
+                let writeVal = '';
+                let colInfo = 'Collection';
                 if (this.props.collection) {
                     writeVal = this.props.collection.can_write ? 'can write to' : 'cannot write to';
                     colInfo = 'Collection' + " (" + writeVal + ")";

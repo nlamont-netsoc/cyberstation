@@ -109,7 +109,7 @@ export class ServersPage extends Component {
         // delete the selected server from the list
         let withoutSelected = this.state.serverList.filter(s => s.conn.baseURL !== this.state.currentServer);
         this.setState({serverList: withoutSelected, discovery: '', currentServer: ''});
-        // tell the parent it has been deleted
+        // tell the parent the server and thus the apiroot have been deleted
         this.props.update(undefined);
         this.props.apiroot(undefined);
     };
@@ -147,7 +147,7 @@ export class ServersPage extends Component {
             let newServer = new Server("/taxii/", new TaxiiConnect(this.state.currentServer, "user-me", "user-password"));
             // timeout for connecting to the server
             let timeout = 5000;
-            // fancy foot work
+            // fancy foot work --> todo not working yet
             Promise.race([
                 newServer.discovery().then(discovery => {
                     this.setState({
@@ -223,7 +223,8 @@ export class ServersPage extends Component {
                 <Dialog open={this.state.loadOpen} transition={Slide} onRequestClose={this.handleRequestDialogClose}>
                     <DialogTitle>{"Enter the server URL"}</DialogTitle>
                     <DialogContent>
-                        <TextField style={{marginLeft: 8, width: 300}}
+                        <TextField autoFocus={true}
+                                   style={{marginLeft: 8, width: 300}}
                                    name="serverUrl"
                                    type="text"
                                    id="serverUrl"
