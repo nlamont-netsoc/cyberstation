@@ -79,7 +79,12 @@ class MainPage extends Component {
         super(props);
         // for login testing--> todo to be removed
         this.taxiCom = new TaxiiConnect("https://test.freetaxii.com:8000", "user-me", "user-password");
-        this.state = { view: "", isLogged: false, loglabel: "Login", selectedServer: undefined, selectedCollection: undefined };
+        this.state = {
+            view: '',
+            isLogged: false,
+            loglabel: 'Login',
+            selectedServer: undefined,
+            selectedCollection: undefined };
     }
 
     isLoggedin = (value) => {

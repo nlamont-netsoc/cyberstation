@@ -13,9 +13,7 @@ import TextField from 'material-ui/TextField';
 import Table, {TableBody, TableCell, TableHead, TableRow} from 'material-ui/Table';
 
 
-const styles = {
-
-};
+const styles = {};
 
 /**
  * control add/delete/save/load and send bundles to the server,
@@ -26,6 +24,8 @@ export class BundlePage extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            server: this.props.server,
+            collection: this.props.collection,
             loading: false,
             objList: [],
             info: '',
@@ -35,7 +35,22 @@ export class BundlePage extends Component {
 
     // initialise the state with the prop.bundle
     componentDidMount() {
-        this.state.bundle = JSON.parse(JSON.stringify(this.props.bundle));
+        this.setState({
+            server: this.props.server,
+            collection: this.props.collection,
+            bundle: JSON.parse(JSON.stringify(this.props.bundle))
+        });
+        this.serverInfo();
+    };
+
+    // when a new props is received
+    componentWillReceiveProps(newProps) {
+    //    if (newProps.collection) console.log("--> bundle collection=" + newProps.collection.id);
+        this.setState({
+            server: newProps.server,
+            collection: newProps.collection,
+            bundle: JSON.parse(JSON.stringify(newProps.bundle))
+        });
         this.serverInfo();
     };
 
@@ -60,15 +75,15 @@ export class BundlePage extends Component {
     };
 
     serverInfo() {
-        if(this.props.server) {
-            this.props.server.discovery().then(discovery => {
+        if (this.state.server) {
+            this.state.server.discovery().then(discovery => {
                 let colEntry = 'no collection selected';
                 let writeVal = '';
                 let colInfo = 'Collection';
-                if (this.props.collection) {
-                    writeVal = this.props.collection.can_write ? 'can write to' : 'cannot write to';
+                if (this.state.collection) {
+                    writeVal = this.state.collection.can_write ? 'can write to' : 'cannot write to';
                     colInfo = 'Collection' + " (" + writeVal + ")";
-                    colEntry = this.props.collection.title;
+                    colEntry = this.state.collection.title;
                 }
                 let serverInfo = <Table style={{marginLeft: 8}}>
                     <TableBody>
@@ -98,13 +113,13 @@ export class BundlePage extends Component {
     };
 
     render() {
-        const sendable = this.props.collection ? this.props.collection.can_write : false;
+        const sendable = this.state.collection ? this.state.collection.can_write : false;
         return (
             <Grid container spacing={8}>
                 <Grid item xs={3}>
                     <BundlePanel canSend={sendable}
                                  bundle={this.props.bundle}
-                                 collection={this.props.collection}
+                                 collection={this.state.collection}
                                  sdotype=''
                                  update={this.updateBundle}
                                  selected={this.selectedObject}/>
@@ -128,7 +143,6 @@ export class BundlePage extends Component {
                                            name="spec_version"
                                            id="spec_version"
                                            label="spec_version"
-                                           className={this.props.textField}
                                            value={this.state.bundle.spec_version}
                                            margin="normal"
                                            onChange={this.handleChange('spec_version')}
@@ -139,7 +153,6 @@ export class BundlePage extends Component {
                                            name="id"
                                            id="id"
                                            label="id"
-                                           className={this.props.textField}
                                            value={this.state.bundle.id}
                                            margin="normal"
                                            onChange={this.handleChange('id')}

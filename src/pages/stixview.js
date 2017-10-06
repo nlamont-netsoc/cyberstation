@@ -45,12 +45,13 @@ export class StixView extends Component {
         this.state = {
             value: 0,
             server: this.props.server,
+            collection: this.props.collection,
             bundle: {name: "new bundle", type: "bundle", id: "bundle--" + uuidv4(), spec_version: "2.1", objects: []}
         };
     }
 
     componentDidMount() {
-        this.setState({server: this.props.server});
+        this.setState({server: this.props.server, collection: this.props.collection});
     };
 
     // when a new props is received
@@ -58,7 +59,8 @@ export class StixView extends Component {
         this.setState({
             value: 0,
             server: newProps.server,
-            bundle: {type: "bundle", id: "bundle--" + uuidv4(), spec_version: "2.0", objects: []}
+            collection: newProps.collection,
+            bundle: {type: "bundle", id: "bundle--" + uuidv4(), spec_version: "2.1", objects: []}
         });
     };
 
@@ -100,7 +102,7 @@ export class StixView extends Component {
                 <div style={viewStyle.content}>
                     {this.state.value === 0 &&
                     <TabContainer>
-                        <BundlePage collection={this.props.collection} server={this.state.server}
+                        <BundlePage collection={this.state.collection} server={this.state.server}
                                     bundle={this.state.bundle}/></TabContainer>}
                     {this.state.value === 1 &&
                     <TabContainer>

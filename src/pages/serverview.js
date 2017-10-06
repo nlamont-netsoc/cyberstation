@@ -79,9 +79,9 @@ export class ServerView extends Component {
     };
 
     updateCollection = col => {
-        this.setState({collection: col});
         // tell the parent about the selected collection
         this.props.updateCollection(col);
+        this.setState({collection: col});
     };
 
     render() {

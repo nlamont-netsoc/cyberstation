@@ -59,7 +59,7 @@ export class CollectionsPage extends Component {
         super(props);
         this.state = {
             loading: false,
-            colSelection: '',
+            selectedColid: '',
             collectionList: [],
             objectList: [],
             apiroot: ''
@@ -69,15 +69,27 @@ export class CollectionsPage extends Component {
     // load the collections of the api root
     componentDidMount() {
         this.setState({apiroot: this.props.apiroot});
-        if (this.props.selection) this.setState({colSelection: this.props.selection.id});
+        if (this.props.selection) this.setState({selectedColid: this.props.selection.id});
         this.dataCollectionList();
+        // if already have a collection id selected, refresh the objects
+        if(this.state.selectedColid) {
+            // find the collection info
+            let thisCol = this.state.collectionList.find(col => col.id === this.state.selectedColid);
+            if (thisCol) this.dataObjectList(thisCol);
+        }
     };
 
     // when a new props is received
     componentWillReceiveProps(newProps) {
         this.setState({collectionList: [], objectList: [], apiroot: newProps.apiroot});
-        if (newProps.selection) this.setState({colSelection: newProps.selection.id});
+        if (newProps.selection) this.setState({selectedColid: newProps.selection.id});
         this.dataCollectionList();
+        // if already have a collection id selected, refresh the objects
+        if(this.state.selectedColid) {
+            // find the collection info
+            let thisCol = this.state.collectionList.find(col => col.id === this.state.selectedColid);
+            if (thisCol) this.dataObjectList(thisCol);
+        }
     };
 
     // get the list of all collections
@@ -89,11 +101,6 @@ export class CollectionsPage extends Component {
             theCollections.get().then(collections => {
                 collections.map(col => colList.push(col));
                 this.setState({collectionList: colList, loading: false});
-                // select the first collection
-                if (colList.length >= 1) {
-                    this.setState({colSelection: colList[0].id});
-                    this.dataObjectList(colList[0]);
-                }
             });
         }
     };
@@ -119,7 +126,7 @@ export class CollectionsPage extends Component {
                                             disabled={!col.can_read}
                                             key={col.id}
                                             value={col.id}
-                                            checked={col.id === this.state.colSelection}
+                                            checked={col.id === this.state.selectedColid}
                                             control={<Radio style={{color: theColor}}/>}
                                             label={labelValue}/>);
         });
@@ -136,7 +143,7 @@ export class CollectionsPage extends Component {
 
     // change the selected collection
     handleSelected = (event, colid) => {
-        this.setState({colSelection: colid});
+        this.setState({selectedColid: colid});
         // find the collection info
         let thisCol = this.state.collectionList.find(col => col.id === colid);
         if (thisCol) {
@@ -152,12 +159,12 @@ export class CollectionsPage extends Component {
 
                 <Grid item xs={3}>
                     <Typography type="body1">Collections list</Typography>
-                    <RadioGroup autoFocus={true}
-                                style={{display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between'}}
-                                aria-label="obj"
-                                name="objGroup"
-                                value={this.state.colSelection}
-                                onChange={this.handleSelected}>
+                    <RadioGroup
+                        style={{display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between'}}
+                        aria-label="obj"
+                        name="objGroup"
+                        value={this.state.selectedColid}
+                        onChange={this.handleSelected}>
                         {this.colsAsFormLabels()}
                     </RadioGroup>
 

@@ -105,16 +105,6 @@ export class ServersPage extends Component {
         }
     };
 
-    // delete the selected server
-    // handleDelete = (event) => {
-    //     // delete the selected server from the list
-    //     let withoutSelected = this.state.serverList.filter(s => s.conn.baseURL !== this.state.currentServer);
-    //     this.setState({serverList: withoutSelected, discovery: '', currentServer: ''});
-    //     // tell the parent the server and thus the apiroot have been deleted
-    //     this.props.update(undefined);
-    //     this.props.apiroot(undefined);
-    // };
-
     // add a new server to the display list
     handleAdd = (event) => {
         this.setState({openNewDialog: true});
