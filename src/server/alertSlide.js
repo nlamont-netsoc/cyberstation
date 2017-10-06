@@ -43,7 +43,7 @@ export class AlertSlide extends Component {
     };
 
     render() {
-        const msg = "Could not connect to the specified server ";
+        const msg = "Could not connect to server: ";
         return (
             <div>
                 <Dialog open={this.state.open} transition={Slide} onRequestClose={this.handleRequestClose}>

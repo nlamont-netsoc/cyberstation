@@ -134,13 +134,17 @@ export class ServersPage extends Component {
 
     handleRequestDialogCancel = () => {
         this.setState({openNewDialog: false});
-        this.setState({currentServer: ''});
     };
 
     // when a new server url has been entered in the dialog text field.
     // try to create a new server object, add it to the list and select it.
     handleRequestDialogOk = () => {
         if (isValidURL(this.state.currentServer)) {
+            // try to find the url in the list of current servers
+            let found = this.state.serverList.find(s => s.conn.baseURL === this.state.currentServer);
+            // do not add a new server if it is already in the list
+            if (found) return;
+
             this.setState({waiting: true, openNewDialog: false});
             // create a server, get its discovery info and add it to the list
             let newServer = new Server("/taxii/", new TaxiiConnect(this.state.currentServer, "user-me", "user-password"));

@@ -89,6 +89,7 @@ export class CollectionsPage extends Component {
             theCollections.get().then(collections => {
                 collections.map(col => colList.push(col));
                 this.setState({collectionList: colList, loading: false});
+                // select the first collection
                 if (colList.length >= 1) {
                     this.setState({colSelection: colList[0].id});
                     this.dataObjectList(colList[0]);
