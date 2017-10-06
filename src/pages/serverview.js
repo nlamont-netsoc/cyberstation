@@ -43,21 +43,11 @@ export class ServerView extends Component {
 
     constructor(props) {
         super(props);
-        this.state = {
-            value: 0,
-            server: this.props.server,
-            apiroot: undefined,
-            collection: undefined
-        };
+        this.state = { value: 0, server: undefined };
     }
 
-    componentDidMount() {
-        if(this.props.server) this.setState({server: this.props.server});
-    };
-
-    // when a new props is received
-    componentWillReceiveProps(newProps) {
-        if(newProps.server) this.setState({server: newProps.server});
+    updateServer = (server) => {
+        this.setState({server: server});
     };
 
     handleChange = (event, value) => {
@@ -66,22 +56,6 @@ export class ServerView extends Component {
 
     handleChangeIndex = index => {
         this.setState({value: index});
-    };
-
-    updateServer = (server) => {
-        // tell the parent about the selected server, could be undefined
-        this.props.update(server);
-        this.setState({server: server});
-    };
-
-    updateApiRoot = apiroot => {
-        this.setState({apiroot: apiroot});
-    };
-
-    updateCollection = col => {
-        // tell the parent about the selected collection
-        this.props.updateCollection(col);
-        this.setState({collection: col});
     };
 
     render() {
@@ -101,23 +75,13 @@ export class ServerView extends Component {
 
                 <SwipeableViews style={viewStyle.content} index={this.state.value}
                                 onChangeIndex={this.handleChangeIndex}>
-                    <TabContainer>
-                        <ServersPage server={this.state.server} update={this.updateServer} apiroot={this.updateApiRoot}/>
-                    </TabContainer>
-                    <TabContainer>
-                        <CollectionsPage selection={this.state.collection} collection={this.updateCollection} server={this.state.server} apiroot={this.state.apiroot}/>
-                    </TabContainer>
+                    <TabContainer> <ServersPage update={this.updateServer} /> </TabContainer>
+                    <TabContainer> <CollectionsPage server={this.state.server} /> </TabContainer>
                 </SwipeableViews>
             </div>
         );
     };
 
 }
-
-ServerView.propTypes = {
-    server: PropTypes.object,
-    update: PropTypes.func.isRequired,
-    updateCollection: PropTypes.func.isRequired
-};
 
 export default withRoot(withStyles(styles)(ServerView));

@@ -11,7 +11,7 @@ import moment from 'moment';
 import Button from 'material-ui/Button';
 import Cached from 'material-ui-icons/Cached';
 import {labelsNames} from '../stix/stixutil.js';
-import AddPanel from './addPanel.js';
+import AddPanel from '../components/addPanel.js';
 
 
 

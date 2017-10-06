@@ -7,6 +7,9 @@ https://test.freetaxii.com:8000
 npm run start
 open /Applications/Google\ Chrome.app --args --disable-web-security --user-data-dir
 
+                let {0 : a ,[array.length - 1] : b} = array;
+                console.log(a, b)
+
 
     // delete the selected server
     // handleDelete = (event) => {

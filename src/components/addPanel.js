@@ -15,6 +15,7 @@ import Dialog, {DialogActions, DialogContent, DialogTitle,} from 'material-ui/Di
 import Slide from 'material-ui/transitions/Slide';
 import Paper from 'material-ui/Paper';
 import TextField from 'material-ui/TextField';
+import Divider from 'material-ui/Divider';
 
 
 const styles = {};
@@ -27,23 +28,29 @@ export default class AddPanel extends Component {
 
     constructor(props) {
         super(props);
-        this.state = {title: '', selection: '', openDialog: false,
+        this.state = {
+            title: '', selection: '', openDialog: false,
             add: false, delete: false, objList: [],
-            addition: ''};
+            addition: ''
+        };
     }
 
     // fill the list
     componentDidMount() {
-        this.setState({title: this.props.title, selection: '',
+        this.setState({
+            title: this.props.title, selection: '',
             openDialog: false, add: false, delete: false,
-            objList: this.props.itemList, addition: ''})
+            objList: this.props.itemList, addition: ''
+        })
     };
 
     // when a new props is received
     componentWillReceiveProps(newProps) {
-        this.setState({title: newProps.title, selection: '',
+        this.setState({
+            title: newProps.title,
             openDialog: false, add: false, delete: false,
-            objList: newProps.itemList, addition: ''})
+            objList: newProps.itemList, addition: ''
+        })
     };
 
     asFormLabels() {
@@ -59,7 +66,8 @@ export default class AddPanel extends Component {
 
     // change the selected item
     handleListSelection = (event, value) => {
-        this.setState({selection: value});
+        this.setState({selection: value.trim()});
+        this.props.update({target: {value: value.trim()}});
     };
 
     // show the add dialog
@@ -84,35 +92,39 @@ export default class AddPanel extends Component {
     };
 
     handleDialogOk = () => {
-        if(this.state.addition.trim()) {
-            this.state.objList.push(this.state.addition);
-            this.setState({openDialog: false});
+        if (this.state.addition.trim()) {
+            this.state.objList.push(this.state.addition.trim());
+            this.state.openDialog = false;
+            this.forceUpdate();
             let event = {target: {value: this.state.objList}};
             this.props.update(event);
         }
     };
 
+    // typing the text
     handleDialogChange = name => event => {
-        this.setState({ [name]: event.target.value});
+        this.setState({[name]: event.target.value});
     };
 
     render() {
+        const theTitle = "Add a new " + this.state.title;
         return (
             <Grid container justify="flex-start" style={{marginTop: 12}}>
 
                 <Grid key="k2" container>
-                    <Grid key="k3" item style={{margin: 12}}>
+                    <Grid key="k3" item style={{margin: 8}}>
                         <Typography type="body1">{this.state.title}</Typography>
+                        <Button fab color="primary" onClick={this.handleAddToList} raised
+                                style={{width: 34, height: 12, margin: 4}}><AddIcon/></Button>
+                        <Button fab color="primary" onClick={this.handleDeleteFromList} raised
+                                style={{width: 34, height: 12, margin: 4}}><RemoveIcon/></Button>
+                        <Divider/>
                     </Grid>
-                        <Grid key="k4" item >
-                            <Button fab color="primary" onClick={this.handleAddToList} raised
-                                    style={{width: 34, height: 12, margin: 4}}><AddIcon/></Button>
-                            <Button fab color="primary" onClick={this.handleDeleteFromList} raised
-                                    style={{width: 34, height: 12, margin: 4}}><RemoveIcon/></Button>
-                    </Grid>
+
                 </Grid>
+
                 <Grid key="k6" container>
-                    <Grid key="k5" item >
+                    <Grid key="k5" item>
                         <Paper style={{marginTop: 6, maxHeight: 200, minWidth: 400, maxWidth: 600, overflow: 'auto'}}>
                             <RadioGroup style={{display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between'}}
                                         aria-label="obj"
@@ -132,15 +144,15 @@ export default class AddPanel extends Component {
                     ignoreEscapeKeyUp
                     maxWidth="md"
                 >
-                    <DialogTitle>Add a new item</DialogTitle>
-                    <DialogContent>
+                    <DialogTitle>{theTitle}</DialogTitle>
+                    <DialogContent style={{width: 400}}>
                         <TextField autoFocus={true}
                                    fullWidth
                                    margin="normal"
                                    name="addition"
                                    type="text"
                                    id="addition"
-                                   label="addition"
+                                   label={this.state.title}
                                    value={this.state.addition}
                                    onChange={this.handleDialogChange('addition')}
                         />

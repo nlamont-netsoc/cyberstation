@@ -13,7 +13,7 @@ import TextField from 'material-ui/TextField';
 import moment from 'moment';
 import Button from 'material-ui/Button';
 import Cached from 'material-ui-icons/Cached';
-import AddPanel from './addPanel.js';
+import AddPanel from '../components/addPanel.js';
 import Switch from 'material-ui/Switch';
 import {FormControlLabel} from 'material-ui/Form';
 

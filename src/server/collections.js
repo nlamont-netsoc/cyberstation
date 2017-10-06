@@ -66,38 +66,36 @@ export class CollectionsPage extends Component {
         };
     }
 
-    // load the collections of the api root
-    componentDidMount() {
-        this.setState({apiroot: this.props.apiroot});
-        if (this.props.selection) this.setState({selectedColid: this.props.selection.id});
-        this.dataCollectionList();
+    initialise(theServer) {
+        this.setState({
+            apiroot: localStorage.getItem('serverApiroot') || '',
+            selectedColid: localStorage.getItem('collectionSelected') || '',
+        });
+        this.dataCollectionList(theServer);
         // if already have a collection id selected, refresh the objects
         if(this.state.selectedColid) {
             // find the collection info
             let thisCol = this.state.collectionList.find(col => col.id === this.state.selectedColid);
             if (thisCol) this.dataObjectList(thisCol);
         }
+    };
+
+    // load the collections of the api root
+    componentDidMount() {
+        this.initialise(this.props.server);
     };
 
     // when a new props is received
     componentWillReceiveProps(newProps) {
-        this.setState({collectionList: [], objectList: [], apiroot: newProps.apiroot});
-        if (newProps.selection) this.setState({selectedColid: newProps.selection.id});
-        this.dataCollectionList();
-        // if already have a collection id selected, refresh the objects
-        if(this.state.selectedColid) {
-            // find the collection info
-            let thisCol = this.state.collectionList.find(col => col.id === this.state.selectedColid);
-            if (thisCol) this.dataObjectList(thisCol);
-        }
+        this.initialise(newProps.server);
     };
 
     // get the list of all collections
-    dataCollectionList() {
+    dataCollectionList(theServer) {
         let colList = [];
-        if (this.state.apiroot && this.props.server) {
+        if (this.state.apiroot && theServer) {
             this.setState({loading: true});
-            const theCollections = new Collections(this.state.apiroot, this.props.server.conn);
+            const theCollections = new Collections(this.state.apiroot, theServer.conn);
             theCollections.get().then(collections => {
                 collections.map(col => colList.push(col));
                 this.setState({collectionList: colList, loading: false});
@@ -143,14 +141,11 @@ export class CollectionsPage extends Component {
 
     // change the selected collection
     handleSelected = (event, colid) => {
+        localStorage.setItem('collectionSelected', colid);
         this.setState({selectedColid: colid});
         // find the collection info
         let thisCol = this.state.collectionList.find(col => col.id === colid);
-        if (thisCol) {
-            this.dataObjectList(thisCol);
-            // tell the parent about the selected collection
-            this.props.collection(thisCol);
-        }
+        if (thisCol) this.dataObjectList(thisCol);
     };
 
     render() {
@@ -185,10 +180,7 @@ export class CollectionsPage extends Component {
 }
 
 CollectionsPage.propTypes = {
-    selection: PropTypes.object,
-    server: PropTypes.object,
-    apiroot: PropTypes.string,
-    collection: PropTypes.func.isRequired
+    server: PropTypes.object
 };
 
 export default withRoot(withStyles(styles)(CollectionsPage));

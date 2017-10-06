@@ -6,34 +6,17 @@ import {ServerInfoPanel} from './serverInfoPanel.js';
 import {TaxiiConnect, Server} from '../libs/taxii2lib.js';
 import Grid from 'material-ui/Grid';
 import React, {Component} from 'react';
-import PropTypes from 'prop-types';
 import withRoot from '../components/withRoot';
 import withStyles from 'material-ui/styles/withStyles';
-import Divider from 'material-ui/Divider';
 import {FormControl, FormControlLabel} from 'material-ui/Form';
-import Radio, {RadioGroup} from 'material-ui/Radio';
-import TextField from 'material-ui/TextField';
-import Button from 'material-ui/Button';
-import Dialog, {DialogActions, DialogContent, DialogTitle,} from 'material-ui/Dialog';
-import Slide from 'material-ui/transitions/Slide';
 import {CircularProgress} from 'material-ui/Progress';
 import {AlertSlide} from '../server/alertSlide.js';
-import Typography from 'material-ui/Typography';
 import {isValidURL} from '../stix/stixutil.js';
-import {ServerPanel} from '../server/serverPanel.js';
+import PropTypes from 'prop-types';
+import AddPanel from '../components/addPanel.js';
 
 
-const styles = {
-    root: {
-        textAlign: 'center',
-        paddingTop: 200
-    },
-    addButton: {
-        position: 'absolute',
-        bottom: 32,
-        right: 32
-    }
-};
+const styles = {};
 
 /**
  * Display the list of servers and the selected server information including its api roots.
@@ -47,93 +30,47 @@ export class ServersPage extends Component {
         this.state = {
             waiting: false,         // for the progress spinner
             alert: false,           // to open the alert dialog, when a server cannot connect
-            openNewDialog: false,   // to open a new server input dialog
-            serverList: [],         // the list of server objects to choose from
+            serverListUrl: [],      // the list of servers url
             discovery: '',          // the current server discovery info
             currentServer: '',      // the current selected server url
+            serverObj: undefined,   // the current selected server object
             currentApiroot: ''      // the current selected api root url
         }
     };
 
     componentDidMount() {
-        if (this.props.server) {
-            this.setState({currentServer: this.props.server.conn.baseURL});
-            this.handleRequestDialogOk();
-        }
-    };
-
-    // when a new props is received
-    componentWillReceiveProps(newProps) {
-        if (newProps.server) {
-            this.state.currentServer = newProps.server.conn.baseURL;
-            this.forceUpdate();
-            this.handleRequestDialogOk();
-        }
-    };
-
-    serverListAsFormLabels() {
-        let formItems = [];
-        this.state.serverList.map(serv =>
-            formItems.push(<FormControlLabel
-                style={{margin: 8}}
-                key={serv.conn.baseURL}
-                value={serv.conn.baseURL}
-                control={<Radio/>}
-                label={serv.conn.baseURL}/>));
-        return formItems;
+        this.setState({
+            currentServer: localStorage.getItem('serverSelected') || '',
+            discovery: JSON.parse(localStorage.getItem('serverDiscovery')) || '',
+            currentApiroot: localStorage.getItem('serverApiroot') || '',
+            serverListUrl: JSON.parse(localStorage.getItem('serverUrlList')) || []
+        });
+        this.createServer();
     };
 
     // update the selected api root url
     updateApiRootSelection = value => {
+        localStorage.setItem('serverApiroot', value);
         this.setState({currentApiroot: value});
-        // tell the parent component
-        this.props.apiroot(value);
     };
 
-    // change the selected server
-    handleServerSelection = event => {
-        let url = event.target.value;
-        let theServer = this.state.serverList.find(s => s.conn.baseURL === url);
-        if (theServer) {
-            // tell the parent component
-            this.props.update(theServer);
-            // get the discovery info
-            this.setState({waiting: true});
-            theServer.discovery().then(discovery => {
-                this.setState({waiting: false, discovery: discovery, currentServer: url});
-            });
+    // close the alert dialog
+    handleAlertRequestClose = () => {
+        this.setState({alert: false, currentServer: '', serverObj: undefined});
+    };
+
+    // display the server info including the api roots
+    serverInfo() {
+        if (this.state.serverObj) {
+            return <ServerInfoPanel server={this.state.serverObj} update={this.updateApiRootSelection}/>
+        } else {
+            return <div>no server selected</div>
         }
-    };
+    }
 
-    // add a new server to the display list
-    handleAdd = (event) => {
-        this.setState({openNewDialog: true});
-    };
-
-    // save the current server to storage
-    handleSave = (event) => {
-        if (this.state.currentServer) localStorage.setItem("server--" + this.state.currentServer, this.state.currentServer);
-    };
-
-    // change the url input text of the dialog
-    handleDialogChange = event => {
-        this.setState({currentServer: event.target.value});
-    };
-
-    handleRequestDialogCancel = () => {
-        this.setState({openNewDialog: false});
-    };
-
-    // when a new server url has been entered in the dialog text field.
-    // try to create a new server object, add it to the list and select it.
-    handleRequestDialogOk = () => {
+    createServer() {
         if (isValidURL(this.state.currentServer)) {
-            // try to find the url in the list of current servers
-            let found = this.state.serverList.find(s => s.conn.baseURL === this.state.currentServer);
-            // do not add a new server if it is already in the list
-            if (found) return;
-
-            this.setState({waiting: true, openNewDialog: false});
+            this.setState({waiting: true});
             // create a server, get its discovery info and add it to the list
             let newServer = new Server("/taxii/", new TaxiiConnect(this.state.currentServer, "user-me", "user-password"));
             // timeout for connecting to the server
@@ -144,13 +81,23 @@ export class ServersPage extends Component {
                     this.setState({
                         waiting: false,
                         discovery: discovery,
-                        serverList: [...this.state.serverList, newServer],
-                        currentServer: newServer.conn.baseURL
+                        currentServer: newServer.conn.baseURL,
+                        serverObj: newServer
                     });
-                    let event = {target: {value: newServer.conn.baseURL}};
-                    this.handleServerSelection(event);
+                    // get the storage serverList
+                    let thisServerList = JSON.parse(localStorage.getItem('serverUrlList')) || [];
+                    // see if already in the list
+                    let found = thisServerList.find(item => item === newServer.conn.baseURL);
+                    if (!found) {
+                        // add this new server url to the list
+                        thisServerList.push(newServer.conn.baseURL);
+                        // update the storage list
+                        localStorage.setItem("serverUrlList", JSON.stringify(thisServerList));
+                    }
+                    // tell the parent component
+                    this.props.update(newServer);
                 }).catch(err => {
-                    this.setState({waiting: false, currentServer: ''});
+                    this.setState({waiting: false, currentServer: '', serverObj: undefined});
                     new Error('fetch error')
                 }),
                 new Promise((_, reject) =>
@@ -158,46 +105,42 @@ export class ServersPage extends Component {
                 )
             ]).catch(err => {
                 // show the alert about cannot connect to the server
-                this.setState({waiting: false, alert: true});
+                this.setState({waiting: false, alert: true, currentServer: '', serverObj: undefined});
             });
         } else {
-            this.setState({currentServer: ''});
+            this.setState({currentServer: '', serverObj: undefined});
         }
     };
 
-    // close the alert dialog
-    handleAlertRequestClose = () => {
-        this.setState({alert: false});
-    };
-
-    // display the server info including the api roots
-    serverInfo() {
-        let theServer = this.state.serverList.find(s => s.conn.baseURL === this.state.currentServer);
-        if (theServer) {
-            return <ServerInfoPanel server={theServer} update={this.updateApiRootSelection}/>
-        } else {
-            return <div>no server selected</div>
-        }
-    }
-
-    // load a server from storage, called from ServerPanel
-    handleLoad = (theUrl) => {
-        if (theUrl) {
-            // try to find the url in the list of current servers
-            let found = this.state.serverList.find(s => s.conn.baseURL === theUrl);
-            // set the server selection and apiroot selections
-            this.state.currentServer = theUrl;
-            this.forceUpdate();
-            // clear the apiroot selection
-            this.updateApiRootSelection('');
-            // if already displayed, just select it
-            if (found) {
-                // update the currentServer selection
-                let event = {target: {value: theUrl}};
-                this.handleServerSelection(event);
+    // callback from the AddPanel, either a selection or the list of server url
+    handleServerUpdate = (event) => {
+        // event.target.value can be a string or an array of strings
+        if (event.target.value) {
+            if (Array.isArray(event.target.value)) {
+                // pick the last value of the array
+                let lastUrl = event.target.value[event.target.value.length - 1];
+                // check it is valid url
+                if (isValidURL(lastUrl)) {
+                    // the list of url
+                    this.state.serverListUrl = event.target.value;
+                    // if there is nothing in the list remove the server object
+                    if (event.target.value.length <= 0) this.state.serverObj = undefined;
+                    this.forceUpdate();
+                    // store the array as a json string object
+                    localStorage.setItem('serverUrlList', JSON.stringify(event.target.value));
+                } else {
+                    this.state.currentServer = undefined;
+                    // remove the last url
+                    event.target.value.splice((event.target.value.length - 1), 1);
+                    // update the store the array
+                    localStorage.setItem('serverUrlList', JSON.stringify(event.target.value));
+                    this.forceUpdate();
+                }
             } else {
-                // create the server, update the state and selection
-                this.handleRequestDialogOk();
+                // a single selection
+                this.state.currentServer = event.target.value;
+                this.forceUpdate();
+                this.createServer();
             }
         }
     };
@@ -207,60 +150,15 @@ export class ServersPage extends Component {
             <div>
                 <Grid container spacing={8}>
                     <Grid item xs={6}>
-
                         <FormControl component="fieldset" required>
-                            <Typography type="body1" style={{margin: 8}}> Servers </Typography>
-
-                            <Grid key="kk">
-                                <Grid key="k1">
-                                    <Button aria-labelledby="new" onClick={this.handleAdd} raised color="primary"
-                                            style={{margin: 4}}>New</Button>
-                                    <Button aria-labelledby="save" onClick={this.handleSave} raised color="primary"
-                                            style={{margin: 4}}>Save</Button>
-                                </Grid>
-                                <Grid key="k2" style={{margin: 8}}>
-                                    <ServerPanel update={this.handleLoad}/>
-                                </Grid>
-                            </Grid>
-
-                            <Divider/>
-                            <RadioGroup style={{display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between'}}
-                                        aria-label="obj"
-                                        name="objGroup"
-                                        value={this.state.currentServer}
-                                        onChange={this.handleServerSelection}>
-                                {this.serverListAsFormLabels()}
-                            </RadioGroup>
+                            <AddPanel title="server url" itemList={this.state.serverListUrl}
+                                      update={this.handleServerUpdate}/>
                         </FormControl>
-
                     </Grid>
-
                     <Grid item xs={6}>
                         {this.serverInfo()}
                     </Grid>
                 </Grid>
-
-                <Dialog open={this.state.openNewDialog} transition={Slide}
-                        onRequestClose={this.handleRequestDialogClose}>
-                    <DialogTitle>{"Enter the server URL"}</DialogTitle>
-                    <DialogContent>
-                        <TextField autoFocus={true}
-                                   style={{marginLeft: 8, width: 300}}
-                                   name="serverUrl"
-                                   type="text"
-                                   id="serverUrl"
-                                   label="server url"
-                                   value={this.state.currentServer}
-                                   margin="normal"
-                                   onChange={this.handleDialogChange}
-                                   fullWidth
-                        />
-                    </DialogContent>
-                    <DialogActions>
-                        <Button onClick={this.handleRequestDialogCancel} color="primary">Cancel</Button>
-                        <Button onClick={this.handleRequestDialogOk} color="primary">Ok</Button>
-                    </DialogActions>
-                </Dialog>
 
                 <div style={{marginLeft: 400, marginTop: 40}}>
                     {this.state.waiting && <CircularProgress size={40}/>}
@@ -276,9 +174,7 @@ export class ServersPage extends Component {
 }
 
 ServersPage.propTypes = {
-    server: PropTypes.object,
-    update: PropTypes.func.isRequired,
-    apiroot: PropTypes.func.isRequired
+    update: PropTypes.func.isRequired
 };
 
 export default withRoot(withStyles(styles)(ServersPage));

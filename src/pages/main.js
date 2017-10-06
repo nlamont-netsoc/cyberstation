@@ -82,9 +82,13 @@ class MainPage extends Component {
         this.state = {
             view: '',
             isLogged: false,
-            loglabel: 'Login',
-            selectedServer: undefined,
-            selectedCollection: undefined };
+            loglabel: 'Login'
+        };
+    //    localStorage.clear();
+
+        for(let key in localStorage) {
+            console.log(key + ' = ' + localStorage.getItem(key));
+        }
     }
 
     isLoggedin = (value) => {
@@ -105,22 +109,12 @@ class MainPage extends Component {
         }
     };
 
-    // called by ServerView -> ServersPage to update the selected server
-    updateServer = server => {
-        this.setState({selectedServer: server});
-    };
-
-    // called by ServerView -> CollectionsPage to update the selected collection endpoint
-    updateCollection = col => {
-        this.setState({selectedCollection: col});
-    };
-
     handleServer = () => {
-        this.setState({ view: <ServerView server={this.state.selectedServer} update={this.updateServer} updateCollection={this.updateCollection}/> });
+        this.setState({ view: <ServerView /> });
     };
 
     handleStix = () => {
-        this.setState({ view: <StixView server={this.state.selectedServer} collection={this.state.selectedCollection} /> });
+        this.setState({ view: <StixView  /> });
     };
 
     componentDidMount() {
