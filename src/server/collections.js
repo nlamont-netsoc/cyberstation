@@ -15,7 +15,7 @@ import {FormControlLabel} from 'material-ui/Form';
 import Radio, {RadioGroup} from 'material-ui/Radio';
 import green from 'material-ui/colors/green';
 import red from 'material-ui/colors/red';
-import { CircularProgress } from 'material-ui/Progress';
+import {CircularProgress} from 'material-ui/Progress';
 
 
 const styles = theme => ({
@@ -59,41 +59,47 @@ export class CollectionsPage extends Component {
         super(props);
         this.state = {
             loading: false,
-            colSelection: undefined,
+            colSelection: '',
             collectionList: [],
             objectList: [],
-            apiroot: ''};
+            apiroot: ''
+        };
     }
 
     // load the collections of the api root
     componentDidMount() {
         this.setState({apiroot: this.props.apiroot});
+        if (this.props.selection) this.setState({colSelection: this.props.selection.id});
         this.dataCollectionList();
     };
 
     // when a new props is received
     componentWillReceiveProps(newProps) {
-        // newProps.server;
         this.setState({collectionList: [], objectList: [], apiroot: newProps.apiroot});
+        if (newProps.selection) this.setState({colSelection: newProps.selection.id});
         this.dataCollectionList();
     };
 
     // get the list of all collections
     dataCollectionList() {
         let colList = [];
-        if (this.state.apiroot) {
+        if (this.state.apiroot && this.props.server) {
             this.setState({loading: true});
             const theCollections = new Collections(this.state.apiroot, this.props.server.conn);
             theCollections.get().then(collections => {
                 collections.map(col => colList.push(col));
                 this.setState({collectionList: colList, loading: false});
+                if (colList.length >= 1) {
+                    this.setState({colSelection: colList[0].id});
+                    this.dataObjectList(colList[0]);
+                }
             });
         }
     };
 
     // get the objects of the selected collection
     dataObjectList(col) {
-        if (this.state.apiroot) {
+        if (this.state.apiroot && this.props.server) {
             this.setState({loading: true});
             const theCollection = new Collection(col, this.state.apiroot, this.props.server.conn);
             theCollection.getObjects().then(bundle =>
@@ -106,13 +112,15 @@ export class CollectionsPage extends Component {
         this.state.collectionList.map(col => {
             let readVal = col.can_read ? 'can read' : 'cannot read';
             let writeVal = col.can_write ? 'can write' : 'cannot write';
-            let labelValue = col.title  + ' (' + readVal + ', ' + writeVal + ')';
+            let labelValue = col.title + ' (' + readVal + ', ' + writeVal + ')';
             let theColor = (col.can_write && col.can_read) ? green[500] : red[500];
             colItems.push(<FormControlLabel style={{margin: 8}}
-                                            disabled = {!col.can_read}
-                                            key={col.id} value={col.id}
+                                            disabled={!col.can_read}
+                                            key={col.id}
+                                            value={col.id}
+                                            checked={col.id === this.state.colSelection}
                                             control={<Radio style={{color: theColor}}/>}
-                                            label={labelValue} />);
+                                            label={labelValue}/>);
         });
         return colItems;
     }
@@ -142,8 +150,9 @@ export class CollectionsPage extends Component {
             <Grid container className={this.props.root}>
 
                 <Grid item xs={3}>
-                    <Typography type="body1" >Collections list</Typography>
-                    <RadioGroup style={{display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between'}}
+                    <Typography type="body1">Collections list</Typography>
+                    <RadioGroup autoFocus={true}
+                                style={{display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between'}}
                                 aria-label="obj"
                                 name="objGroup"
                                 value={this.state.colSelection}
@@ -154,12 +163,12 @@ export class CollectionsPage extends Component {
                 </Grid>
 
                 <Grid item xs={9}>
-                    <Typography type="body1" >Objects list</Typography>
+                    <Typography type="body1">Objects list</Typography>
                     <List> {this.objsAsFormLabels()} </List>
                 </Grid>
 
                 <div style={{marginLeft: 400, marginTop: 40}}>
-                    {this.state.loading && <CircularProgress size={40}  />}
+                    {this.state.loading && <CircularProgress size={40}/>}
                 </div>
             </Grid>
         );
@@ -168,6 +177,7 @@ export class CollectionsPage extends Component {
 }
 
 CollectionsPage.propTypes = {
+    selection: PropTypes.object,
     server: PropTypes.object,
     apiroot: PropTypes.string,
     collection: PropTypes.func.isRequired

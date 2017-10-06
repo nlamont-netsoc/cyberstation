@@ -9,7 +9,7 @@ import React, {Component, StyleSheet} from 'react';
 import PropTypes from 'prop-types';
 import withRoot from '../components/withRoot';
 import withStyles from 'material-ui/styles/withStyles';
-import {Server, TaxiiConnect} from "../libs/taxii2lib";
+
 
 
 function TabContainer(props) {
@@ -36,11 +36,8 @@ const styles = theme => ({
     }
 });
 
-// for testing --> todo to be removed
-const testServer = new Server("/taxii/", new TaxiiConnect("https://test.freetaxii.com:8000", "user-me", "user-password"));
-
 /**
- * presenting the server and collections tabs
+ * show the server and collections tabs
  */
 export class ServerView extends Component {
 
@@ -48,16 +45,11 @@ export class ServerView extends Component {
         super(props);
         this.state = {
             value: 0,
-            server: testServer,
-            apiroot: '',
-            collection: ''
+            server: undefined,
+            apiroot: undefined,
+            collection: undefined
         };
     }
-
-    componentDidMount() {
-        this.setState({server: testServer});
-        this.updateServer(testServer, false)
-    };
 
     handleChange = (event, value) => {
         this.setState({value});
@@ -70,6 +62,7 @@ export class ServerView extends Component {
     updateServer = (server) => {
         // tell the parent about the selected server, could be undefined
         this.props.update(server);
+        this.setState({server: server});
     };
 
     updateApiRoot = apiroot => {
@@ -103,7 +96,7 @@ export class ServerView extends Component {
                         <ServersPage update={this.updateServer} apiroot={this.updateApiRoot}/>
                     </TabContainer>
                     <TabContainer>
-                        <CollectionsPage collection={this.updateCollection} server={this.state.server} apiroot={this.state.apiroot}/>
+                        <CollectionsPage selection={this.state.collection} collection={this.updateCollection} server={this.state.server} apiroot={this.state.apiroot}/>
                     </TabContainer>
                 </SwipeableViews>
             </div>

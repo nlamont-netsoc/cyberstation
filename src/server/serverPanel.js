@@ -2,103 +2,127 @@
 
 /* global conn */
 // @flow weak
+
 import Grid from 'material-ui/Grid';
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import withRoot from '../components/withRoot';
 import withStyles from 'material-ui/styles/withStyles';
-import Divider from 'material-ui/Divider';
-import {FormControlLabel} from 'material-ui/Form';
+import {FormControl, FormControlLabel} from 'material-ui/Form';
 import Radio, {RadioGroup} from 'material-ui/Radio';
-import Table, {TableBody, TableCell, TableRow} from 'material-ui/Table';
+import Button from 'material-ui/Button';
+import Dialog, {DialogActions, DialogContent, DialogTitle,} from 'material-ui/Dialog';
+import Slide from 'material-ui/transitions/Slide';
 
 
-const styles = {
-
-};
+const styles = {};
 
 /**
- * used by ServersPage to display the selected server info (discovery) and the api roots url.
+ * to load/delete servers url from storage
  */
 export class ServerPanel extends Component {
 
     constructor(props) {
         super(props);
-        this.state = {currentApiroot: '', discovery: ''}
-    };
-
-    componentDidMount() {
-        if(this.props.server) {
-            this.props.server.discovery().then(discovery => {
-                this.setState({discovery: discovery, currentApiroot: discovery.default});
-                // tell the parent component
-                this.props.update(discovery.default);
-            });
+        this.state = {
+            storeOpen: false,       // to open the storeDialog for delete or load
+            storeSelection: '',     // the store (load or delete) server url selection
+            storeDelete: false,     // to select delete (true) or load (false) action in the store dialog
+            urlList: [],            // the list of server url from localStorage
         }
     };
 
-    // change the selected api root
-    handleSelection = event => {
-        event.persist();
-        let value = event.target.value;
-        this.setState({currentApiroot: value});
-        // tell the parent component
-        this.props.update(value);
+    // retrieve all url from storage as an array
+    getAllFromStorage = () => {
+        let storeContent = [];
+        // get all the servers keys but not the bundles
+        let keys = Object.keys(localStorage).filter(k => k.startsWith("server--"));
+        for (let key of keys) {
+            let url = localStorage.getItem(key);
+            storeContent.push({name: url, key: key});
+        }
+        return storeContent;
     };
 
-    // the api roots url as form labels
-    apiRootsAsFormLabels() {
-        let items = [];
-        if (this.state.discovery) {
-            let arr = this.state.discovery.api_roots;
-            if (arr) {
-                for (let j = 0; j < arr.length; j++) {
-                    items.push(<FormControlLabel
-                        style={{margin: 8}} key={j} value={arr[j]}
-                        control={<Radio/>} label={arr[j]}/>);
-                }
+    handleChange = (event, value) => {
+        this.setState({storeSelection: value});
+    };
+
+    handleOk = () => {
+        this.setState({storeOpen: false});
+        let theUrl = this.state.storeSelection;
+        if (theUrl) {
+            if (this.state.storeDelete) {
+                // deleting
+                localStorage.removeItem(theUrl);
+                let withoutSelection = this.state.urlList.filter(item => item !== this.state.storeSelection);
+                this.setState({urlList: withoutSelection, storeDelete: false});
+            } else {
+                // loading
+                // tell the parent component to load the selected server url
+                this.props.update(theUrl);
             }
         }
-        return items;
     };
 
-    serverInfo() {
-        if (this.state.discovery) {
-            return <Table>
-            <TableBody>
-                <TableRow key="Title">
-                    <TableCell>Title</TableCell>
-                    <TableCell>{this.state.discovery.title}</TableCell>
-                </TableRow>
-                <TableRow key="Description">
-                    <TableCell>Description</TableCell>
-                    <TableCell>{this.state.discovery.description}</TableCell>
-                </TableRow>
-                <TableRow key="Contact">
-                    <TableCell>Contact</TableCell>
-                    <TableCell>{this.state.discovery.contact}</TableCell>
-                </TableRow>
-                <TableRow key="Default">
-                    <TableCell>Default</TableCell>
-                    <TableCell>{this.state.discovery.default}</TableCell>
-                </TableRow>
-            </TableBody>
-            </Table>;
-        }
+    // show load a url from storage
+    handleStoreLoad = () => {
+        this.setState({storeOpen: true, storeDelete: false});
+    };
+
+    // show delete a url from storage
+    handleStoreDelete = () => {
+        this.setState({storeOpen: true, storeDelete: true});
+    };
+
+    handleCancel = () => {
+        this.setState({storeOpen: false, storeDelete: false});
     };
 
     render() {
+        const dialogTitle = this.state.storeDelete ? "Select a server to delete" : "Select a server to load";
         return (
-            <Grid item xs={12} sm={12}>
-                {this.serverInfo()}
-                <Divider/>
-                <RadioGroup style={{display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between'}}
-                            aria-label="apiroots"
-                            name="apiroots"
-                            value={this.state.currentApiroot}
-                            onChange={this.handleSelection}>
-                    {this.apiRootsAsFormLabels()}
-                </RadioGroup>
+            <Grid container justify="flex-start">
+                <FormControl component="fieldset" required>
+                    <Grid key="kk">
+                        <Button aria-labelledby="load" onClick={this.handleStoreLoad} raised color="primary"
+                                style={{margin: 4}}>Load</Button>
+                        <Button aria-labelledby="delete" onClick={this.handleStoreDelete} raised color="primary"
+                                style={{margin: 4}}>Delete</Button>
+                    </Grid>
+                </FormControl>
+
+                <Dialog
+                    open={this.state.storeOpen}
+                    transition={Slide}
+                    ignoreBackdropClick
+                    ignoreEscapeKeyUp
+                    maxWidth="md"
+                >
+                    <DialogTitle>{dialogTitle}</DialogTitle>
+                    <DialogContent>
+                        <RadioGroup
+                            innerRef={node => {this.radioGroup = node}}
+                            aria-label="storeurl"
+                            name="storeurl"
+                            value={this.state.storeSelection}
+                            onChange={this.handleChange}
+                        >
+                            {this.getAllFromStorage().map(bndl => (
+                                <FormControlLabel
+                                    value={bndl.name}
+                                    key={bndl.key}
+                                    control={<Radio/>}
+                                    label={bndl.name}/>
+                            ))}
+                        </RadioGroup>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={this.handleCancel} color="primary">Cancel</Button>
+                        <Button onClick={this.handleOk} color="primary">Ok</Button>
+                    </DialogActions>
+                </Dialog>
+
             </Grid>
         );
     };
@@ -106,7 +130,6 @@ export class ServerPanel extends Component {
 }
 
 ServerPanel.propTypes = {
-    server: PropTypes.object,
     update: PropTypes.func.isRequired
 };
 

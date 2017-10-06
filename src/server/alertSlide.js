@@ -29,7 +29,6 @@ export class AlertSlide extends Component {
     constructor(props) {
         super(props);
         this.state = { open: this.props.open, url: this.props.url};
-        console.log("---> AlertSlide");
     };
 
     // when a new props is received

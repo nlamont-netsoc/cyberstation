@@ -122,7 +122,7 @@ export class BundlePanel extends Component {
     // retrieve all bundles from storage as an array of objects
     getAllFromStorage = () => {
         let storeContent = [];
-        let keys = Object.keys(localStorage);
+        let keys = Object.keys(localStorage).filter(k => k.startsWith("bundle--"));
         for (let key of keys) {
             let bndl = JSON.parse(localStorage.getItem(key));
             storeContent.push({name: bndl.name, key: key});

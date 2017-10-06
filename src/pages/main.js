@@ -68,11 +68,8 @@ const styles = theme => ({
     }
 });
 
-// for testing --> todo to be removed
-const testServer = new Server("/taxii/", new TaxiiConnect("https://test.freetaxii.com:8000", "user-me", "user-password"));
-
 /**
- * main entry point into CyberStation app.
+ * main entry point into CyberStation.
  * Provide a single page application consisting of a AppBar with login/logout and
  * a server and stix views buttons.
  */
@@ -80,9 +77,9 @@ class MainPage extends Component {
 
     constructor(props) {
         super(props);
-        // for testing--> todo to be removed
+        // for login testing--> todo to be removed
         this.taxiCom = new TaxiiConnect("https://test.freetaxii.com:8000", "user-me", "user-password");
-        this.state = { view: "", isLogged: false, loglabel: "Login", selectedServer: testServer, selectedCollection: undefined };
+        this.state = { view: "", isLogged: false, loglabel: "Login", selectedServer: '', selectedCollection: undefined };
     }
 
     isLoggedin = (value) => {
@@ -103,12 +100,12 @@ class MainPage extends Component {
         }
     };
 
-    // called by ServerView to update the selected server
+    // called by ServerView -> ServersPage to update the selected server
     updateServer = server => {
         this.setState({selectedServer: server});
     };
 
-    // called by ServerView -> Collections to update the selected collection endpoint
+    // called by ServerView -> CollectionsPage to update the selected collection endpoint
     updateCollection = col => {
         this.setState({selectedCollection: col});
     };
