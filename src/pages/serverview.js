@@ -45,11 +45,20 @@ export class ServerView extends Component {
         super(props);
         this.state = {
             value: 0,
-            server: undefined,
+            server: this.props.server,
             apiroot: undefined,
             collection: undefined
         };
     }
+
+    componentDidMount() {
+        if(this.props.server) this.setState({server: this.props.server});
+    };
+
+    // when a new props is received
+    componentWillReceiveProps(newProps) {
+        if(newProps.server) this.setState({server: newProps.server});
+    };
 
     handleChange = (event, value) => {
         this.setState({value});
@@ -93,7 +102,7 @@ export class ServerView extends Component {
                 <SwipeableViews style={viewStyle.content} index={this.state.value}
                                 onChangeIndex={this.handleChangeIndex}>
                     <TabContainer>
-                        <ServersPage update={this.updateServer} apiroot={this.updateApiRoot}/>
+                        <ServersPage server={this.state.server} update={this.updateServer} apiroot={this.updateApiRoot}/>
                     </TabContainer>
                     <TabContainer>
                         <CollectionsPage selection={this.state.collection} collection={this.updateCollection} server={this.state.server} apiroot={this.state.apiroot}/>
@@ -106,6 +115,7 @@ export class ServerView extends Component {
 }
 
 ServerView.propTypes = {
+    server: PropTypes.object,
     update: PropTypes.func.isRequired,
     updateCollection: PropTypes.func.isRequired
 };

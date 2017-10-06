@@ -55,23 +55,21 @@ export class ServersPage extends Component {
         }
     };
 
-    // for testing
-    // componentDidMount() {
-    //     this.setState({waiting: true});
-    //     let server = new Server("/taxii/", new TaxiiConnect("https://test.freetaxii.com:8000", "user-me", "user-password"));
-    //     let objItems = [];
-    //     objItems.push(server);
-    //     server.discovery().then(discovery => {
-    //         this.setState({
-    //             waiting: false,
-    //             discovery: discovery,
-    //             serverList: objItems,
-    //             currentServer: server.conn.baseURL
-    //         });
-    //         let event = {target: {value: server.conn.baseURL}};
-    //         this.handleServerSelection(event);
-    //     });
-    // };
+    componentDidMount() {
+        if (this.props.server) {
+            this.setState({currentServer: this.props.server.conn.baseURL});
+            this.handleRequestDialogOk();
+        }
+    };
+
+    // when a new props is received
+    componentWillReceiveProps(newProps) {
+        if (newProps.server) {
+            this.state.currentServer = newProps.server.conn.baseURL;
+            this.forceUpdate();
+            this.handleRequestDialogOk();
+        }
+    };
 
     serverListAsFormLabels() {
         let formItems = [];
@@ -288,6 +286,7 @@ export class ServersPage extends Component {
 }
 
 ServersPage.propTypes = {
+    server: PropTypes.object,
     update: PropTypes.func.isRequired,
     apiroot: PropTypes.func.isRequired
 };
