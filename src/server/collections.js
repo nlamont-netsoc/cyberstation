@@ -58,7 +58,7 @@ export class CollectionsPage extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            loading: false,
+            waiting: false,
             selectedColid: '',
             collectionList: [],
             objectList: [],
@@ -96,11 +96,11 @@ export class CollectionsPage extends Component {
     dataCollectionList(theServer) {
         let colList = [];
         if (this.state.apiroot && theServer) {
-            this.setState({loading: true});
+            this.setState({waiting: true});
             const theCollections = new Collections(this.state.apiroot, theServer.conn);
             theCollections.get().then(collections => {
                 collections.map(col => colList.push(col));
-                this.setState({collectionList: colList, loading: false});
+                this.setState({collectionList: colList, waiting: false});
             });
         }
     };
@@ -108,10 +108,10 @@ export class CollectionsPage extends Component {
     // get the objects of the selected collection
     dataObjectList(col) {
         if (this.state.apiroot && this.props.server) {
-            this.setState({loading: true});
+            this.setState({waiting: true});
             const theCollection = new Collection(col, this.state.apiroot, this.props.server.conn);
             theCollection.getObjects().then(bundle =>
-                this.setState({objectList: bundle.objects, loading: false}));
+                this.setState({objectList: bundle.objects, waiting: false}));
         }
     };
 
@@ -173,7 +173,7 @@ export class CollectionsPage extends Component {
                 </Grid>
 
                 <div style={{marginLeft: 400, marginTop: 40}}>
-                    {this.state.loading && <CircularProgress size={40}/>}
+                    {this.state.waiting && <CircularProgress size={40}/>}
                 </div>
             </Grid>
         );

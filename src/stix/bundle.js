@@ -16,6 +16,8 @@ import PropTypes from "prop-types";
 import {defaultBundle} from './stixutil.js';
 import Divider from 'material-ui/Divider';
 import {Collection} from "../libs/taxii2lib";
+import Button from 'material-ui/Button';
+import Cached from 'material-ui-icons/Cached';
 
 
 const styles = {};
@@ -188,15 +190,20 @@ export class BundlePage extends Component {
                                 />
                             </Grid>
                             <Grid key="bundle2" item>
-                                <TextField style={{marginLeft: 8}}
+                                <TextField style={{marginLeft: 8, width: 400}}
                                            name="id"
                                            id="id"
                                            label="id"
                                            value={this.state.bundle.id}
                                            margin="normal"
                                            onChange={this.handleChange('id')}
-                                           fullWidth
                                 />
+                                <Button fab dense color="primary" aria-label="redo" style={{width: 33, height: 22}}
+                                        onClick={(e) => {
+                                            this.handleChange('id')({target: {value: "bundle--" + uuidv4()}})
+                                        }}>
+                                    <Cached/>
+                                </Button>
                             </Grid>
                         </form>
 

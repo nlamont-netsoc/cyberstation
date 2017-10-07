@@ -37,6 +37,9 @@ const styles = theme => ({
     }
 });
 
+/**
+ * shows the bundle and all stix types tabs
+ */
 export class StixView extends Component {
 
     constructor(props) {

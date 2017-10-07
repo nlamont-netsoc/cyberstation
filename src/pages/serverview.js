@@ -11,7 +11,6 @@ import withRoot from '../components/withRoot';
 import withStyles from 'material-ui/styles/withStyles';
 
 
-
 function TabContainer(props) {
     return <div style={{padding: 6}}>{props.children}</div>;
 }
@@ -37,15 +36,16 @@ const styles = theme => ({
 });
 
 /**
- * show the server and collections tabs
+ * show the servers and collections tabs
  */
 export class ServerView extends Component {
 
     constructor(props) {
         super(props);
-        this.state = { value: 0, server: undefined };
+        this.state = {value: 0, server: undefined};
     }
 
+    // callback for ServersPage
     updateServer = (server) => {
         this.setState({server: server});
         // tell the parent component
@@ -75,10 +75,12 @@ export class ServerView extends Component {
                     </Tabs>
                 </div>
 
-                <SwipeableViews style={viewStyle.content} index={this.state.value}
-                                onChangeIndex={this.handleChangeIndex}>
-                    <TabContainer> <ServersPage update={this.updateServer} /> </TabContainer>
-                    <TabContainer> <CollectionsPage server={this.state.server} /> </TabContainer>
+                <SwipeableViews
+                    style={viewStyle.content}
+                    index={this.state.value}
+                    onChangeIndex={this.handleChangeIndex}>
+                    <TabContainer> <ServersPage update={this.updateServer}/> </TabContainer>
+                    <TabContainer> <CollectionsPage server={this.state.server}/> </TabContainer>
                 </SwipeableViews>
             </div>
         );

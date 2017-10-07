@@ -3,11 +3,11 @@
 /* global conn */
 // @flow weak
 import {Server, TaxiiConnect} from "../libs/taxii2lib";
-import { ServerView } from '../pages/serverview.js';
-import { StixView } from '../pages/stixview.js';
-import { LoginPage } from '../pages/userlogin.js';
-import { LogoutPage } from '../pages/userlogout.js';
-import React, { Component } from 'react';
+import {ServerView} from '../pages/serverview.js';
+import {StixView} from '../pages/stixview.js';
+import {LoginPage} from '../pages/userlogin.js';
+import {LogoutPage} from '../pages/userlogout.js';
+import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import withRoot from '../components/withRoot';
 import withStyles from 'material-ui/styles/withStyles';
@@ -15,7 +15,7 @@ import AppBar from 'material-ui/AppBar';
 import Toolbar from 'material-ui/Toolbar';
 import Typography from 'material-ui/Typography';
 import Button from 'material-ui/Button';
-import { defaultBundle } from '../stix/stixutil.js';
+import {defaultBundle} from '../stix/stixutil.js';
 
 
 function TabContainer(props) {
@@ -92,17 +92,17 @@ class MainPage extends Component {
     }
 
     initStore = () => {
-        //    localStorage.setItem('collectionSelected', JSON.stringify({}));
-        //   localStorage.removeItem('bundle--99819859-f19d-49e7-84de-4fbb344c0630');
-        //    localStorage.clear();
-        //   localStorage.setItem('bundleSelected', 0);
-        //   localStorage.setItem('bundleList', JSON.stringify([]));
-        for(let key in localStorage) {
-            console.log(key + ' = ' + localStorage.getItem(key));
-        }
+        //  localStorage.setItem('serverDiscovery', JSON.stringify({}));
+        //  localStorage.removeItem('bundle--99819859-f19d-49e7-84de-4fbb344c0630');
+        //  localStorage.clear();
+        //  localStorage.setItem('bundleSelected', 0);
+        //  localStorage.setItem('bundleList', JSON.stringify([]));
+          for(let key in localStorage) {
+              console.log(key + ' = ' + localStorage.getItem(key));
+          }
 
-        // default bundle if store is empty
-        let defBndl = JSON.parse(JSON.stringify(defaultBundle));
+        // add a default bundle if store is empty
+        let defBndl = JSON.parse(JSON.stringify(defaultBundle)); // make a deep copy to be sure
         let bndlList = JSON.parse(localStorage.getItem('bundleList')) || [];
         // if the store bundleList is empty add the default bundle to it
         if (bndlList.length <= 0) {
@@ -112,42 +112,48 @@ class MainPage extends Component {
             localStorage.setItem('bundleSelected', 0);
         }
 
-        // add a default test taxii server to the list
-        localStorage.setItem('serverUrlList', JSON.stringify(["https://test.freetaxii.com:8000"]));
+        // add a default test taxii server if the list is empty
+        let srvList = JSON.parse(localStorage.getItem('serverUrlList')) || [];
+        if (srvList.length <= 0) {
+            localStorage.setItem('serverUrlList', JSON.stringify(["https://test.freetaxii.com:8000"]));
+        }
     };
 
     isLoggedin = (value) => {
         if (value) {
-            this.setState({ isLogged: true, loglabel: "Logout" });
+            this.setState({isLogged: true, loglabel: "Logout"});
             this.handleServer();
         } else {
-            this.setState({ isLogged: false, loglabel: "Login" });
-            this.setState({ view: <LoginPage conn={this.taxiCom} loggedin={this.isLoggedin} /> });
+            this.setState({isLogged: false, loglabel: "Login"});
+            this.setState({view: <LoginPage conn={this.taxiCom} loggedin={this.isLoggedin}/>});
         }
     };
 
     handleLogin = () => {
         if (this.state.isLogged) {
-            this.setState({ view: <LogoutPage conn={this.taxiCom} loggedin={this.isLoggedin} /> });
+            this.setState({view: <LogoutPage conn={this.taxiCom} loggedin={this.isLoggedin}/>});
         } else {
-            this.setState({ view: <LoginPage conn={this.taxiCom} loggedin={this.isLoggedin} /> });
+            this.setState({view: <LoginPage conn={this.taxiCom} loggedin={this.isLoggedin}/>});
         }
     };
 
+    // callback from ServerView of servers and collections tabs
     updateServer = (server) => {
         this.setState({server: server});
     };
 
+    // the serverview
     handleServer = () => {
-        this.setState({ view: <ServerView update={this.updateServer} /> });
+        this.setState({view: <ServerView update={this.updateServer}/>});
     };
 
+    // the stixview
     handleStix = () => {
-        this.setState({ view: <StixView server={this.state.server} /> });
+        this.setState({view: <StixView server={this.state.server}/>});
     };
 
     componentDidMount() {
-        this.setState({ view: <LoginPage conn={this.taxiCom} loggedin={this.isLoggedin} /> });
+        this.setState({view: <LoginPage conn={this.taxiCom} loggedin={this.isLoggedin}/>});
     };
 
     render() {
@@ -157,10 +163,13 @@ class MainPage extends Component {
 
                     <AppBar className={this.props.classes.appBar}>
                         <Toolbar>
-                            <Typography type="title" color="inherit" className={this.props.classes.flex}>CyberStation 0.1</Typography>
+                            <Typography type="title" color="inherit" className={this.props.classes.flex}>CyberStation
+                                0.1</Typography>
                             <Button color="contrast" onClick={this.handleLogin}>{this.state.loglabel}</Button>
-                            <Button disabled={!this.state.isLogged} color="contrast" onClick={this.handleServer}>Server</Button>
-                            <Button disabled={!this.state.isLogged} color="contrast" onClick={this.handleStix}>Stix</Button>
+                            <Button disabled={!this.state.isLogged} color="contrast"
+                                    onClick={this.handleServer}>Server</Button>
+                            <Button disabled={!this.state.isLogged} color="contrast"
+                                    onClick={this.handleStix}>Stix</Button>
                         </Toolbar>
                     </AppBar>
 

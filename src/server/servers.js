@@ -31,7 +31,7 @@ export class ServersPage extends Component {
             waiting: false,         // for the progress spinner
             alert: false,           // to open the alert dialog, when a server cannot connect
             serverListUrl: [],      // the list of servers url
-            discovery: '',          // the current server discovery info
+            discovery: undefined,   // the current server discovery info
             currentServer: '',      // the current selected server url
             serverObj: undefined,   // the current selected server object
             currentApiroot: ''      // the current selected api root url
@@ -41,7 +41,7 @@ export class ServersPage extends Component {
     componentDidMount() {
         this.setState({
             currentServer: localStorage.getItem('serverSelected') || '',
-            discovery: JSON.parse(localStorage.getItem('serverDiscovery')) || '',
+            discovery: JSON.parse(localStorage.getItem('serverDiscovery')) || undefined,
             currentApiroot: localStorage.getItem('serverApiroot') || '',
             serverListUrl: JSON.parse(localStorage.getItem('serverUrlList')) || []
         });
@@ -91,8 +91,9 @@ export class ServersPage extends Component {
                     if (!found) {
                         // add this new server url to the list
                         thisServerList.push(newServer.conn.baseURL);
-                        // update the storage list
+                        // update the storage
                         localStorage.setItem("serverUrlList", JSON.stringify(thisServerList));
+                        localStorage.setItem("serverDiscovery", JSON.stringify(discovery));
                     }
                     // tell the parent component
                     this.props.update(newServer);
@@ -114,6 +115,16 @@ export class ServersPage extends Component {
 
     // callback from the AddPanel, either a selection or the list of server url
     handleServerUpdate = (event) => {
+        // if there is nothing in the list remove the server object
+        if (event.target.value.length <= 0) {
+            localStorage.setItem('serverApiroot', '');
+            localStorage.setItem('serverDiscovery', JSON.stringify({}));
+            localStorage.setItem('serverSelected', '');
+            localStorage.setItem('collectionSelected', JSON.stringify({}));
+            this.setState({serverObj: '', currentServer: '', discovery: '', currentApiroot: ''});
+            this.forceUpdate();
+            return;
+        }
         // event.target.value can be a string or an array of strings
         if (event.target.value) {
             if (Array.isArray(event.target.value)) {
@@ -123,8 +134,7 @@ export class ServersPage extends Component {
                 if (isValidURL(lastUrl)) {
                     // the list of url
                     this.state.serverListUrl = event.target.value;
-                    // if there is nothing in the list remove the server object
-                    if (event.target.value.length <= 0) this.state.serverObj = undefined;
+
                     this.forceUpdate();
                     // store the array as a json string object
                     localStorage.setItem('serverUrlList', JSON.stringify(event.target.value));

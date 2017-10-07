@@ -8,10 +8,10 @@ import Dialog, {
     DialogTitle,
 } from 'material-ui/Dialog';
 import Slide from 'material-ui/transitions/Slide';
-
 import PropTypes from 'prop-types';
 import withRoot from '../components/withRoot';
 import withStyles from 'material-ui/styles/withStyles';
+
 
 const styles = theme => ({
     root: {
@@ -23,7 +23,9 @@ const styles = theme => ({
 });
 
 // todo --> generalise this
-// used in ServersPage when connection to the server cannot be established
+/**
+ * used in ServersPage when connection to the server cannot be established
+ */
 export class AlertSlide extends Component {
 
     constructor(props) {
