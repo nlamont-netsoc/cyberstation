@@ -92,7 +92,7 @@ class MainPage extends Component {
     }
 
     initStore = () => {
-
+        //    localStorage.setItem('collectionSelected', JSON.stringify({}));
         //   localStorage.removeItem('bundle--99819859-f19d-49e7-84de-4fbb344c0630');
         //    localStorage.clear();
         //   localStorage.setItem('bundleSelected', 0);
@@ -101,7 +101,7 @@ class MainPage extends Component {
             console.log(key + ' = ' + localStorage.getItem(key));
         }
 
-        // default bundle
+        // default bundle if store is empty
         let defBndl = JSON.parse(JSON.stringify(defaultBundle));
         let bndlList = JSON.parse(localStorage.getItem('bundleList')) || [];
         // if the store bundleList is empty add the default bundle to it
@@ -112,7 +112,7 @@ class MainPage extends Component {
             localStorage.setItem('bundleSelected', 0);
         }
 
-        // have a default test taxii server in the list
+        // add a default test taxii server to the list
         localStorage.setItem('serverUrlList', JSON.stringify(["https://test.freetaxii.com:8000"]));
     };
 

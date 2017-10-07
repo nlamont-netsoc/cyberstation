@@ -67,9 +67,11 @@ export class CollectionsPage extends Component {
     }
 
     initialise(theServer) {
+        let colInfo = JSON.parse(localStorage.getItem('collectionSelected'));
+        let colid = colInfo ? colInfo.id : '' ;
         this.setState({
             apiroot: localStorage.getItem('serverApiroot') || '',
-            selectedColid: localStorage.getItem('collectionSelected') || '',
+            selectedColid: colid,
         });
         this.dataCollectionList(theServer);
         // if already have a collection id selected, refresh the objects
@@ -141,11 +143,11 @@ export class CollectionsPage extends Component {
 
     // change the selected collection
     handleSelected = (event, colid) => {
-        localStorage.setItem('collectionSelected', colid);
         this.setState({selectedColid: colid});
         // find the collection info
         let thisCol = this.state.collectionList.find(col => col.id === colid);
         if (thisCol) this.dataObjectList(thisCol);
+        localStorage.setItem('collectionSelected', JSON.stringify(thisCol));
     };
 
     render() {

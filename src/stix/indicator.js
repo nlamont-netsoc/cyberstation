@@ -38,8 +38,20 @@ export class IndicatorPage extends Component {
 
     constructor(props) {
         super(props);
-        // make a deep copy of theStix
-        this.state = {display: false, stix: JSON.parse(JSON.stringify(theStix))};
+        let theBundleArr = JSON.parse(localStorage.getItem('bundleList'));
+        let theBundle = theBundleArr[localStorage.getItem('bundleSelected')];
+        this.state = {
+            display: false,
+            bundle: JSON.parse(JSON.stringify(theBundle)),  // make a deep copy of theBundle
+            stix: JSON.parse(JSON.stringify(theStix))       // make a deep copy of theStix
+        };
+    }
+
+    // before leaving the component, update the store
+    componentWillUnmount(){
+        let theBundleArr = JSON.parse(localStorage.getItem('bundleList'));
+        theBundleArr[localStorage.getItem('bundleSelected')] = this.state.bundle;
+        localStorage.setItem('bundleList', JSON.stringify(theBundleArr));
     }
 
     stixDefault = () => {
@@ -57,7 +69,7 @@ export class IndicatorPage extends Component {
 
     updateBundleObject = (fieldName, value) => {
         // find the object in the bundle
-        let objFound = this.props.bundle.objects.find(obj => obj.id === this.state.stix.id);
+        let objFound = this.state.bundle.objects.find(obj => obj.id === this.state.stix.id);
         if (objFound) {
             objFound[fieldName] = value;
         }
@@ -84,7 +96,7 @@ export class IndicatorPage extends Component {
         } else {
             if (sdoid) {
                 // find the object with id=sdoid in the bundle
-                let objFound = this.props.bundle.objects.find(obj => obj.id === sdoid);
+                let objFound = this.state.bundle.objects.find(obj => obj.id === sdoid);
                 if (objFound) {
                     this.setState({display: true, stix: objFound});
                 }
@@ -97,9 +109,9 @@ export class IndicatorPage extends Component {
         let defaultStix = this.stixDefault();
         if (this.state.display === true) {
             return (
-                <Grid container className={this.props.root}>
+                <Grid >
                     <Grid item xs={3}>
-                        <BundleContent selected={this.selectedObject} bundle={this.props.bundle} stix={defaultStix}/>
+                        <BundleContent selected={this.selectedObject} bundle={this.state.bundle} stix={defaultStix}/>
                     </Grid>
                     <Grid item xs={9}>
                         {commonStix(this.state.stix, this.handleChange)}
@@ -111,7 +123,7 @@ export class IndicatorPage extends Component {
             return (
                 <Grid container className={this.props.root}>
                     <Grid item xs={3}>
-                        <BundleContent selected={this.selectedObject} bundle={this.props.bundle} stix={defaultStix}/>
+                        <BundleContent selected={this.selectedObject} bundle={this.state.bundle} stix={defaultStix}/>
                     </Grid>
                 </Grid>
             );
@@ -195,10 +207,6 @@ export class IndicatorPage extends Component {
     };
 
 }
-
-IndicatorPage.propTypes = {
-    bundle: PropTypes.object.isRequired
-};
 
 export default withRoot(withStyles(styles)(IndicatorPage));
 

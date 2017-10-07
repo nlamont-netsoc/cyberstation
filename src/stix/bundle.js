@@ -15,6 +15,7 @@ import {FormControl, FormLabel, FormControlLabel} from 'material-ui/Form';
 import PropTypes from "prop-types";
 import {defaultBundle} from './stixutil.js';
 import Divider from 'material-ui/Divider';
+import {Collection} from "../libs/taxii2lib";
 
 
 const styles = {};
@@ -28,8 +29,10 @@ export class BundlePage extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            waiting: false,         // for the progress spinner
             server: this.props.server,
             collection: '',
+            apiroot: '',
             bundleMap: new Map(),
             bundleList: [],
             bundleNameList: [],
@@ -39,16 +42,16 @@ export class BundlePage extends Component {
         };
     }
 
-    // initialise the state
-    componentDidMount() {
+    initialise(theServer) {
         // make a deep copy of the default bundle
         let bndlList = JSON.parse(localStorage.getItem('bundleList'));
-        let theMap = new Map();
-        for (let bndl of bndlList) theMap.set(bndl.name, bndl);
+     //   let theMap = new Map();
+     //   for (let bndl of bndlList) theMap.set(bndl.name, bndl);
         this.setState({
-            server: localStorage.getItem('serverSelected') || '',
-            collection: localStorage.getItem('collectionSelected') || '',
-            bundleMap: theMap,
+            server: theServer,
+            collection: JSON.parse(localStorage.getItem('collectionSelected')),
+            apiroot: localStorage.getItem('serverApiroot') || '',
+        //    bundleMap: theMap,
             bundleList: bndlList,
             bundle: bndlList[localStorage.getItem('bundleSelected')],
             bundleNameList: bndlList.map(bndl => bndl.name)
@@ -56,9 +59,14 @@ export class BundlePage extends Component {
         this.showServerInfo();
     };
 
+    // initialise the state
+    componentDidMount() {
+        this.initialise(this.props.server)
+    };
+
     // when a new props is received
     componentWillReceiveProps(newProps) {
-        this.setState({server: newProps.server});
+        this.initialise(newProps.server)
     };
 
     objectsAsFormLabels() {
