@@ -15,6 +15,7 @@ import AppBar from 'material-ui/AppBar';
 import Toolbar from 'material-ui/Toolbar';
 import Typography from 'material-ui/Typography';
 import Button from 'material-ui/Button';
+import { defaultBundle } from '../stix/stixutil.js';
 
 
 function TabContainer(props) {
@@ -81,15 +82,39 @@ class MainPage extends Component {
         this.taxiCom = new TaxiiConnect("https://test.freetaxii.com:8000", "user-me", "user-password");
         this.state = {
             view: '',
+            server: undefined,
             isLogged: false,
             loglabel: 'Login'
         };
-    //    localStorage.clear();
 
+        this.initStore();
+
+    }
+
+    initStore = () => {
+
+        //   localStorage.removeItem('bundle--99819859-f19d-49e7-84de-4fbb344c0630');
+        //    localStorage.clear();
+        //   localStorage.setItem('bundleSelected', 0);
+        //   localStorage.setItem('bundleList', JSON.stringify([]));
         for(let key in localStorage) {
             console.log(key + ' = ' + localStorage.getItem(key));
         }
-    }
+
+        // default bundle
+        let defBndl = JSON.parse(JSON.stringify(defaultBundle));
+        let bndlList = JSON.parse(localStorage.getItem('bundleList')) || [];
+        // if the store bundleList is empty add the default bundle to it
+        if (bndlList.length <= 0) {
+            localStorage.setItem('bundleList', JSON.stringify([defBndl]));
+            bndlList.push(defBndl);
+            // bundle selected is the index into the bundle list
+            localStorage.setItem('bundleSelected', 0);
+        }
+
+        // have a default test taxii server in the list
+        localStorage.setItem('serverUrlList', JSON.stringify(["https://test.freetaxii.com:8000"]));
+    };
 
     isLoggedin = (value) => {
         if (value) {
@@ -109,12 +134,16 @@ class MainPage extends Component {
         }
     };
 
+    updateServer = (server) => {
+        this.setState({server: server});
+    };
+
     handleServer = () => {
-        this.setState({ view: <ServerView /> });
+        this.setState({ view: <ServerView update={this.updateServer} /> });
     };
 
     handleStix = () => {
-        this.setState({ view: <StixView  /> });
+        this.setState({ view: <StixView server={this.state.server} /> });
     };
 
     componentDidMount() {

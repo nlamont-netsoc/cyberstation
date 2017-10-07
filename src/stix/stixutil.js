@@ -1,4 +1,6 @@
 
+import uuidv4 from "uuid/v4";
+
 export const labelsNames = [
     "anomalous-activity",
     "anonymization",
@@ -33,4 +35,12 @@ export function isValidURL(str) {
     } else {
         return false;
     }
+};
+
+export const defaultBundle = {
+    name: 'default-bundle',
+    type: "bundle",
+    id: "bundle--" + uuidv4(),
+    spec_version: "2.1",
+    objects: []
 };

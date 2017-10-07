@@ -29,7 +29,7 @@ export default class AddPanel extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            title: '', selection: '', openDialog: false,
+            title: '', selection: this.props.initSelection, openDialog: false,
             add: false, delete: false, objList: [],
             addition: ''
         };
@@ -38,10 +38,10 @@ export default class AddPanel extends Component {
     // fill the list
     componentDidMount() {
         this.setState({
-            title: this.props.title, selection: '',
+            title: this.props.title,
             openDialog: false, add: false, delete: false,
             objList: this.props.itemList, addition: ''
-        })
+        });
     };
 
     // when a new props is received
@@ -50,7 +50,7 @@ export default class AddPanel extends Component {
             title: newProps.title,
             openDialog: false, add: false, delete: false,
             objList: newProps.itemList, addition: ''
-        })
+        });
     };
 
     asFormLabels() {
@@ -172,5 +172,6 @@ export default class AddPanel extends Component {
 AddPanel.propTypes = {
     title: PropTypes.string.isRequired,
     itemList: PropTypes.array.isRequired,
-    update: PropTypes.func.isRequired
+    update: PropTypes.func.isRequired,
+    initSelection: PropTypes.string
 };

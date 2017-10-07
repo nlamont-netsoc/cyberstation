@@ -5,7 +5,6 @@
 import {commonStix} from '../stix/common.js';
 import Grid from 'material-ui/Grid';
 import React, {Component} from 'react';
-import PropTypes from 'prop-types';
 import withRoot from '../components/withRoot';
 import withStyles from 'material-ui/styles/withStyles';
 import {BundleContent} from '../stix/bundleContent.js';
@@ -38,7 +37,10 @@ export class AttackPatternPage extends Component {
     constructor(props) {
         super(props);
         // make a deep copy of theStix
-        this.state = {display: false, stix: JSON.parse(JSON.stringify(theStix))};
+        this.state = {
+            display: false,
+            bundle: JSON.parse(JSON.stringify(localStorage.getItem('bundleSelected'))),
+            stix: JSON.parse(JSON.stringify(theStix))};
     }
 
     stixDefault = () => {
@@ -54,7 +56,7 @@ export class AttackPatternPage extends Component {
 
     updateBundleObject = (fieldName, value) => {
         // find the object in the bundle
-        let objFound = this.props.bundle.objects.find(obj => obj.id === this.state.stix.id);
+        let objFound = this.state.bundle.objects.find(obj => obj.id === this.state.stix.id);
         if (objFound) {
             objFound[fieldName] = value;
         }
@@ -81,7 +83,7 @@ export class AttackPatternPage extends Component {
         } else {
             if (sdoid) {
                 // find the object with id=sdoid in the bundle
-                let objFound = this.props.bundle.objects.find(obj => obj.id === sdoid);
+                let objFound = this.state.bundle.objects.find(obj => obj.id === sdoid);
                 if (objFound) {
                     this.setState({display: true, stix: objFound});
                 }
@@ -96,7 +98,7 @@ export class AttackPatternPage extends Component {
             return (
                 <Grid container className={this.props.root}>
                     <Grid item xs={3}>
-                        <BundleContent selected={this.selectedObject} bundle={this.props.bundle} stix={defaultStix}/>
+                        <BundleContent selected={this.selectedObject} bundle={this.state.bundle} stix={defaultStix}/>
                     </Grid>
                     <Grid item xs={9}>
                         {commonStix(this.state.stix, this.handleChange)}
@@ -108,7 +110,7 @@ export class AttackPatternPage extends Component {
             return (
                 <Grid container className={this.props.root}>
                     <Grid item xs={3}>
-                        <BundleContent selected={this.selectedObject} bundle={this.props.bundle} stix={defaultStix}/>
+                        <BundleContent selected={this.selectedObject} bundle={this.state.bundle} stix={defaultStix}/>
                     </Grid>
                 </Grid>
             );
@@ -144,10 +146,6 @@ export class AttackPatternPage extends Component {
     };
 
 }
-
-AttackPatternPage.propTypes = {
-    bundle: PropTypes.object.isRequired
-};
 
 export default withRoot(withStyles(styles)(AttackPatternPage));
 

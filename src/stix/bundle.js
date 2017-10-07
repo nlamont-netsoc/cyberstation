@@ -4,13 +4,17 @@
 // @flow weak
 import Grid from 'material-ui/Grid';
 import React, {Component} from 'react';
-import PropTypes from 'prop-types';
 import withRoot from '../components/withRoot';
 import withStyles from 'material-ui/styles/withStyles';
 import Typography from 'material-ui/Typography';
-import {BundlePanel} from '../stix/bundlePanel.js';
 import TextField from 'material-ui/TextField';
 import Table, {TableBody, TableCell, TableHead, TableRow} from 'material-ui/Table';
+import uuidv4 from "uuid/v4";
+import AddPanel from '../components/addPanel.js';
+import {FormControl, FormControlLabel} from 'material-ui/Form';
+import PropTypes from "prop-types";
+import { defaultBundle } from './stixutil.js';
+
 
 
 const styles = {};
@@ -25,56 +29,79 @@ export class BundlePage extends Component {
         super(props);
         this.state = {
             server: this.props.server,
-            collection: this.props.collection,
-            loading: false,
+            collection: '',
+            bundleList: [],
+            bundleNameList: [],
             objList: [],
             info: '',
-            bundle: {name: '', type: '', id: '', spec_version: '', objects: []}
+            bundle: JSON.parse(JSON.stringify(defaultBundle))
         };
     }
 
-    // initialise the state with the prop.bundle
+    // initialise the state
     componentDidMount() {
+        // make a deep copy of the default bundle
+        let bndlList = JSON.parse(localStorage.getItem('bundleList'));
         this.setState({
-            server: this.props.server,
-            collection: this.props.collection,
-            bundle: JSON.parse(JSON.stringify(this.props.bundle))
+            server: localStorage.getItem('serverSelected') || '',
+            collection: localStorage.getItem('collectionSelected') || '',
+            bundleList: bndlList,
+            bundle: bndlList[localStorage.getItem('bundleSelected')],
+            bundleNameList: bndlList.map(bndl => bndl.name)
         });
-        this.serverInfo();
+        this.showServerInfo();
     };
 
     // when a new props is received
     componentWillReceiveProps(newProps) {
-    //    if (newProps.collection) console.log("--> bundle collection=" + newProps.collection.id);
-        this.setState({
-            server: newProps.server,
-            collection: newProps.collection,
-            bundle: JSON.parse(JSON.stringify(newProps.bundle))
-        });
-        this.serverInfo();
+        this.setState({server: newProps.server});
     };
 
+    // changes to bundle due to user input editing
     handleChange = name => event => {
-        // copy the new value to the parent bundle
-        Object.assign(this.props.bundle, this.props.bundle, {[name]: event.target.value});
-        // copy the new value to this state bundle
-        Object.assign(this.state.bundle, this.state.bundle, {[name]: event.target.value});
-        // update the state
-        this.forceUpdate();
+        // update only the specific attribute
+        this.setState({bundle: {...this.state.bundle, [name]: event.target.value}});
+
+        // changing the name of the bundle
+        if(name === 'name'){
+            let ndx = localStorage.getItem('bundleSelected');
+            // find the selected bundle name in the bundleNameList
+            let temp = this.state.bundleNameList[ndx];
+
+
+        }
+
+        // copy the new value to the state bundle
+        //    Object.assign(this.state.bundle, this.state.bundle, {[name]: event.target.value});
+        // copy the updated state bundle to the store
+        //    localStorage.setItem('bundleSelected', JSON.stringify(this.state.bundle));
     };
 
-    selectedObject = (sdoid, isDeleted) => {
-
+    // callback from the AddPanel, either a selection or the list of bundle names
+    handleBundleUpdate = (event) => {
+        // event.target.value can be a string or an array of strings
+        if (event.target.value) {
+            if (Array.isArray(event.target.value)) {
+                // update the list
+                this.state.bundleNameList = event.target.value;
+                // if there is nothing in the list
+                if (event.target.value.length <= 0) this.state.bundleSelected = undefined;
+                this.forceUpdate();
+                // store the array as a json string object
+                localStorage.setItem('bundleList', JSON.stringify(event.target.value));
+            }
+        } else {
+            // a single selection
+            this.state.bundleSelected = event.target.value;
+            this.forceUpdate();
+            // find the index of the selected named bundle in the list
+            let ndx = this.state.bundleList.findIndex(bndl => bndl.name === event.target.value);
+            // update the store selected bundle
+            localStorage.setItem('bundleSelected', ndx);
+        }
     };
 
-    // from the BundlePanel when a bundle is loaded from localstore
-    updateBundle = (theBundle) => {
-        this.setState({bundle: theBundle});
-        this.handleChange('spec_version')({target: {value: theBundle.spec_version}});
-        this.handleChange('id')({target: {value: theBundle.id}});
-    };
-
-    serverInfo() {
+    showServerInfo() {
         if (this.state.server) {
             this.state.server.discovery().then(discovery => {
                 let colEntry = 'no collection selected';
@@ -116,25 +143,25 @@ export class BundlePage extends Component {
         const sendable = this.state.collection ? this.state.collection.can_write : false;
         return (
             <Grid container spacing={8}>
-                <Grid item xs={3}>
-                    <BundlePanel canSend={sendable}
-                                 bundle={this.props.bundle}
-                                 collection={this.state.collection}
-                                 sdotype=''
-                                 update={this.updateBundle}
-                                 selected={this.selectedObject}/>
+
+                <Grid item xs={5}>
+                    <FormControl component="fieldset" required>
+                        <AddPanel title="bundle"
+                                  initSelection={this.state.bundle.name}
+                                  itemList={this.state.bundleNameList}
+                                  update={this.handleBundleUpdate}/>
+                    </FormControl>
                 </Grid>
 
-                <Grid item xs={9}>
+                <Grid item xs={6}>
 
                     <Grid>
                         <form noValidate autoComplete="off">
                             <Grid key="bundle1" item>
-                                <TextField style={{marginLeft: 8, width: 500}}
+                                <TextField style={{marginLeft: 8, width: 400}}
                                            name="name"
                                            id="name"
                                            label="name"
-                                           className={this.props.textField}
                                            value={this.state.bundle.name}
                                            margin="normal"
                                            onChange={this.handleChange('name')}
@@ -172,14 +199,13 @@ export class BundlePage extends Component {
                 </Grid>
             </Grid>
         );
-    };
+    }
+    ;
 
 }
 
 BundlePage.propTypes = {
-    server: PropTypes.object,
-    collection: PropTypes.object,
-    bundle: PropTypes.object.isRequired
+    server: PropTypes.object
 };
 
 export default withRoot(withStyles(styles)(BundlePage));

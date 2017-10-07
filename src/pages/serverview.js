@@ -48,6 +48,8 @@ export class ServerView extends Component {
 
     updateServer = (server) => {
         this.setState({server: server});
+        // tell the parent component
+        this.props.update(server);
     };
 
     handleChange = (event, value) => {
@@ -83,5 +85,9 @@ export class ServerView extends Component {
     };
 
 }
+
+ServerView.propTypes = {
+    update: PropTypes.func.isRequired
+};
 
 export default withRoot(withStyles(styles)(ServerView));

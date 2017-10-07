@@ -11,7 +11,6 @@ import {BundlePage} from '../stix/bundle.js';
 import {RelationShipPage} from '../stix/relations.js';
 import {AttackPatternPage} from '../stix/attackpattern.js';
 import {SightingPage} from '../stix/sighting.js';
-import uuidv4 from 'uuid/v4';
 
 
 function TabContainer(props) {
@@ -42,26 +41,12 @@ export class StixView extends Component {
 
     constructor(props) {
         super(props);
-        this.state = {
-            value: 0,
-            server: this.props.server,
-            collection: this.props.collection,
-            bundle: {name: "new bundle", type: "bundle", id: "bundle--" + uuidv4(), spec_version: "2.1", objects: []}
-        };
+        this.state = {value: 0, server: this.props.server};
     }
-
-    componentDidMount() {
-        this.setState({server: this.props.server, collection: this.props.collection});
-    };
 
     // when a new props is received
     componentWillReceiveProps(newProps) {
-        this.setState({
-            value: 0,
-            server: newProps.server,
-            collection: newProps.collection,
-            bundle: {type: "bundle", id: "bundle--" + uuidv4(), spec_version: "2.1", objects: []}
-        });
+        this.setState({server: newProps.server});
     };
 
     handleChange = (event, value) => {
@@ -100,25 +85,11 @@ export class StixView extends Component {
                 </div>
 
                 <div style={viewStyle.content}>
-                    {this.state.value === 0 &&
-                    <TabContainer>
-                        <BundlePage collection={this.state.collection} server={this.state.server}
-                                    bundle={this.state.bundle}/></TabContainer>}
-                    {this.state.value === 1 &&
-                    <TabContainer>
-                        <AttackPatternPage server={this.state.server} bundle={this.state.bundle}/>
-                    </TabContainer>}
-                    {this.state.value === 2 &&
-                    <TabContainer>
-                        <RelationShipPage server={this.state.server} bundle={this.state.bundle}/>
-                    </TabContainer>}
-                    {this.state.value === 3 &&
-                    <TabContainer>
-                        <IndicatorPage server={this.state.server} bundle={this.state.bundle}/>
-                    </TabContainer>}
-                    {this.state.value === 4 && <TabContainer>
-                        <SightingPage server={this.state.server} bundle={this.state.bundle}/>
-                    </TabContainer>}
+                    {this.state.value === 0 && <TabContainer><BundlePage server={this.state.server}/></TabContainer>}
+                    {this.state.value === 1 && <TabContainer><AttackPatternPage /></TabContainer>}
+                    {this.state.value === 2 && <TabContainer><RelationShipPage /></TabContainer>}
+                    {this.state.value === 3 && <TabContainer><IndicatorPage /></TabContainer>}
+                    {this.state.value === 4 && <TabContainer><SightingPage /></TabContainer>}
                     {this.state.value === 5 && <TabContainer>{'Malware'}</TabContainer>}
                     {this.state.value === 6 && <TabContainer>{'Campaign'}</TabContainer>}
                     {this.state.value === 7 && <TabContainer>{'Course of Action'}</TabContainer>}
@@ -138,8 +109,7 @@ export class StixView extends Component {
 }
 
 StixView.propTypes = {
-    server: PropTypes.object,
-    collection: PropTypes.object
+    server: PropTypes.object
 };
 
 export default withRoot(withStyles(styles)(StixView));
