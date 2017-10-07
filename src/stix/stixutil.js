@@ -44,3 +44,11 @@ export const defaultBundle = {
     spec_version: "2.1",
     objects: []
 };
+
+export const emptyBundle = {
+    name: '',
+    type: 'bundle',
+    id: '',
+    spec_version: '',
+    objects: []
+};

@@ -13,7 +13,7 @@ import uuidv4 from "uuid/v4";
 import AddPanel from '../components/addPanel.js';
 import {FormControl, FormLabel, FormControlLabel} from 'material-ui/Form';
 import PropTypes from "prop-types";
-import {defaultBundle} from './stixutil.js';
+import {defaultBundle, emptyBundle} from './stixutil.js';
 import Divider from 'material-ui/Divider';
 import {Collection} from "../libs/taxii2lib";
 import Button from 'material-ui/Button';
@@ -45,15 +45,15 @@ export class BundlePage extends Component {
     }
 
     initialise(theServer) {
-        // make a deep copy of the default bundle
+        // make a deep copy of the bundle list
         let bndlList = JSON.parse(localStorage.getItem('bundleList'));
-     //   let theMap = new Map();
-     //   for (let bndl of bndlList) theMap.set(bndl.name, bndl);
+        //   let theMap = new Map();
+        //   for (let bndl of bndlList) theMap.set(bndl.name, bndl);
         this.setState({
             server: theServer,
             collection: JSON.parse(localStorage.getItem('collectionSelected')),
             apiroot: localStorage.getItem('serverApiroot') || '',
-        //    bundleMap: theMap,
+            //    bundleMap: theMap,
             bundleList: bndlList,
             bundle: bndlList[localStorage.getItem('bundleSelected')],
             bundleNameList: bndlList.map(bndl => bndl.name)
@@ -72,8 +72,9 @@ export class BundlePage extends Component {
     };
 
     objectsAsFormLabels() {
+        const objslist = this.state.bundle ? this.state.bundle.objects : [];
         let formItems = [];
-        this.state.bundle.objects.map(sdo => formItems.push(
+        objslist.map(sdo => formItems.push(
             <Typography type="body1" key={sdo.id} style={{margin: 8, marginLeft: 16}}>{sdo.name}</Typography>));
         return formItems;
     };
@@ -97,13 +98,46 @@ export class BundlePage extends Component {
         // event.target.value can be a string or an array of strings
         if (event.target.value) {
             if (Array.isArray(event.target.value)) {
+                // if there is nothing in the list clear everything
+                if (event.target.value.length <= 0) {
+                    localStorage.setItem('bundleSelected', '');
+                    localStorage.setItem('bundleList', JSON.stringify([]));
+                    this.state.bundleList = [];
+                    this.state.bundleNameList = [];
+                    this.state.objList = [];
+                    this.state.info = '';
+                    this.state.bundle = undefined;
+                    this.forceUpdate();
+                    // tell the parent about having no bundle selected
+                    this.props.update(false);
+                    return;
+                }
+                // pick the last value of the array
+                let lastValue = event.target.value[event.target.value.length - 1];
                 // update the list
                 this.state.bundleNameList = event.target.value;
-                // if there is nothing in the list
-                //    if (event.target.value.length <= 0) this.state.bundleSelected = undefined;
+                // find the index of the lastValue bundle in the list
+                let ndx = this.state.bundleList.findIndex(bndl => bndl.name === lastValue);
+                if (ndx === -1) {
+                    // must create a new bundle
+                    let newBundle = JSON.parse(JSON.stringify(defaultBundle));
+                    newBundle.name = lastValue;
+                    this.state.bundleList = [newBundle];
+                    this.state.bundleNameList = [newBundle.name];
+                    this.state.objList = [];
+                    this.state.info = '';
+                    this.state.bundle = newBundle;
+                    // update the store selected bundle
+                    localStorage.setItem('bundleSelected', 0);
+                    // store the array as a json string object
+                    localStorage.setItem('bundleList', JSON.stringify(this.state.bundleList));
+                } else {
+                    // update the store selected bundle
+                    localStorage.setItem('bundleSelected', ndx);
+                }
+                // tell the parent about having a bundle selected
+                this.props.update(true);
                 this.forceUpdate();
-                // store the array as a json string object
-                localStorage.setItem('bundleList', JSON.stringify(event.target.value));
             }
         } else {
             // a single selection
@@ -153,15 +187,59 @@ export class BundlePage extends Component {
         }
     };
 
+    showBundleInfo() {
+        if (this.state.bundle) {
+            return <form noValidate autoComplete="off">
+                <Grid key="bundle1" item>
+                    <TextField style={{marginLeft: 8, width: 350}}
+                               name="name"
+                               id="name"
+                               label="name"
+                               value={this.state.bundle.name}
+                               margin="normal"
+                               onChange={this.handleChange('name')}
+                    />
+                    <TextField style={{marginLeft: 22, width: 40}}
+                               name="spec_version"
+                               id="spec_version"
+                               label="spec_version"
+                               value={this.state.bundle.spec_version}
+                               margin="normal"
+                               onChange={this.handleChange('spec_version')}
+                    />
+                </Grid>
+                <Grid key="bundle2" item>
+                    <TextField style={{marginLeft: 8, width: 400}}
+                               name="id"
+                               id="id"
+                               label="id"
+                               value={this.state.bundle.id}
+                               margin="normal"
+                               onChange={this.handleChange('id')}
+                    />
+                    <Button fab dense color="primary" aria-label="redo" style={{width: 33, height: 22}}
+                            onClick={(e) => {
+                                this.handleChange('id')({target: {value: "bundle--" + uuidv4()}})
+                            }}>
+                        <Cached/>
+                    </Button>
+                </Grid>
+            </form>
+        } else {
+            return <div> no bundle information </div>
+        }
+    };
+
     render() {
         const sendable = this.state.collection ? this.state.collection.can_write : false;
+        const bundleName = this.state.bundle ? this.state.bundle.name : '';
         return (
             <Grid container spacing={8}>
 
                 <Grid item xs={5}>
                     <FormControl component="fieldset" required>
                         <AddPanel title="bundle"
-                                  initSelection={this.state.bundle.name}
+                                  initSelection={bundleName}
                                   itemList={this.state.bundleNameList}
                                   update={this.handleBundleUpdate}/>
                     </FormControl>
@@ -170,43 +248,7 @@ export class BundlePage extends Component {
                 <Grid item xs={6}>
 
                     <Grid>
-                        <form noValidate autoComplete="off">
-                            <Grid key="bundle1" item>
-                                <TextField style={{marginLeft: 8, width: 350}}
-                                           name="name"
-                                           id="name"
-                                           label="name"
-                                           value={this.state.bundle.name}
-                                           margin="normal"
-                                           onChange={this.handleChange('name')}
-                                />
-                                <TextField style={{marginLeft: 22, width: 40}}
-                                           name="spec_version"
-                                           id="spec_version"
-                                           label="spec_version"
-                                           value={this.state.bundle.spec_version}
-                                           margin="normal"
-                                           onChange={this.handleChange('spec_version')}
-                                />
-                            </Grid>
-                            <Grid key="bundle2" item>
-                                <TextField style={{marginLeft: 8, width: 400}}
-                                           name="id"
-                                           id="id"
-                                           label="id"
-                                           value={this.state.bundle.id}
-                                           margin="normal"
-                                           onChange={this.handleChange('id')}
-                                />
-                                <Button fab dense color="primary" aria-label="redo" style={{width: 33, height: 22}}
-                                        onClick={(e) => {
-                                            this.handleChange('id')({target: {value: "bundle--" + uuidv4()}})
-                                        }}>
-                                    <Cached/>
-                                </Button>
-                            </Grid>
-                        </form>
-
+                        {this.showBundleInfo()}
                     </Grid>
 
                     <Grid key="bundle3" item>
@@ -231,7 +273,8 @@ export class BundlePage extends Component {
 }
 
 BundlePage.propTypes = {
-    server: PropTypes.object
+    server: PropTypes.object,
+    update: PropTypes.func
 };
 
 export default withRoot(withStyles(styles)(BundlePage));

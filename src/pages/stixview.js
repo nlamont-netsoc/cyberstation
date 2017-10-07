@@ -44,7 +44,7 @@ export class StixView extends Component {
 
     constructor(props) {
         super(props);
-        this.state = {value: 0, server: this.props.server};
+        this.state = {value: 0, server: this.props.server, hasBundle: true};
     }
 
     // when a new props is received
@@ -53,7 +53,15 @@ export class StixView extends Component {
     };
 
     handleChange = (event, value) => {
-        this.setState({value});
+        this.setState({value: value});
+    };
+
+    // update from the BundlePage,
+    // if false means no bundle is selected, true there is a selected bundle
+    // this is for the case where all bundles have been deleted.
+    // Use to disable the sdo pages, see below
+    handleBundleUpdate = (value) => {
+        this.setState({hasBundle: value});
     };
 
     render() {
@@ -88,21 +96,21 @@ export class StixView extends Component {
                 </div>
 
                 <div style={viewStyle.content}>
-                    {this.state.value === 0 && <TabContainer><BundlePage server={this.state.server}/></TabContainer>}
-                    {this.state.value === 1 && <TabContainer><AttackPatternPage /></TabContainer>}
-                    {this.state.value === 2 && <TabContainer><RelationShipPage /></TabContainer>}
-                    {this.state.value === 3 && <TabContainer><IndicatorPage /></TabContainer>}
-                    {this.state.value === 4 && <TabContainer><SightingPage /></TabContainer>}
-                    {this.state.value === 5 && <TabContainer>{'Malware'}</TabContainer>}
-                    {this.state.value === 6 && <TabContainer>{'Campaign'}</TabContainer>}
-                    {this.state.value === 7 && <TabContainer>{'Course of Action'}</TabContainer>}
-                    {this.state.value === 8 && <TabContainer>{'Identity'}</TabContainer>}
-                    {this.state.value === 9 && <TabContainer>{'Intrusion Set'}</TabContainer>}
-                    {this.state.value === 10 && <TabContainer>{'Observed Data'}</TabContainer>}
-                    {this.state.value === 11 && <TabContainer>{'Report'}</TabContainer>}
-                    {this.state.value === 12 && <TabContainer>{'Threat Actor'}</TabContainer>}
-                    {this.state.value === 13 && <TabContainer>{'Tool'}</TabContainer>}
-                    {this.state.value === 14 && <TabContainer>{'Vulnerability'}</TabContainer>}
+                    {this.state.value === 0 && <TabContainer><BundlePage update={this.handleBundleUpdate} server={this.state.server}/></TabContainer>}
+                    {this.state.hasBundle && this.state.value === 1 && <TabContainer><AttackPatternPage /></TabContainer>}
+                    {this.state.hasBundle && this.state.value === 2 && <TabContainer><RelationShipPage /></TabContainer>}
+                    {this.state.hasBundle && this.state.value === 3 && <TabContainer><IndicatorPage /></TabContainer>}
+                    {this.state.hasBundle && this.state.value === 4 && <TabContainer><SightingPage /></TabContainer>}
+                    {this.state.hasBundle && this.state.value === 5 && <TabContainer>{'Malware'}</TabContainer>}
+                    {this.state.hasBundle && this.state.value === 6 && <TabContainer>{'Campaign'}</TabContainer>}
+                    {this.state.hasBundle && this.state.value === 7 && <TabContainer>{'Course of Action'}</TabContainer>}
+                    {this.state.hasBundle && this.state.value === 8 && <TabContainer>{'Identity'}</TabContainer>}
+                    {this.state.hasBundle && this.state.value === 9 && <TabContainer>{'Intrusion Set'}</TabContainer>}
+                    {this.state.hasBundle && this.state.value === 10 && <TabContainer>{'Observed Data'}</TabContainer>}
+                    {this.state.hasBundle && this.state.value === 11 && <TabContainer>{'Report'}</TabContainer>}
+                    {this.state.hasBundle && this.state.value === 12 && <TabContainer>{'Threat Actor'}</TabContainer>}
+                    {this.state.hasBundle && this.state.value === 13 && <TabContainer>{'Tool'}</TabContainer>}
+                    {this.state.hasBundle && this.state.value === 14 && <TabContainer>{'Vulnerability'}</TabContainer>}
                 </div>
 
             </div>
