@@ -36,11 +36,20 @@ export class AttackPatternPage extends Component {
 
     constructor(props) {
         super(props);
-        // make a deep copy of theStix
+        let theBundleArr = JSON.parse(localStorage.getItem('bundleList'));
+        let theBundle = theBundleArr[localStorage.getItem('bundleSelected')];
         this.state = {
             display: false,
-            bundle: JSON.parse(JSON.stringify(localStorage.getItem('bundleSelected'))),
-            stix: JSON.parse(JSON.stringify(theStix))};
+            bundle: JSON.parse(JSON.stringify(theBundle)),  // make a deep copy of theBundle
+            stix: JSON.parse(JSON.stringify(theStix))       // make a deep copy of theStix
+        };
+    }
+
+    // before leaving the component, update the store
+    componentWillUnmount(){
+        let theBundleArr = JSON.parse(localStorage.getItem('bundleList'));
+        theBundleArr[localStorage.getItem('bundleSelected')] = this.state.bundle;
+        localStorage.setItem('bundleList', JSON.stringify(theBundleArr));
     }
 
     stixDefault = () => {

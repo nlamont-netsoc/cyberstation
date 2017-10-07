@@ -11,10 +11,10 @@ import TextField from 'material-ui/TextField';
 import Table, {TableBody, TableCell, TableHead, TableRow} from 'material-ui/Table';
 import uuidv4 from "uuid/v4";
 import AddPanel from '../components/addPanel.js';
-import {FormControl, FormControlLabel} from 'material-ui/Form';
+import {FormControl, FormLabel, FormControlLabel} from 'material-ui/Form';
 import PropTypes from "prop-types";
-import { defaultBundle } from './stixutil.js';
-
+import {defaultBundle} from './stixutil.js';
+import Divider from 'material-ui/Divider';
 
 
 const styles = {};
@@ -30,6 +30,7 @@ export class BundlePage extends Component {
         this.state = {
             server: this.props.server,
             collection: '',
+            bundleMap: new Map(),
             bundleList: [],
             bundleNameList: [],
             objList: [],
@@ -42,9 +43,12 @@ export class BundlePage extends Component {
     componentDidMount() {
         // make a deep copy of the default bundle
         let bndlList = JSON.parse(localStorage.getItem('bundleList'));
+        let theMap = new Map();
+        for (let bndl of bndlList) theMap.set(bndl.name, bndl);
         this.setState({
             server: localStorage.getItem('serverSelected') || '',
             collection: localStorage.getItem('collectionSelected') || '',
+            bundleMap: theMap,
             bundleList: bndlList,
             bundle: bndlList[localStorage.getItem('bundleSelected')],
             bundleNameList: bndlList.map(bndl => bndl.name)
@@ -57,24 +61,25 @@ export class BundlePage extends Component {
         this.setState({server: newProps.server});
     };
 
+    objectsAsFormLabels() {
+        let formItems = [];
+        this.state.bundle.objects.map(sdo => formItems.push(
+            <Typography type="body1" key={sdo.id} style={{margin: 8, marginLeft: 16}}>{sdo.name}</Typography>));
+        return formItems;
+    };
+
     // changes to bundle due to user input editing
     handleChange = name => event => {
         // update only the specific attribute
         this.setState({bundle: {...this.state.bundle, [name]: event.target.value}});
-
-        // changing the name of the bundle
-        if(name === 'name'){
+        // special case, changing the name of the bundle, we need to also update the bundleNameList
+        if (name === 'name') {
+            // the index of the selected bundle in the list
             let ndx = localStorage.getItem('bundleSelected');
-            // find the selected bundle name in the bundleNameList
-            let temp = this.state.bundleNameList[ndx];
-
-
+            // update the value of this name in the list
+            this.state.bundleNameList[ndx] = event.target.value;
         }
-
-        // copy the new value to the state bundle
-        //    Object.assign(this.state.bundle, this.state.bundle, {[name]: event.target.value});
-        // copy the updated state bundle to the store
-        //    localStorage.setItem('bundleSelected', JSON.stringify(this.state.bundle));
+        this.forceUpdate();
     };
 
     // callback from the AddPanel, either a selection or the list of bundle names
@@ -85,14 +90,13 @@ export class BundlePage extends Component {
                 // update the list
                 this.state.bundleNameList = event.target.value;
                 // if there is nothing in the list
-                if (event.target.value.length <= 0) this.state.bundleSelected = undefined;
+                //    if (event.target.value.length <= 0) this.state.bundleSelected = undefined;
                 this.forceUpdate();
                 // store the array as a json string object
                 localStorage.setItem('bundleList', JSON.stringify(event.target.value));
             }
         } else {
             // a single selection
-            this.state.bundleSelected = event.target.value;
             this.forceUpdate();
             // find the index of the selected named bundle in the list
             let ndx = this.state.bundleList.findIndex(bndl => bndl.name === event.target.value);
@@ -158,7 +162,7 @@ export class BundlePage extends Component {
                     <Grid>
                         <form noValidate autoComplete="off">
                             <Grid key="bundle1" item>
-                                <TextField style={{marginLeft: 8, width: 400}}
+                                <TextField style={{marginLeft: 8, width: 350}}
                                            name="name"
                                            id="name"
                                            label="name"
@@ -194,6 +198,13 @@ export class BundlePage extends Component {
                         <div style={{height: 20}}/>
                         <Typography type="body1" style={{marginLeft: 8}}>Connected to</Typography>
                         {this.state.info}
+                    </Grid>
+
+                    <Grid key="bundle4" item>
+                        <div style={{height: 20}}/>
+                        <Typography type="body1" style={{marginLeft: 8}}>Objects list</Typography>
+                        <Divider/>
+                        {this.objectsAsFormLabels()}
                     </Grid>
 
                 </Grid>
