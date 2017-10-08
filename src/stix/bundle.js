@@ -232,6 +232,27 @@ export class BundlePage extends Component {
         }
     };
 
+    // send the bundle to the server collection endpoint
+    handleSend = (event) => {
+        if (this.state.collection) {
+            // add only if can write to the collection
+            if (this.state.collection.can_write) {
+                this.setState({waiting: true});
+                // must remove the name attribute from the bundle object before sending
+                // make a deep copy of the bundle
+                let bundleCopy = JSON.parse(JSON.stringify(this.state.bundle));
+                // remove the name attribute from it, because it's not part of the bundle specs
+                delete bundleCopy.name;
+                // make a collection object
+                const theCollection = new Collection(this.state.collection, this.state.apiroot, this.props.server.conn);
+                theCollection.addObject(bundleCopy).then(status => {
+                    console.log("----> collection.addObject() \n" + JSON.stringify(status));
+                });
+                this.setState({waiting: false});
+            }
+        }
+    };
+
     render() {
         const sendable = this.state.collection ? this.state.collection.can_write : false;
         const bundleName = this.state.bundle ? this.state.bundle.name : '';
@@ -240,6 +261,9 @@ export class BundlePage extends Component {
 
                 <Grid item xs={5}>
                     <FormControl component="fieldset" required>
+                        <Button disabled={!sendable} onClick={this.handleSend} raised color="primary"
+                                style={{margin: 8}}>Send to server</Button>
+
                         <AddPanel title="bundle"
                                   initSelection={bundleName}
                                   itemList={this.state.bundleNameList}

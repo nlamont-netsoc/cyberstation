@@ -1,4 +1,15 @@
 
+
+to force the github page to accept new updates
+modify the index.html file a bit , then do
+
+npm run deploy
+
+again.
+
+
+
+
 autoFocus={true}
 
 https://test.freetaxii.com:8000
