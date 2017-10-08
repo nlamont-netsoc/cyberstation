@@ -1,10 +1,8 @@
 ### CyberStation
 
-**CyberStation** is a browser application written in Javascript ([ES6, ES2015](http://www.ecma-international.org/ecma-262/6.0/index.html)) 
-that provides a UI to 
-connect to a [TAXII-2.0](https://oasis-open.github.io/cti-documentation/taxii/intro.html) server 
-and allow a user to create and then send 
-[STIX 2.1](https://oasis-open.github.io/cti-documentation/stix/intro) objects to it.
+**CyberStation** is an interactive browser application for 
+creating and sending [STIX 2.1](https://oasis-open.github.io/cti-documentation/stix/intro) objects 
+to a [TAXII-2.0](https://oasis-open.github.io/cti-documentation/taxii/intro.html) server.
 
 [STIX-2.1](https://oasis-open.github.io/cti-documentation/resources#stix-20-specification) 
  cyber threat intelligence objects are described as [1]: 
@@ -26,6 +24,11 @@ The aim of **CyberStation** is to create STIX-2.1 objects through a UI and sendi
 selected TAXII-2 server. The App consist of a single page user interface, with a number 
 of tabs to choose from. The work flow consists of selecting a server together with a collection endpoint to connect to.
  Then creating a bundle of STIX objects using the UI and sending that bundle to the selected server endpoint. 
+
+**CyberStation** is written in Javascript ([ECMAScript 2015](http://www.ecma-international.org/ecma-262/6.0/index.html)) 
+and uses the [React](https://reactjs.org/) and 
+[Material Design](https://github.com/callemall/material-ui) libraries for its user interface.
+
 The following describes the different pages of **CyberStation**. 
 
 #### Login
@@ -66,26 +69,27 @@ Currently only **"attack pattern, indicator, relationship and sighting"** are im
 
 If a server/api root/collection has not yet been selected, a bundle of STIX objects can still be created. Such 
 bundle is saved to local (browser) storage, such that it can be further edited later on, 
-and eventually sent to the selected TAXII-2 server.   
+and eventually sent to a TAXII-2 server.   
 
 
 ## Demo
 
 There is a demo of **CyberStation** at [CyberStation 0.1](https://workingdog.github.io/cyberstation/).
 It makes use of the 
-[freetaxii-server](https://github.com/freetaxii/freetaxii-server).
+[freetaxii-server](https://github.com/freetaxii/freetaxii-server) as the default TAXII-2 server.
 
 
-#### Requisite
+#### Prerequisite
  
 You need a modern browser compatible with Javascript ES6, see 
 [ES6 compatibility table](https://kangax.github.io/compat-table/es6/).
  Note when using [freetaxii-server](https://github.com/freetaxii/freetaxii-server) there is 
  currently an issue with the "Allow-Control-Allow-Origin" requirement. 
- To overcome this on Chrome for example, launch Chrome (on macos) with:
+ To overcome this on Chrome (on macos) for example, launch Chrome with:
  
      open /Applications/Google\ Chrome.app --args --disable-web-security --user-data-dir
  
+There maybe similar workaround for other browsers and systems.
 
 ### References
  
@@ -96,6 +100,11 @@ You need a modern browser compatible with Javascript ES6, see
 3) [freetaxii-server](https://github.com/freetaxii/freetaxii-server). A cyber threat intelligence server based on TAXII 2 and written in Golang.
 
 4) [TAXII-2.0 Javascript lib](https://github.com/workingDog/taxii2lib). A TAXII 2.0 javascript client library.
+
+5) [React](https://reactjs.org/). A JavaScript library for building user interfaces.
+
+6) [material-ui](https://github.com/callemall/material-ui). React Components that Implement Google's Material Design.
+
 
 ### Status
 
