@@ -88,11 +88,14 @@ You need a modern browser compatible with Javascript ES6, see
 
 ### References
  
-1) [STIX 2.1 Specification](https://oasis-open.github.io/cti-documentation/)
+1) [STIX 2.1 Specification](https://oasis-open.github.io/cti-documentation/). OASIS open standards
 
-2) [TAXII-2.0 Specification](https://oasis-open.github.io/cti-documentation/resources#taxii-20-specification)
+2) [TAXII-2.0 Specification](https://oasis-open.github.io/cti-documentation/resources#taxii-20-specification). OASIS open standards
 
 3) [freetaxii-server](https://github.com/freetaxii/freetaxii-server). A cyber threat intelligence server based on TAXII 2 and written in Golang.
+
+4) [TAXII-2.0 Javascript lib](https://github.com/workingDog/taxii2lib). A TAXII 2.0 javascript client library.
+
 ### Status
 
 work in progress, not tested, prototype stage.
