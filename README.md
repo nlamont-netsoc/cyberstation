@@ -66,7 +66,7 @@ Currently only **"attack pattern, indicator, relationship and sighting"** are im
 
 If a server/api root/collection has not yet been selected, a bundle of STIX objects can still be created. Such 
 bundle is saved to local (browser) storage, such that it can be further edited later on, 
-and eventually send to the selected TAXII-2 server.   
+and eventually sent to the selected TAXII-2 server.   
 
 
 ## Demo
