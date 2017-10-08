@@ -39,7 +39,7 @@ Clicking on the **SERVER** button brings a page with the tabs; **SERVERS** where
 and **COLLECTIONS** representing the endpoints of the chosen server collections. Clicking on 
 the **STIX** button brings the UI for creating the different types of STIX objects. 
 
-##### Server page
+#### Server page
 On the **SERVER** tab page, a test server from [freetaxii-server](https://github.com/freetaxii/freetaxii-server)
 is predefined for selection. Selecting a server brings the list of its api roots. 
 One api root should be selected to be able to send STIX objects to the server.
@@ -51,7 +51,7 @@ by selecting the desired server and clicking on the ![-](/images/delete.png?raw=
 On the **COLLECTIONS** tab page, a list of the collections available at the selected server is displayed.
 A collection should be selected to be able to send STIX objects to the server.
 
-##### Stix page
+#### Stix page
 Clicking on the **STIX** button brings a page where STIX objects can be created. All STIX objects 
 must belong to a bundle. As such, a bundle object must first be created from the **BUNDLE** page before 
 any STIX objects types can be added to it.
