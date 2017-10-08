@@ -94,11 +94,12 @@ export class BundlePage extends Component {
     };
 
     // callback from the AddPanel, either a selection or the list of bundle names
+    // ---> todo all this should be redone
     handleBundleUpdate = (event) => {
-        // event.target.value can be a string or an array of strings
+        // event.target.value can be a string or an array of strings (the list)
         if (event.target.value) {
             if (Array.isArray(event.target.value)) {
-                // if there is nothing in the list clear everything
+                // if there is nothing in the list clear everything and return
                 if (event.target.value.length <= 0) {
                     localStorage.setItem('bundleSelected', '');
                     localStorage.setItem('bundleList', JSON.stringify([]));
@@ -114,10 +115,11 @@ export class BundlePage extends Component {
                 }
                 // pick the last value of the array
                 let lastValue = event.target.value[event.target.value.length - 1];
-                // update the list
+                // update the name list
                 this.state.bundleNameList = event.target.value;
-                // find the index of the lastValue bundle in the list
+                // find the index of the lastValue bundle in the bundle list
                 let ndx = this.state.bundleList.findIndex(bndl => bndl.name === lastValue);
+                // if could not find the selection in the list, means the list is empty
                 if (ndx === -1) {
                     // must create a new bundle
                     let newBundle = JSON.parse(JSON.stringify(defaultBundle));
@@ -127,9 +129,9 @@ export class BundlePage extends Component {
                     this.state.objList = [];
                     this.state.info = '';
                     this.state.bundle = newBundle;
-                    // update the store selected bundle
+                    // update the store selected bundle index
                     localStorage.setItem('bundleSelected', 0);
-                    // store the array as a json string object
+                    // store the new bundle list as a json string object
                     localStorage.setItem('bundleList', JSON.stringify(this.state.bundleList));
                 } else {
                     // update the store selected bundle

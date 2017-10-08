@@ -56,9 +56,8 @@ export class StixView extends Component {
         this.setState({value: value});
     };
 
-    // update from the BundlePage,
+    // update from the BundlePage, is for the case where all bundles have been deleted.
     // if false means no bundle is selected, true there is a selected bundle
-    // this is for the case where all bundles have been deleted.
     // Use to disable the sdo pages, see below
     handleBundleUpdate = (value) => {
         this.setState({hasBundle: value});
