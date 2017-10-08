@@ -33,8 +33,7 @@ export class TaxiiConnect {
             'headers': new Headers({
                 'Accept': 'application/vnd.oasis.taxii+json',
                 'version': '2.1',
-                'Authorization': 'Basic ' + this.hash,
-                'Content-Type': 'application/vnd.oasis.taxii+json',
+                'Content-Type': 'application/vnd.oasis.taxii+json'
             })
         };
 
@@ -44,7 +43,7 @@ export class TaxiiConnect {
                 'Accept': 'application/vnd.oasis.taxii+json',
                 'version': '2.1',
                 'Authorization': 'Basic ' + this.hash,
-                'Content-Type': 'application/vnd.oasis.stix+json',
+                'Content-Type': 'application/vnd.oasis.stix+json'
             })
         };
 
@@ -55,7 +54,6 @@ export class TaxiiConnect {
                 'version': '2.1',
                 'Authorization': 'Basic ' + this.hash,
                 'Content-Type': 'application/vnd.oasis.stix+json'
-
             })
         };
     }

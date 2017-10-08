@@ -285,7 +285,7 @@ export class BundlePage extends Component {
 
                     <Grid key="bundle4" item>
                         <div style={{height: 20}}/>
-                        <Typography type="body1" style={{marginLeft: 8}}>Objects list</Typography>
+                        <Typography type="body1" style={{marginLeft: 8}}>Bundle content</Typography>
                         <Divider/>
                         {this.objectsAsFormLabels()}
                     </Grid>
