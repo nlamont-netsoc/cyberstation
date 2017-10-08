@@ -2,7 +2,7 @@
 
 /* global conn */
 // @flow weak
-import {commonStix} from '../stix/common.js';
+
 import Grid from 'material-ui/Grid';
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
@@ -14,6 +14,7 @@ import moment from 'moment';
 import Button from 'material-ui/Button';
 import Cached from 'material-ui-icons/Cached';
 import AddKillPhase from './addKillPhase.js';
+import {commonStix} from "./common";
 
 const styles = {};
 
@@ -109,7 +110,7 @@ export class IndicatorPage extends Component {
         let defaultStix = this.stixDefault();
         if (this.state.display === true) {
             return (
-                <Grid >
+                <Grid container className={this.props.root}>
                     <Grid item xs={3}>
                         <BundleContent selected={this.selectedObject} bundle={this.state.bundle} stix={defaultStix}/>
                     </Grid>
