@@ -1,7 +1,10 @@
 ### CyberStation
 
-A browser App to add [STIX 2.1](https://oasis-open.github.io/cti-documentation/stix/intro) objects 
-to a [TAXII-2.0](https://oasis-open.github.io/cti-documentation/taxii/intro.html) server. 
+**CyberStation** is a browser application written in Javascript ([ES6, ES2015](http://www.ecma-international.org/ecma-262/6.0/index.html)) 
+that provides a UI to 
+connect to a [TAXII-2.0](https://oasis-open.github.io/cti-documentation/taxii/intro.html) server 
+and allow a user to create and then send 
+[STIX 2.1](https://oasis-open.github.io/cti-documentation/stix/intro) objects to it.
 
 [STIX-2.1](https://oasis-open.github.io/cti-documentation/resources#stix-20-specification) 
  cyber threat intelligence objects are described as [1]: 
@@ -16,9 +19,6 @@ is described as [2]: "Trusted Automated Exchange of Intelligence Information (TA
 is an application protocol for exchanging CTI over HTTPS. ​TAXII defines a RESTful API 
 (a set of services and message exchanges) and a set of requirements for TAXII Clients 
 and Servers."
-
-**CyberStation** is a browser App written in Javascript ([ES6, ES2015](http://www.ecma-international.org/ecma-262/6.0/index.html)) that provides a UI to 
-connect to a TAXII-2 server and allow a user to create and then send STIX-2.1 objects to it.
 
 ### Documentation
 
