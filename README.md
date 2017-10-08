@@ -46,7 +46,7 @@ One api root should be selected to be able to send STIX objects to the server.
 
 The UI allows for adding new servers by clicking the 
 ![+](/images/add.png?raw=true "Add") button or deleting previously defined servers 
-by selecting the desired server and clicking on the ![-](/images/add.png?raw=true "Delete") button.
+by selecting the desired server and clicking on the ![-](/images/delete.png?raw=true "Delete") button.
 
 On the **COLLECTIONS** tab page, a list of the collections available at the selected server is displayed.
 A collection should be selected to be able to send STIX objects to the server.
@@ -57,7 +57,7 @@ must belong to a bundle. As such, a bundle object must first be created from the
 any STIX objects types can be added to it.
 
 The UI allows for adding new bundles by clicking the ![+](/images/add.png?raw=true "Add") button or deleting previously defined bundles 
-by selecting the desired bundle and clicking on the ![-](/images/add.png?raw=true "Delete") button. In addition a **SEND TO SERVER** button 
+by selecting the desired bundle and clicking on the ![-](/images/delete.png?raw=true "Delete") button. In addition a **SEND TO SERVER** button 
 allows for sending the bundle to the selected server. This button is disabled if no server and collection 
 endpoint are selected or the selected collection does not allow writing to.
 
