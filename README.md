@@ -66,7 +66,7 @@ any STIX objects types can be added to it.
 The UI allows for adding new bundles by clicking the ![+](/images/add.png?raw=true "Add") button or deleting previously defined bundles 
 by selecting the desired bundle and clicking on the ![-](/images/delete.png?raw=true "Delete") button. In addition a **SEND TO SERVER** button 
 allows for sending the bundle to the selected server. This button is disabled if no server and collection 
-endpoint are selected or the selected collection does not allow writing to.
+endpoints are selected or the selected collection does not allow writing to.
 
 Other tabs on the STIX page allow for creating the different STIX types objects.
 Currently only **"attack pattern, indicator, relationship and sighting"** are implemented.
