@@ -56,7 +56,11 @@ export class TaxiiConnect {
                 'Content-Type': 'application/vnd.oasis.stix+json'
             })
         };
+
     }
+
+    // for testing, a CORS proxy to bypass the Access-Control-Allow-Origin response header
+    static proxyurl = "https://cors-anywhere.herokuapp.com/";
 
     /**
      * send an async request (GET or POST) to the taxii2 server.
@@ -68,7 +72,7 @@ export class TaxiiConnect {
      */
     async asyncFetch(path, config, filter) {
         let fullPath = (filter === undefined) ? path : path + "?" + TaxiiConnect.asQueryString(filter);
-        let results = await (await (fetch(fullPath, config).then(res => {
+        let results = await (await (fetch(TaxiiConnect.proxyurl + fullPath, config).then(res => {
             return res.json();
         }).catch(err => {
             throw new Error("fetch error: " + err);

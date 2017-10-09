@@ -88,12 +88,7 @@ It makes use of the
 You need a modern browser compatible with Javascript ES6, see 
 [ES6 compatibility table](https://kangax.github.io/compat-table/es6/).
  Note when using [freetaxii-server](https://github.com/freetaxii/freetaxii-server) there is 
- currently an issue with the "Allow-Control-Allow-Origin" requirement. 
- To overcome this on Chrome (on macos) for example, launch Chrome with:
- 
-     open /Applications/Google\ Chrome.app --args --disable-web-security --user-data-dir
- 
-There maybe similar workaround for other browsers and systems.
+ currently an issue with the "Allow-Control-Allow-Origin" server response header.
 
 ### References
  
@@ -103,7 +98,7 @@ There maybe similar workaround for other browsers and systems.
 
 3) [freetaxii-server](https://github.com/freetaxii/freetaxii-server). A cyber threat intelligence server based on TAXII 2 and written in Golang.
 
-4) [TAXII-2.0 Javascript lib](https://github.com/workingDog/taxii2lib). A TAXII 2.0 javascript client library.
+4) [TAXII-2.0 Javascript library](https://github.com/workingDog/taxii2lib). A TAXII 2.0 javascript client library.
 
 5) [React](https://reactjs.org/). A JavaScript library for building user interfaces.
 
