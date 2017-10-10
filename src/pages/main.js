@@ -1,8 +1,8 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
 
-/* global conn */
+
 // @flow weak
-import {Server, TaxiiConnect} from "../libs/taxii2lib";
+import {TaxiiConnect} from "../libs/taxii2lib";
 import {ServerView} from '../pages/serverview.js';
 import {StixView} from '../pages/stixview.js';
 import {LoginPage} from '../pages/userlogin.js';
@@ -86,9 +86,7 @@ class MainPage extends Component {
             isLogged: false,
             loglabel: 'Login'
         };
-
         this.initStore();
-
     }
 
     initStore = () => {
@@ -137,17 +135,17 @@ class MainPage extends Component {
         }
     };
 
-    // callback from ServerView of servers and collections tabs
+    // callback from ServerView
     updateServer = (server) => {
         this.setState({server: server});
     };
 
-    // the serverview
+    // set the view to the ServerView
     handleServer = () => {
-        this.setState({view: <ServerView update={this.updateServer}/>});
+        this.setState({view: <ServerView server={this.state.server} update={this.updateServer}/>});
     };
 
-    // the stixview
+    // set the view to the StixView
     handleStix = () => {
         this.setState({view: <StixView server={this.state.server}/>});
     };
@@ -163,8 +161,9 @@ class MainPage extends Component {
 
                     <AppBar className={this.props.classes.appBar}>
                         <Toolbar>
-                            <Typography type="title" color="inherit" className={this.props.classes.flex}>CyberStation
-                                0.1</Typography>
+                            <Typography type="title" color="inherit"
+                                        className={this.props.classes.flex}>
+                                CyberStation 0.1</Typography>
                             <Button color="contrast" onClick={this.handleLogin}>{this.state.loglabel}</Button>
                             <Button disabled={!this.state.isLogged} color="contrast"
                                     onClick={this.handleServer}>Server</Button>
@@ -173,9 +172,7 @@ class MainPage extends Component {
                         </Toolbar>
                     </AppBar>
 
-                    <main className={this.props.classes.content}>
-                        {this.state.view}
-                    </main>
+                    <main className={this.props.classes.content}>{this.state.view}</main>
 
                 </div>
             </div>

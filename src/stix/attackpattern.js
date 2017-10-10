@@ -1,12 +1,10 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
 
-/* global conn */
+
 // @flow weak
 import {commonStix} from '../stix/common.js';
 import Grid from 'material-ui/Grid';
 import React, {Component} from 'react';
-import withRoot from '../components/withRoot';
-import withStyles from 'material-ui/styles/withStyles';
 import {BundleContent} from '../stix/bundleContent.js';
 import TextField from 'material-ui/TextField';
 import moment from 'moment';
@@ -46,7 +44,7 @@ export class AttackPatternPage extends Component {
     }
 
     // before leaving the component, update the store
-    componentWillUnmount(){
+    componentWillUnmount() {
         let theBundleArr = JSON.parse(localStorage.getItem('bundleList'));
         theBundleArr[localStorage.getItem('bundleSelected')] = this.state.bundle;
         localStorage.setItem('bundleList', JSON.stringify(theBundleArr));
@@ -147,7 +145,7 @@ export class AttackPatternPage extends Component {
                     </Grid>
                     <Grid key="a9" item>
                         <AddKillPhase title="Kill chain phases" itemList={this.state.stix.kill_chain_phases}
-                                  update={this.handleChange('kill_chain_phases')}/>
+                                      update={this.handleChange('kill_chain_phases')}/>
                     </Grid>
                 </form>
             </Grid>
@@ -156,5 +154,4 @@ export class AttackPatternPage extends Component {
 
 }
 
-export default withRoot(withStyles(styles)(AttackPatternPage));
 

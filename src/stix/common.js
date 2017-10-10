@@ -1,8 +1,8 @@
-import React, {Component} from 'react';
+import React from 'react';
 import TextField from 'material-ui/TextField';
 import Grid from 'material-ui/Grid';
 import Input, {InputLabel} from 'material-ui/Input';
-import {FormControl, FormHelperText} from 'material-ui/Form';
+import {FormControl} from 'material-ui/Form';
 import Select from 'material-ui/Select';
 import {MenuItem} from 'material-ui/Menu';
 import Switch from 'material-ui/Switch';

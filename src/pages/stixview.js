@@ -4,8 +4,6 @@ import {viewStyle} from '../styles/viewStyle.js';
 import Tabs, {Tab} from 'material-ui/Tabs';
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import withRoot from '../components/withRoot';
-import withStyles from 'material-ui/styles/withStyles';
 import {IndicatorPage} from '../stix/indicator.js';
 import {BundlePage} from '../stix/bundle.js';
 import {RelationShipPage} from '../stix/relations.js';
@@ -121,6 +119,4 @@ export class StixView extends Component {
 StixView.propTypes = {
     server: PropTypes.object
 };
-
-export default withRoot(withStyles(styles)(StixView));
 

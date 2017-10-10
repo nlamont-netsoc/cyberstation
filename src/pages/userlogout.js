@@ -1,6 +1,5 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
 
-/* global conn */
 // @flow weak
 
 import Grid from 'material-ui/Grid';

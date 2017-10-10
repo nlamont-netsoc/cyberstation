@@ -1,14 +1,12 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
 
-/* global conn */
+
 // @flow weak
 
 import {Collections, Collection} from '../libs/taxii2lib.js';
 import Grid from 'material-ui/Grid';
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import withRoot from '../components/withRoot';
-import withStyles from 'material-ui/styles/withStyles';
 import Typography from 'material-ui/Typography';
 import List, {ListItemText} from 'material-ui/List';
 import {FormControlLabel} from 'material-ui/Form';
@@ -34,21 +32,6 @@ const styles = theme => ({
     }
 });
 
-const labelStyles = {
-    canread: {
-        color: green[500],
-    },
-    cannotread: {
-        color: red[500],
-    },
-    canwrite: {
-        color: green[500],
-    },
-    cannotwrite: {
-        color: red[500],
-    }
-};
-
 /**
  * list all collections from the selected server and api root.
  * Display the objects of the selected collection.
@@ -67,19 +50,24 @@ export class CollectionsPage extends Component {
     }
 
     initialise(theServer) {
-        let colInfo = JSON.parse(localStorage.getItem('collectionSelected'));
-        let colid = colInfo ? colInfo.id : '' ;
-        this.setState({
-            apiroot: localStorage.getItem('serverApiroot') || '',
-            selectedColid: colid,
-        });
-        this.dataCollectionList(theServer);
-        // if already have a collection id selected, refresh the objects
-        if(this.state.selectedColid) {
-            // find the collection info
-            let thisCol = this.state.collectionList.find(col => col.id === this.state.selectedColid);
-            if (thisCol) this.dataObjectList(thisCol);
+        if (theServer) {
+            let colInfo = JSON.parse(localStorage.getItem('collectionSelected'));
+            let colid = colInfo ? colInfo.id : '';
+            this.setState({
+                apiroot: localStorage.getItem('serverApiroot') || '',
+                selectedColid: colid
+            });
+            this.dataCollectionList(theServer);
+            // if already have a collection id selected, refresh the objects
+            if (this.state.selectedColid) {
+                // find the collection info
+                let thisCol = this.state.collectionList.find(col => col.id === this.state.selectedColid);
+                if (thisCol) this.dataObjectList(thisCol);
+            }
+        } else {
+            this.setState({waiting: false, selectedColid: '', collectionList: [], objectList: [], apiroot: ''});
         }
+        this.forceUpdate();
     };
 
     // load the collections of the api root
@@ -184,5 +172,3 @@ export class CollectionsPage extends Component {
 CollectionsPage.propTypes = {
     server: PropTypes.object
 };
-
-export default withRoot(withStyles(styles)(CollectionsPage));

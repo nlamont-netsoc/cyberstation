@@ -9,8 +9,6 @@ import Dialog, {
 } from 'material-ui/Dialog';
 import Slide from 'material-ui/transitions/Slide';
 import PropTypes from 'prop-types';
-import withRoot from '../components/withRoot';
-import withStyles from 'material-ui/styles/withStyles';
 
 
 const styles = theme => ({
@@ -69,4 +67,3 @@ AlertSlide.propTypes = {
     onClose: PropTypes.func.isRequired
 };
 
-export default withRoot(withStyles(styles)(AlertSlide));

@@ -1,13 +1,10 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
 
-/* global conn */
+
 // @flow weak
 import {commonStix} from '../stix/common.js';
 import Grid from 'material-ui/Grid';
 import React, {Component} from 'react';
-import PropTypes from 'prop-types';
-import withRoot from '../components/withRoot';
-import withStyles from 'material-ui/styles/withStyles';
 import {BundleContent} from '../stix/bundleContent.js';
 import TextField from 'material-ui/TextField';
 import moment from 'moment';
@@ -219,7 +216,5 @@ export class SightingPage extends Component {
     };
 
 }
-
-export default withRoot(withStyles(styles)(SightingPage));
 
 

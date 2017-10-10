@@ -1,14 +1,12 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
 
-/* global conn */
+
 // @flow weak
 import {ServerInfoPanel} from './serverInfoPanel.js';
 import {TaxiiConnect, Server} from '../libs/taxii2lib.js';
 import Grid from 'material-ui/Grid';
 import React, {Component} from 'react';
-import withRoot from '../components/withRoot';
-import withStyles from 'material-ui/styles/withStyles';
-import {FormControl, FormControlLabel} from 'material-ui/Form';
+import {FormControl} from 'material-ui/Form';
 import {CircularProgress} from 'material-ui/Progress';
 import {AlertSlide} from '../server/alertSlide.js';
 import {isValidURL} from '../stix/stixutil.js';
@@ -43,9 +41,21 @@ export class ServersPage extends Component {
             currentServer: localStorage.getItem('serverSelected') || '',
             discovery: JSON.parse(localStorage.getItem('serverDiscovery')) || undefined,
             currentApiroot: localStorage.getItem('serverApiroot') || '',
-            serverListUrl: JSON.parse(localStorage.getItem('serverUrlList')) || []
+            serverListUrl: JSON.parse(localStorage.getItem('serverUrlList')) || [],
+            serverObj: this.props.server,
         });
-        this.createServer();
+        if (!this.props.server) this.createServer();
+    };
+
+    // when a new props is received
+    componentWillReceiveProps(newProps) {
+        this.setState({
+            currentServer: localStorage.getItem('serverSelected'),
+            discovery: JSON.parse(localStorage.getItem('serverDiscovery')) || undefined,
+            currentApiroot: localStorage.getItem('serverApiroot') || '',
+            serverListUrl: JSON.parse(localStorage.getItem('serverUrlList')) || [],
+            serverObj: newProps.server
+        });
     };
 
     // update the selected api root url
@@ -56,7 +66,12 @@ export class ServersPage extends Component {
 
     // close the alert dialog
     handleAlertRequestClose = () => {
-        this.setState({alert: false, currentServer: '', serverObj: undefined});
+      //  this.setState({alert: false});
+         this.setState({alert: false, currentServer: '', currentApiroot: '', serverObj: undefined});
+        // localStorage.setItem('serverSelected', '');
+        // localStorage.setItem('serverApiroot', '');
+        // localStorage.setItem('serverDiscovery', JSON.stringify({}));
+        // localStorage.setItem('collectionSelected', JSON.stringify({}));
     };
 
     // display the server info including the api roots
@@ -64,7 +79,7 @@ export class ServersPage extends Component {
         if (this.state.serverObj) {
             return <ServerInfoPanel server={this.state.serverObj} update={this.updateApiRootSelection}/>
         } else {
-            return <div>no server selected</div>
+            return <div>no TAXII-2 server selected</div>
         }
     }
 
@@ -84,32 +99,48 @@ export class ServersPage extends Component {
                         currentServer: newServer.conn.baseURL,
                         serverObj: newServer
                     });
+                    this.forceUpdate();
                     // get the storage serverList
                     let thisServerList = JSON.parse(localStorage.getItem('serverUrlList')) || [];
                     // see if already in the list
-                    let found = thisServerList.find(item => item === newServer.conn.baseURL);
-                    if (!found) {
+                    let foundUrl = thisServerList.find(item => item === newServer.conn.baseURL);
+                    if (!foundUrl) {
                         // add this new server url to the list
                         thisServerList.push(newServer.conn.baseURL);
                         // update the storage
                         localStorage.setItem("serverUrlList", JSON.stringify(thisServerList));
                         localStorage.setItem("serverDiscovery", JSON.stringify(discovery));
+                        localStorage.setItem('serverSelected', foundUrl);
                     }
                     // tell the parent component
                     this.props.update(newServer);
                 }).catch(err => {
                     this.setState({waiting: false, currentServer: '', serverObj: undefined});
+                    localStorage.setItem('serverSelected', '');
+                    localStorage.setItem('serverApiroot', '');
+                    localStorage.setItem('serverDiscovery', JSON.stringify({}));
+                    localStorage.setItem('collectionSelected', JSON.stringify({}));
+                    // tell the parent component
+                    this.props.update(undefined);
                     new Error('fetch error')
                 }),
-                new Promise((_, reject) =>
-                    setTimeout(() => reject(new Error('timeout')), timeout)
-                )
+                new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), timeout))
             ]).catch(err => {
                 // show the alert about cannot connect to the server
-                this.setState({waiting: false, alert: true, currentServer: '', serverObj: undefined});
+                this.setState({waiting: false, alert: true, serverObj: undefined, discovery: '', currentApiroot: ''});
+                this.forceUpdate();
+                localStorage.setItem('serverSelected', '');
+                localStorage.setItem('serverApiroot', '');
+                localStorage.setItem('serverDiscovery', JSON.stringify({}));
+                localStorage.setItem('collectionSelected', JSON.stringify({}));
+                // tell the parent component
+                this.props.update(undefined);
             });
         } else {
             this.setState({currentServer: '', serverObj: undefined});
+            localStorage.setItem('serverSelected', '');
+            // tell the parent component
+            this.props.update(undefined);
         }
     };
 
@@ -123,6 +154,8 @@ export class ServersPage extends Component {
             localStorage.setItem('collectionSelected', JSON.stringify({}));
             this.setState({serverObj: '', currentServer: '', discovery: '', currentApiroot: ''});
             this.forceUpdate();
+            // tell the parent component
+            this.props.update(undefined);
             return;
         }
         // event.target.value can be a string or an array of strings
@@ -130,25 +163,28 @@ export class ServersPage extends Component {
             if (Array.isArray(event.target.value)) {
                 // pick the last value of the array
                 let lastUrl = event.target.value[event.target.value.length - 1];
-                // check it is valid url
+                // check it is a valid url
                 if (isValidURL(lastUrl)) {
                     // the list of url
                     this.state.serverListUrl = event.target.value;
-
-                    this.forceUpdate();
+                    this.state.currentServer = lastUrl;
                     // store the array as a json string object
                     localStorage.setItem('serverUrlList', JSON.stringify(event.target.value));
+                    localStorage.setItem('serverSelected', lastUrl);
                 } else {
-                    this.state.currentServer = undefined;
+                    // not a valid url
                     // remove the last url
                     event.target.value.splice((event.target.value.length - 1), 1);
-                    // update the store the array
+                    // update the store the updated array
                     localStorage.setItem('serverUrlList', JSON.stringify(event.target.value));
-                    this.forceUpdate();
+                    localStorage.setItem('serverSelected', '');
+                    this.state.currentServer = undefined;
                 }
+                this.forceUpdate();
             } else {
                 // a single selection
                 this.state.currentServer = event.target.value;
+                localStorage.setItem('serverSelected', event.target.value);
                 this.forceUpdate();
                 this.createServer();
             }
@@ -161,7 +197,8 @@ export class ServersPage extends Component {
                 <Grid container spacing={8}>
                     <Grid item xs={6}>
                         <FormControl component="fieldset" required>
-                            <AddPanel title="server url" itemList={this.state.serverListUrl}
+                            <AddPanel initSelection={this.state.currentServer}
+                                      title="server url" itemList={this.state.serverListUrl}
                                       update={this.handleServerUpdate}/>
                         </FormControl>
                     </Grid>
@@ -184,7 +221,6 @@ export class ServersPage extends Component {
 }
 
 ServersPage.propTypes = {
-    update: PropTypes.func.isRequired
+    update: PropTypes.func.isRequired,
+    server: PropTypes.object
 };
-
-export default withRoot(withStyles(styles)(ServersPage));

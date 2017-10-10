@@ -1,19 +1,15 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
 
-/* global conn */
 // @flow weak
 import {commonStix} from '../stix/common.js';
 import Grid from 'material-ui/Grid';
 import React, {Component} from 'react';
-import PropTypes from 'prop-types';
-import withRoot from '../components/withRoot';
-import withStyles from 'material-ui/styles/withStyles';
 import {BundleContent} from '../stix/bundleContent.js';
 import TextField from 'material-ui/TextField';
 import moment from 'moment';
 import {relationshipsNames} from "./stixutil";
 import Input, {InputLabel} from 'material-ui/Input';
-import {FormControl, FormHelperText} from 'material-ui/Form';
+import {FormControl} from 'material-ui/Form';
 import Select from 'material-ui/Select';
 import {MenuItem} from 'material-ui/Menu';
 
@@ -207,7 +203,5 @@ export class RelationShipPage extends Component {
     };
 
 }
-
-export default withRoot(withStyles(styles)(RelationShipPage));
 
 

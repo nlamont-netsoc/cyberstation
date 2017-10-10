@@ -1,6 +1,5 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
 
-/* global conn */
 // @flow weak
 import AddIcon from 'material-ui-icons/Add';
 import RemoveIcon from 'material-ui-icons/Remove';
@@ -8,7 +7,7 @@ import Grid from 'material-ui/Grid';
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import Typography from 'material-ui/Typography';
-import {FormControl, FormControlLabel} from 'material-ui/Form';
+import {FormControlLabel} from 'material-ui/Form';
 import Radio, {RadioGroup} from 'material-ui/Radio';
 import Button from 'material-ui/Button';
 import Dialog, {DialogActions, DialogContent, DialogTitle,} from 'material-ui/Dialog';
@@ -39,6 +38,7 @@ export default class AddPanel extends Component {
     componentDidMount() {
         this.setState({
             title: this.props.title,
+            selection: this.props.initSelection,
             openDialog: false, add: false, delete: false,
             objList: this.props.itemList, addition: ''
         });
@@ -48,6 +48,7 @@ export default class AddPanel extends Component {
     componentWillReceiveProps(newProps) {
         this.setState({
             title: newProps.title,
+            selection: newProps.initSelection,
             openDialog: false, add: false, delete: false,
             objList: newProps.itemList, addition: ''
         });

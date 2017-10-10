@@ -1,19 +1,17 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
 
-/* global conn */
+
 // @flow weak
 import Grid from 'material-ui/Grid';
 import React, {Component} from 'react';
-import withRoot from '../components/withRoot';
-import withStyles from 'material-ui/styles/withStyles';
 import Typography from 'material-ui/Typography';
 import TextField from 'material-ui/TextField';
-import Table, {TableBody, TableCell, TableHead, TableRow} from 'material-ui/Table';
+import Table, {TableBody, TableCell, TableRow} from 'material-ui/Table';
 import uuidv4 from "uuid/v4";
 import AddPanel from '../components/addPanel.js';
-import {FormControl, FormLabel, FormControlLabel} from 'material-ui/Form';
+import {FormControl} from 'material-ui/Form';
 import PropTypes from "prop-types";
-import {defaultBundle, emptyBundle} from './stixutil.js';
+import {defaultBundle} from './stixutil.js';
 import Divider from 'material-ui/Divider';
 import {Collection} from "../libs/taxii2lib";
 import Button from 'material-ui/Button';
@@ -159,7 +157,7 @@ export class BundlePage extends Component {
                 let colInfo = 'Collection';
                 if (this.state.collection) {
                     writeVal = this.state.collection.can_write ? 'can write to' : 'cannot write to';
-                    colInfo = 'Collection' + " (" + writeVal + ")";
+                    colInfo = "Collection" + " (" + writeVal + ")";
                     colEntry = this.state.collection.title;
                 }
                 let serverInfo = <Table style={{marginLeft: 8}}>
@@ -302,5 +300,3 @@ BundlePage.propTypes = {
     server: PropTypes.object,
     update: PropTypes.func
 };
-
-export default withRoot(withStyles(styles)(BundlePage));

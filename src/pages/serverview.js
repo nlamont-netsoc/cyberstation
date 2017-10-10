@@ -5,10 +5,8 @@ import {CollectionsPage} from '../server/collections.js';
 import {ServersPage} from '../server/servers.js';
 import Tabs, {Tab} from 'material-ui/Tabs';
 import SwipeableViews from 'react-swipeable-views';
-import React, {Component, StyleSheet} from 'react';
+import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import withRoot from '../components/withRoot';
-import withStyles from 'material-ui/styles/withStyles';
 
 
 function TabContainer(props) {
@@ -42,8 +40,13 @@ export class ServerView extends Component {
 
     constructor(props) {
         super(props);
-        this.state = {value: 0, server: undefined};
+        this.state = {value: 0, server: this.props.server};
     }
+
+    // when a new props is received
+    componentWillReceiveProps(newProps) {
+        this.setState({server: newProps.server});
+    };
 
     // callback for ServersPage
     updateServer = (server) => {
@@ -52,8 +55,8 @@ export class ServerView extends Component {
         this.props.update(server);
     };
 
-    handleChange = (event, value) => {
-        this.setState({value});
+    handleChange = (event, theValue) => {
+        this.setState({value: theValue});
     };
 
     handleChangeIndex = index => {
@@ -62,7 +65,7 @@ export class ServerView extends Component {
 
     render() {
         return (
-            <div className={this.props.root}>
+            <div className={styles.root}>
                 <div style={viewStyle.tabs}>
                     <Tabs
                         value={this.state.value}
@@ -79,7 +82,7 @@ export class ServerView extends Component {
                     style={viewStyle.content}
                     index={this.state.value}
                     onChangeIndex={this.handleChangeIndex}>
-                    <TabContainer> <ServersPage update={this.updateServer}/> </TabContainer>
+                    <TabContainer> <ServersPage server={this.state.server} update={this.updateServer}/> </TabContainer>
                     <TabContainer> <CollectionsPage server={this.state.server}/> </TabContainer>
                 </SwipeableViews>
             </div>
@@ -89,7 +92,7 @@ export class ServerView extends Component {
 }
 
 ServerView.propTypes = {
-    update: PropTypes.func.isRequired
+    update: PropTypes.func.isRequired,
+    server: PropTypes.object
 };
 
-export default withRoot(withStyles(styles)(ServerView));

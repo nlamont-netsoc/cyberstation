@@ -1,27 +1,19 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
 
-/* global conn */
+
 // @flow weak
 
 import Button from 'material-ui/Button';
 import AddIcon from 'material-ui-icons/Add';
-import RemoveCircleOutlineIcon from 'material-ui-icons/RemoveCircleOutline';
 import RemoveIcon from 'material-ui-icons/Remove';
-import Tooltip from 'material-ui/Tooltip';
-import blue from 'material-ui/colors/blue';
 import Grid from 'material-ui/Grid';
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import withRoot from '../components/withRoot';
-import withStyles from 'material-ui/styles/withStyles';
 import Typography from 'material-ui/Typography';
-import Divider from 'material-ui/Divider';
-import List, {ListItem, ListItemSecondaryAction, ListItemText} from 'material-ui/List';
-import Paper from 'material-ui/Paper';
-import {FormLabel, FormControl, FormControlLabel} from 'material-ui/Form';
+import {FormControl, FormControlLabel} from 'material-ui/Form';
 import Radio, {RadioGroup} from 'material-ui/Radio';
 import uuidv4 from 'uuid/v4';
-import moment from 'moment';
+
 
 const styles = {
     tabs: {
@@ -136,8 +128,6 @@ export class BundleContent extends Component {
     };
 
     render() {
-    //    const addTip = "Add a new " + this.props.stix.type;
-    //    const deleteTip = "Delete the selected " + this.props.stix.type;
         return (
             <Grid container className={this.props.root} justify="flex-start">
                 <FormControl component="fieldset" required>
@@ -168,5 +158,3 @@ BundleContent.propTypes = {
     bundle: PropTypes.object.isRequired,
     selected: PropTypes.func.isRequired
 };
-
-export default withRoot(withStyles(styles)(BundleContent));

@@ -1,12 +1,10 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
 
-/* global conn */
+
 // @flow weak
 import Grid from 'material-ui/Grid';
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import withRoot from '../components/withRoot';
-import withStyles from 'material-ui/styles/withStyles';
 import Divider from 'material-ui/Divider';
 import {FormControlLabel} from 'material-ui/Form';
 import Radio, {RadioGroup} from 'material-ui/Radio';
@@ -107,5 +105,3 @@ ServerInfoPanel.propTypes = {
     server: PropTypes.object,
     update: PropTypes.func.isRequired
 };
-
-export default withRoot(withStyles(styles)(ServerInfoPanel));
