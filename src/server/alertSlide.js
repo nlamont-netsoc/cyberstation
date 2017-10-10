@@ -52,7 +52,7 @@ export class AlertSlide extends Component {
                         <DialogContentText> {msg} </DialogContentText>
                         <DialogContentText> {this.state.url} </DialogContentText>
                     </DialogContent>
-                    <DialogActions>
+                    <DialogActions style={{justifyContent:'center'}}>
                         <Button onClick={this.handleRequestClose} color="primary">Ok</Button>
                     </DialogActions>
                 </Dialog>

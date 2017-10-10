@@ -145,7 +145,7 @@ export class ServersPage extends Component {
 
     // callback from the AddPanel, either a selection or the list of server url
     handleServerUpdate = (event) => {
-        // if there is nothing in the list remove the server object
+        // if there is nothing in the list clear everything
         if (event.target.value.length <= 0) {
             localStorage.setItem('serverApiroot', '');
             localStorage.setItem('serverDiscovery', JSON.stringify({}));
