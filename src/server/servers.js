@@ -129,7 +129,6 @@ export class ServersPage extends Component {
                 // show the alert about cannot connect to the server
                 this.setState({waiting: false, alert: true, serverObj: undefined, discovery: '', currentApiroot: ''});
                 this.forceUpdate();
-                localStorage.setItem('serverSelected', '');
                 localStorage.setItem('serverApiroot', '');
                 localStorage.setItem('serverDiscovery', JSON.stringify({}));
                 localStorage.setItem('collectionSelected', JSON.stringify({}));
@@ -171,16 +170,14 @@ export class ServersPage extends Component {
                     // store the array as a json string object
                     localStorage.setItem('serverUrlList', JSON.stringify(event.target.value));
                     localStorage.setItem('serverSelected', lastUrl);
+                    this.forceUpdate();
+                    this.createServer()
                 } else {
-                    // not a valid url
-                    // remove the last url
+                    // not a valid url, remove the last url
                     event.target.value.splice((event.target.value.length - 1), 1);
-                    // update the store the updated array
-                    localStorage.setItem('serverUrlList', JSON.stringify(event.target.value));
-                    localStorage.setItem('serverSelected', '');
-                    this.state.currentServer = undefined;
+                    this.state.serverListUrl = event.target.value;
+                    this.forceUpdate();
                 }
-                this.forceUpdate();
             } else {
                 // a single selection
                 this.state.currentServer = event.target.value;

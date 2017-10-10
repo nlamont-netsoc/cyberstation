@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>TAXII2</title>
+    <meta charset="UTF-8">
+</head>
+<body>
+<div id="test"></div>
+<script>
+    function testFreeTaxii() {
+        // with this proxy, it works --> "https://cors-anywhere.herokuapp.com/"
+        var proxy = '';
+        var xhttp = new XMLHttpRequest();
+        // the request
+        xhttp.open("GET", proxy + "https://test.freetaxii.com:8000/taxii/", true);
+        xhttp.setRequestHeader('Accept', 'application/vnd.oasis.taxii+json; version=2.1');
+        xhttp.setRequestHeader('Content-type', 'application/vnd.oasis.taxii+json; version=2.1');
+        xhttp.send();
+        // another request
+        // xhttp.open("GET", proxy + "https://test.freetaxii.com:8000/api1/collections/9cfa669c-ee94-4ece-afd2-f8edac37d8fd/objects/", true);
+        // xhttp.setRequestHeader('Accept', 'application/vnd.oasis.stix+json; version=2.1');
+        // xhttp.setRequestHeader('Content-type', 'application/vnd.oasis.stix+json; version=2.1');
+        // xhttp.send();
+
+        // the response
+        xhttp.onreadystatechange = function () {
+            if (this.readyState === 4 && this.status === 200) {
+                document.getElementById("test").innerHTML = this.responseText;
+            }
+        };
+    }
+
+    testFreeTaxii();
+
+</script>
+</body>
+</html>
