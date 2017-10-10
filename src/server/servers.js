@@ -68,10 +68,10 @@ export class ServersPage extends Component {
     handleAlertRequestClose = () => {
       //  this.setState({alert: false});
          this.setState({alert: false, currentServer: '', currentApiroot: '', serverObj: undefined});
-        // localStorage.setItem('serverSelected', '');
-        // localStorage.setItem('serverApiroot', '');
-        // localStorage.setItem('serverDiscovery', JSON.stringify({}));
-        // localStorage.setItem('collectionSelected', JSON.stringify({}));
+         localStorage.setItem('serverSelected', '');
+         localStorage.setItem('serverApiroot', '');
+         localStorage.setItem('serverDiscovery', JSON.stringify({}));
+         localStorage.setItem('collectionSelected', JSON.stringify({}));
     };
 
     // display the server info including the api roots

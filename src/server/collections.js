@@ -70,8 +70,10 @@ export class CollectionsPage extends Component {
                     // create the selected collection endpoint
                     const theCollection = new Collection(thisCol, this.state.apiroot, this.props.server.conn);
                     // get the objects
-                    theCollection.getObjects().then(bundle =>
-                        this.setState({collectionList: colList, objectList: bundle.objects, waiting: false}));
+                    theCollection.getObjects().then(bundle => {
+                        this.setState({collectionList: colList, objectList: bundle.objects, waiting: false})
+                        this.forceUpdate();
+                    });
                 });
             } else {
                 // just list the collections
@@ -101,6 +103,7 @@ export class CollectionsPage extends Component {
                 let colList = [];
                 collections.map(col => colList.push(col));
                 this.setState({collectionList: colList, waiting: false});
+                this.forceUpdate();
             });
         }
     };
