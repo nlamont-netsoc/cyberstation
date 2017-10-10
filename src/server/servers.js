@@ -99,17 +99,17 @@ export class ServersPage extends Component {
                         currentServer: newServer.conn.baseURL,
                         serverObj: newServer
                     });
-                    this.forceUpdate();
+                    localStorage.setItem("serverDiscovery", JSON.stringify(discovery));
                     // get the storage serverList
                     let thisServerList = JSON.parse(localStorage.getItem('serverUrlList')) || [];
                     // see if already in the list
                     let foundUrl = thisServerList.find(item => item === newServer.conn.baseURL);
+                    // if not in the list
                     if (!foundUrl) {
                         // add this new server url to the list
                         thisServerList.push(newServer.conn.baseURL);
-                        // update the storage
+                        // update the store
                         localStorage.setItem("serverUrlList", JSON.stringify(thisServerList));
-                        localStorage.setItem("serverDiscovery", JSON.stringify(discovery));
                         localStorage.setItem('serverSelected', foundUrl);
                     }
                     // tell the parent component

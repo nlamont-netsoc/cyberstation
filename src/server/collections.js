@@ -57,17 +57,29 @@ export class CollectionsPage extends Component {
                 apiroot: localStorage.getItem('serverApiroot') || '',
                 selectedColid: colid
             });
-            this.dataCollectionList(theServer);
-            // if already have a collection id selected, refresh the objects
-            if (this.state.selectedColid) {
-                // find the collection info
-                let thisCol = this.state.collectionList.find(col => col.id === this.state.selectedColid);
-                if (thisCol) this.dataObjectList(thisCol);
+            // if already have a collection id selected
+            if (this.state.selectedColid && this.state.apiroot) {
+                this.setState({waiting: true});
+                const theCollections = new Collections(this.state.apiroot, theServer.conn);
+                theCollections.get().then(collections => {
+                    let colList = [];
+                    // fill the array with collections info
+                    collections.map(col => colList.push(col));
+                    // get the selected collection info
+                    let thisCol = colList.find(col => col.id === this.state.selectedColid);
+                    // create the selected collection endpoint
+                    const theCollection = new Collection(thisCol, this.state.apiroot, this.props.server.conn);
+                    // get the objects
+                    theCollection.getObjects().then(bundle =>
+                        this.setState({collectionList: colList, objectList: bundle.objects, waiting: false}));
+                });
+            } else {
+                // just list the collections
+                this.dataCollectionList(theServer);
             }
         } else {
             this.setState({waiting: false, selectedColid: '', collectionList: [], objectList: [], apiroot: ''});
         }
-        this.forceUpdate();
     };
 
     // load the collections of the api root
@@ -82,11 +94,11 @@ export class CollectionsPage extends Component {
 
     // get the list of all collections
     dataCollectionList(theServer) {
-        let colList = [];
         if (this.state.apiroot && theServer) {
             this.setState({waiting: true});
             const theCollections = new Collections(this.state.apiroot, theServer.conn);
             theCollections.get().then(collections => {
+                let colList = [];
                 collections.map(col => colList.push(col));
                 this.setState({collectionList: colList, waiting: false});
             });

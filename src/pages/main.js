@@ -93,11 +93,11 @@ class MainPage extends Component {
         //  localStorage.setItem('serverDiscovery', JSON.stringify({}));
         //  localStorage.removeItem('bundle--99819859-f19d-49e7-84de-4fbb344c0630');
         //  localStorage.clear();
-        //  localStorage.setItem('bundleSelected', 0);
+       //   localStorage.setItem('collectionSelected', JSON.stringify({}));
         //  localStorage.setItem('bundleList', JSON.stringify([]));
-    //      for(let key in localStorage) {
-    //          console.log(key + ' = ' + localStorage.getItem(key));
-    //      }
+     //     for(let key in localStorage) {
+     //         console.log(key + ' = ' + localStorage.getItem(key));
+     //     }
 
         // add a default bundle if store is empty
         let defBndl = JSON.parse(JSON.stringify(defaultBundle)); // make a deep copy to be sure
@@ -109,7 +109,6 @@ class MainPage extends Component {
             // bundle selected is the index into the bundle list
             localStorage.setItem('bundleSelected', 0);
         }
-
         // add a default test taxii server if the list is empty
         let srvList = JSON.parse(localStorage.getItem('serverUrlList')) || [];
         if (srvList.length <= 0) {
