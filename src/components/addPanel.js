@@ -15,6 +15,7 @@ import Slide from 'material-ui/transitions/Slide';
 import Paper from 'material-ui/Paper';
 import TextField from 'material-ui/TextField';
 import Divider from 'material-ui/Divider';
+import Tooltip from 'material-ui/Tooltip';
 
 
 const styles = {};
@@ -108,17 +109,22 @@ export default class AddPanel extends Component {
     };
 
     render() {
-        const theTitle = "Add a new " + this.state.title;
+        const itemType = this.state.title;
         return (
             <Grid container justify="flex-start" style={{marginTop: 12}}>
 
                 <Grid key="k2" container>
                     <Grid key="k3" item style={{margin: 8}}>
                         <Typography type="body1">{this.state.title}</Typography>
-                        <Button fab color="primary" onClick={this.handleAddToList} raised
-                                style={{width: 34, height: 12, margin: 4}}><AddIcon/></Button>
-                        <Button fab color="primary" onClick={this.handleDeleteFromList} raised
-                                style={{width: 34, height: 12, margin: 4}}><RemoveIcon/></Button>
+                        <Tooltip id="tooltip-add" title={"Add a new " + itemType} placement="top" enterDelay={500}>
+                            <Button fab color="primary" onClick={this.handleAddToList} raised
+                                    style={{width: 34, height: 12, margin: 4}}><AddIcon/></Button>
+                        </Tooltip>
+                        <Tooltip id="tooltip-del" title={"Delete selected " + itemType} placement="top"
+                                 enterDelay={500}>
+                            <Button fab color="primary" onClick={this.handleDeleteFromList} raised
+                                    style={{width: 34, height: 12, margin: 4}}><RemoveIcon/></Button>
+                        </Tooltip>
                         <Divider/>
                     </Grid>
 
@@ -145,7 +151,7 @@ export default class AddPanel extends Component {
                     ignoreEscapeKeyUp
                     maxWidth="md"
                 >
-                    <DialogTitle>{theTitle}</DialogTitle>
+                    <DialogTitle>{"Add a new " + itemType}</DialogTitle>
                     <DialogContent style={{width: 400}}>
                         <TextField autoFocus={true}
                                    fullWidth

@@ -12,7 +12,7 @@ import Button from 'material-ui/Button';
 import Cached from 'material-ui-icons/Cached';
 import {labelsNames} from '../stix/stixutil.js';
 import AddPanel from '../components/addPanel.js';
-
+import Tooltip from 'material-ui/Tooltip';
 
 
 export const ITEM_HEIGHT = 48;
@@ -52,13 +52,14 @@ export const commonStix = (state, handler) => {
                                margin="normal"
                                onChange={handler('created')}
                     />
-                    <Button fab dense color="primary" aria-label="redo" style={{width: 33, height: 22}}
-                            onClick={(e) => {
-                                handler('created')({target: {value: moment().toISOString()}})
-                            }}>
-                        <Cached/>
-                    </Button>
-
+                    <Tooltip id="tooltip-add" title="Renew the timestamp" placement="top" enterDelay={500}>
+                        <Button fab dense color="primary" aria-label="redo" style={{width: 33, height: 22}}
+                                onClick={(e) => {
+                                    handler('created')({target: {value: moment().toISOString()}})
+                                }}>
+                            <Cached/>
+                        </Button>
+                    </Tooltip>
                     <TextField style={{marginLeft: 26, width: 210}}
                                type="text"
                                name="modified"
@@ -68,13 +69,14 @@ export const commonStix = (state, handler) => {
                                margin="normal"
                                onChange={handler('modified')}
                     />
-                    <Button fab dense color="primary" aria-label="redo" style={{width: 33, height: 22}}
-                            onClick={(e) => {
-                                handler('modified')({target: {value: moment().toISOString()}})
-                            }}>
-                        <Cached/>
-                    </Button>
-
+                    <Tooltip id="tooltip-add" title="Renew the timestamp" placement="top" enterDelay={500}>
+                        <Button fab dense color="primary" aria-label="redo" style={{width: 33, height: 22}}
+                                onClick={(e) => {
+                                    handler('modified')({target: {value: moment().toISOString()}})
+                                }}>
+                            <Cached/>
+                        </Button>
+                    </Tooltip>
                     <FormControlLabel
                         control={
                             <Switch

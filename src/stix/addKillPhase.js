@@ -15,6 +15,7 @@ import Dialog, {DialogActions, DialogContent, DialogTitle,} from 'material-ui/Di
 import Slide from 'material-ui/transitions/Slide';
 import Paper from 'material-ui/Paper';
 import TextField from 'material-ui/TextField';
+import Tooltip from 'material-ui/Tooltip';
 
 
 const styles = {};
@@ -74,15 +75,17 @@ export default class AddKillPhase extends Component {
 
     // delete the selected item
     handleDeleteFromList = (event) => {
-        // delete the selected item from the objList
-        let selectedObj = JSON.parse(this.state.selection);
-        let indexToDelete = this.state.objList.findIndex(obj =>
-            (obj.kill_chain_name === selectedObj.kill_chain_name && obj.phase_name === selectedObj.phase_name));
-        if (indexToDelete !== -1) {
-            this.state.objList.splice(indexToDelete, 1);
-            this.forceUpdate();
-            let event = {target: {value: this.state.objList}};
-            this.props.update(event);
+        if (this.state.selection) {
+            // delete the selected item from the objList
+            let selectedObj = JSON.parse(this.state.selection);
+            let indexToDelete = this.state.objList.findIndex(obj =>
+                (obj.kill_chain_name === selectedObj.kill_chain_name && obj.phase_name === selectedObj.phase_name));
+            if (indexToDelete !== -1) {
+                this.state.objList.splice(indexToDelete, 1);
+                this.forceUpdate();
+                let event = {target: {value: this.state.objList}};
+                this.props.update(event);
+            }
         }
     };
 
@@ -111,10 +114,14 @@ export default class AddKillPhase extends Component {
                         <Typography type="body1">{this.state.title}</Typography>
                     </Grid>
                     <Grid key="k4" item>
-                        <Button fab color="primary" onClick={this.handleAddToList} raised
-                                style={{width: 34, height: 12, margin: 4}}><AddIcon/></Button>
-                        <Button fab color="primary" onClick={this.handleDeleteFromList} raised
-                                style={{width: 34, height: 12, margin: 4}}><RemoveIcon/></Button>
+                        <Tooltip id="tooltip-add" title={"Add a new kill chain phase"} placement="top" enterDelay={500}>
+                            <Button fab color="primary" onClick={this.handleAddToList} raised
+                                    style={{width: 34, height: 12, margin: 4}}><AddIcon/></Button>
+                        </Tooltip>
+                        <Tooltip id="tooltip-add" title={"Delete selected kill chain phase"} placement="top" enterDelay={500}>
+                            <Button fab color="primary" onClick={this.handleDeleteFromList} raised
+                                    style={{width: 34, height: 12, margin: 4}}><RemoveIcon/></Button>
+                        </Tooltip>
                     </Grid>
                 </Grid>
                 <Grid key="k6" container>
@@ -138,7 +145,7 @@ export default class AddKillPhase extends Component {
                     ignoreEscapeKeyUp
                     maxWidth="md"
                 >
-                    <DialogTitle>Add a new item</DialogTitle>
+                    <DialogTitle>Add a new kill chain phase</DialogTitle>
                     <DialogContent>
                         <TextField autoFocus={true}
                                    fullWidth
@@ -151,14 +158,14 @@ export default class AddKillPhase extends Component {
                                    onChange={this.handleDialogChange('kill_chain_name')}
                         />
                         <TextField
-                                   fullWidth
-                                   margin="normal"
-                                   name="phase_name"
-                                   type="text"
-                                   id="phase_name"
-                                   label="phase_name"
-                                   value={this.state.phase_name}
-                                   onChange={this.handleDialogChange('phase_name')}
+                            fullWidth
+                            margin="normal"
+                            name="phase_name"
+                            type="text"
+                            id="phase_name"
+                            label="phase_name"
+                            value={this.state.phase_name}
+                            onChange={this.handleDialogChange('phase_name')}
                         />
                     </DialogContent>
                     <DialogActions>

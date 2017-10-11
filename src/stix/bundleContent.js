@@ -13,6 +13,7 @@ import Typography from 'material-ui/Typography';
 import {FormControl, FormControlLabel} from 'material-ui/Form';
 import Radio, {RadioGroup} from 'material-ui/Radio';
 import uuidv4 from 'uuid/v4';
+import Tooltip from 'material-ui/Tooltip';
 
 
 const styles = {
@@ -128,15 +129,21 @@ export class BundleContent extends Component {
     };
 
     render() {
+        const stixtype = this.props.stix.type;
         return (
             <Grid container className={this.props.root} justify="flex-start">
                 <FormControl component="fieldset" required>
                     <Typography type="body1" style={{margin: 8}}> {this.title} </Typography>
                     <Grid key="k1">
-                        <Button fab color="primary" onClick={this.handleAdd} raised
-                                style={{margin: 8}}><AddIcon/></Button>
-                        <Button fab color="primary" onClick={this.handleDelete} raised
-                                style={{margin: 8}}><RemoveIcon/></Button>
+                        <Tooltip id="tooltip-add" title={"Add a new " + stixtype} placement="top" enterDelay={500}>
+                            <Button fab color="primary" onClick={this.handleAdd} raised
+                                    style={{margin: 8}}><AddIcon/></Button>
+                        </Tooltip>
+                        <Tooltip id="tooltip-add" title={"Delete selected " + stixtype} placement="top"
+                                 enterDelay={500}>
+                            <Button fab color="primary" onClick={this.handleDelete} raised
+                                    style={{margin: 8}}><RemoveIcon/></Button>
+                        </Tooltip>
                     </Grid>
 
                     <RadioGroup style={{display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between'}}

@@ -12,6 +12,8 @@ import Button from 'material-ui/Button';
 import Cached from 'material-ui-icons/Cached';
 import AddKillPhase from './addKillPhase.js';
 import {commonStix} from "./common";
+import Tooltip from 'material-ui/Tooltip';
+
 
 const styles = {};
 
@@ -46,7 +48,7 @@ export class IndicatorPage extends Component {
     }
 
     // before leaving the component, update the store
-    componentWillUnmount(){
+    componentWillUnmount() {
         let theBundleArr = JSON.parse(localStorage.getItem('bundleList'));
         theBundleArr[localStorage.getItem('bundleSelected')] = this.state.bundle;
         localStorage.setItem('bundleList', JSON.stringify(theBundleArr));
@@ -158,12 +160,14 @@ export class IndicatorPage extends Component {
                                    margin="normal"
                                    onChange={this.handleChange('valid_from')}
                         />
-                        <Button fab dense color="primary" aria-label="redo" style={{width: 33, height: 22}}
-                                onClick={(e) => {
-                                    this.handleChange('valid_from')({target: {value: moment().toISOString()}})
-                                }}>
-                            <Cached/>
-                        </Button>
+                        <Tooltip id="tooltip-add" title="Renew the timestamp" placement="top" enterDelay={500}>
+                            <Button fab dense color="primary" aria-label="redo" style={{width: 33, height: 22}}
+                                    onClick={(e) => {
+                                        this.handleChange('valid_from')({target: {value: moment().toISOString()}})
+                                    }}>
+                                <Cached/>
+                            </Button>
+                        </Tooltip>
                         <TextField style={{marginLeft: 26, width: 210}}
                                    type="text"
                                    name="valid_until"
@@ -173,13 +177,14 @@ export class IndicatorPage extends Component {
                                    margin="normal"
                                    onChange={this.handleChange('valid_until')}
                         />
-                        <Button fab dense color="primary" aria-label="redo" style={{width: 33, height: 22}}
-                                onClick={(e) => {
-                                    this.handleChange('valid_until')({target: {value: moment().toISOString()}})
-                                }}>
-                            <Cached/>
-                        </Button>
-
+                        <Tooltip id="tooltip-add" title="Renew the timestamp" placement="top" enterDelay={500}>
+                            <Button fab dense color="primary" aria-label="redo" style={{width: 33, height: 22}}
+                                    onClick={(e) => {
+                                        this.handleChange('valid_until')({target: {value: moment().toISOString()}})
+                                    }}>
+                                <Cached/>
+                            </Button>
+                        </Tooltip>
                     </Grid>
                     <Grid key="b4" item>
                         <TextField style={{marginLeft: 8}}
