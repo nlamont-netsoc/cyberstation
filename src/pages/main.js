@@ -90,14 +90,14 @@ class MainPage extends Component {
     }
 
     initStore = () => {
-        //  localStorage.setItem('serverDiscovery', JSON.stringify({}));
+        //  localStorage.setItem('serverApiroot', '');
         //  localStorage.removeItem('bundle--99819859-f19d-49e7-84de-4fbb344c0630');
         //  localStorage.clear();
        //   localStorage.setItem('collectionSelected', JSON.stringify({}));
         //  localStorage.setItem('bundleList', JSON.stringify([]));
-     //     for(let key in localStorage) {
-     //         console.log(key + ' = ' + localStorage.getItem(key));
-     //     }
+    //      for(let key in localStorage) {
+    //          console.log(key + ' = ' + localStorage.getItem(key));
+    //      }
 
         // add a default bundle if store is empty
         let defBndl = JSON.parse(JSON.stringify(defaultBundle)); // make a deep copy to be sure

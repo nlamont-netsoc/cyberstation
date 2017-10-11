@@ -50,7 +50,9 @@ export class ServerView extends Component {
 
     // callback for ServersPage
     updateServer = (server) => {
-        this.setState({server: server});
+      //  this.setState({server: server});
+        this.state.server = server;
+        this.forceUpdate();
         // tell the parent component
         this.props.update(server);
     };
