@@ -116,15 +116,14 @@ export default class AddPanel extends Component {
                 <Grid key="k2" container>
                     <Grid key="k3" item style={{margin: 8}}>
                         <Typography type="body1">{this.state.title}</Typography>
-                        <Tooltip id="tooltip-add" title={"Add a new " + itemType} placement="top" enterDelay={500}>
+                        {/*<Tooltip id="tooltip-add" title={"Add a new " + itemType} placement="top" enterDelay={500}>*/}
                             <Button fab color="primary" onClick={this.handleAddToList} raised
                                     style={{width: 34, height: 12, margin: 4}}><AddIcon/></Button>
-                        </Tooltip>
-                        <Tooltip id="tooltip-del" title={"Delete selected " + itemType} placement="top"
-                                 enterDelay={500}>
+                        {/*</Tooltip>*/}
+                        {/*<Tooltip id="tooltip-del" title={"Delete selected " + itemType} placement="top" enterDelay={500}>*/}
                             <Button fab color="primary" onClick={this.handleDeleteFromList} raised
                                     style={{width: 34, height: 12, margin: 4}}><RemoveIcon/></Button>
-                        </Tooltip>
+                        {/*</Tooltip>*/}
                         <Divider/>
                     </Grid>
 
