@@ -45,6 +45,12 @@ export class StixView extends Component {
         this.state = {value: 0, server: this.props.server, hasBundle: true};
     }
 
+    // initialise the state
+    componentDidMount() {
+        let haveBundle = localStorage.getItem('bundleSelected') ? true : false;
+        this.setState({value: 0, server: this.props.server, hasBundle: haveBundle});
+    };
+
     // when a new props is received
     componentWillReceiveProps(newProps) {
         this.setState({server: newProps.server});

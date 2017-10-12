@@ -40,11 +40,13 @@ export class IndicatorPage extends Component {
         super(props);
         let theBundleArr = JSON.parse(localStorage.getItem('bundleList'));
         let theBundle = theBundleArr[localStorage.getItem('bundleSelected')];
-        this.state = {
-            display: false,
-            bundle: JSON.parse(JSON.stringify(theBundle)),  // make a deep copy of theBundle
-            stix: JSON.parse(JSON.stringify(theStix))       // make a deep copy of theStix
-        };
+        if(theBundle) {
+            this.state = {
+                display: false,
+                bundle: JSON.parse(JSON.stringify(theBundle)),  // make a deep copy of theBundle
+                stix: JSON.parse(JSON.stringify(theStix))       // make a deep copy of theStix
+            };
+        }
     }
 
     // before leaving the component, update the store

@@ -44,14 +44,17 @@ export class BundlePage extends Component {
 
     initialise(theServer) {
         // make a deep copy of the bundle list
-        let bndlList = JSON.parse(localStorage.getItem('bundleList'));
-        //   let theMap = new Map();
-        //   for (let bndl of bndlList) theMap.set(bndl.name, bndl);
+        let bndlList = JSON.parse(localStorage.getItem('bundleList')) || [];
+        let theBundleNdx = localStorage.getItem('bundleSelected') || '';
+        if (theBundleNdx && bndlList.length <= 0){
+            localStorage.setItem('bundleList', JSON.stringify([defaultBundle]));
+            localStorage.setItem('bundleSelected', 0);
+            bndlList = JSON.parse(localStorage.getItem('bundleList'));
+        }
         this.setState({
             server: theServer,
             collection: JSON.parse(localStorage.getItem('collectionSelected')),
             apiroot: localStorage.getItem('serverApiroot') || '',
-            //    bundleMap: theMap,
             bundleList: bndlList,
             bundle: bndlList[localStorage.getItem('bundleSelected')],
             bundleNameList: bndlList.map(bndl => bndl.name)
