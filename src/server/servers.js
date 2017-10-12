@@ -196,7 +196,8 @@ export class ServersPage extends Component {
                         <FormControl component="fieldset" required>
                             <AddPanel initSelection={this.state.currentServer}
                                       title="server url" itemList={this.state.serverListUrl}
-                                      update={this.handleServerUpdate}/>
+                                      update={this.handleServerUpdate}
+                                      updateFlag={true} />
                         </FormControl>
                     </Grid>
                     <Grid item xs={6}>

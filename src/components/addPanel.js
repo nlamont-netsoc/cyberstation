@@ -72,8 +72,11 @@ export default class AddPanel extends Component {
     };
 
     // change the selected item
-    handleListSelection = (event, value) => {
-        this.setState({selection: value.trim()});
+    handleListSelection = (event, theValue) => {
+        this.setState({selection: theValue.trim()});
+        if (this.props.updateFlag) {
+            this.props.update({target: {value: theValue}});
+        }
     };
 
     // show the add dialog
@@ -103,7 +106,7 @@ export default class AddPanel extends Component {
             let found = this.state.objList.find(obj => obj === newEntry);
             // if this entry is already in the list
             if (found) {
-                this.setState({ showAlert: true });
+                this.setState({showAlert: true});
             } else {
                 // ok, a new entry
                 this.state.objList.push(newEntry);
@@ -121,7 +124,7 @@ export default class AddPanel extends Component {
     };
 
     handleAlertClose = () => {
-        this.setState({ showAlert: false });
+        this.setState({showAlert: false});
     };
 
     render() {
@@ -190,7 +193,7 @@ export default class AddPanel extends Component {
                     <DialogContent>
                         <DialogContentText> change the name of this entry </DialogContentText>
                     </DialogContent>
-                    <DialogActions style={{justifyContent:'center'}}>
+                    <DialogActions style={{justifyContent: 'center'}}>
                         <Button onClick={this.handleAlertClose} color="primary">Ok</Button>
                     </DialogActions>
                 </Dialog>
@@ -205,5 +208,6 @@ AddPanel.propTypes = {
     title: PropTypes.string.isRequired,
     itemList: PropTypes.array.isRequired,
     update: PropTypes.func.isRequired,
+    updateFlag: PropTypes.bool,
     initSelection: PropTypes.string
 };
