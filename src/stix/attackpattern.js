@@ -78,7 +78,6 @@ export class AttackPatternPage extends Component {
     // change the state value of the given fieldName
     handleChange = fieldName => (event, checked) => {
         let theValue = event.target.value;
-        console.log("--> fieldName="+fieldName+" theValue="+theValue);
         // if event came from some switch
         if (checked === true || checked === false) theValue = checked;
         // change the individual field value of the stix
