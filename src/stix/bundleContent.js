@@ -44,42 +44,35 @@ export class BundleContent extends Component {
         this.stixTemplate = JSON.parse(JSON.stringify(this.props.stix));
     }
 
-    // when a new props is received
-    componentWillReceiveProps(newProps) {
+    initialise(theProps) {
         // make a deep copy of the new stix template
-        this.stixTemplate = JSON.parse(JSON.stringify(newProps.stix));
-    }
-
-    // when a new props is received
-    // componentWillReceiveProps(newProps) {
-    //     // an array of stix id
-    //     let objItems = [];
-    //     if (newProps.bundle !== undefined) {
-    //         // if have no filtering, take all
-    //         if (newProps.stix.type === undefined || newProps.stix.type === '') {
-    //             objItems = newProps.bundle.objects;
-    //         } else {
-    //             // apply the type filter
-    //             objItems = newProps.bundle.objects.filter(obj => obj.type === newProps.stix.type);
-    //         }
-    //     }
-    //     this.setState({objList: objItems});
-    // };
-
-    // fill the list with the filtered objects of the bundle
-    componentDidMount() {
+        this.stixTemplate = JSON.parse(JSON.stringify(theProps.stix));
+        this.title = "Bundle " + theProps.stix.type;
+        if (theProps.stix.type) {
+            this.title = this.title + "s";
+        }
         // an array of stix id
         let objItems = [];
-        if (this.props.bundle) {
-            // if have no filtering, take all
-            if (this.props.stix.type) {
+        if (theProps.bundle) {
+            if (theProps.stix.type) {
                 // apply the type filter
-                objItems = this.props.bundle.objects.filter(obj => obj.type === this.props.stix.type);
+                objItems = theProps.bundle.objects.filter(obj => obj.type === theProps.stix.type);
             } else {
-                objItems = this.props.bundle.objects;
+                // take all types
+                objItems = theProps.bundle.objects;
             }
         }
         this.setState({objList: objItems});
+    }
+
+    // when a new props is received
+    componentWillReceiveProps(newProps) {
+        this.initialise(newProps);
+    }
+
+    // fill the list with the filtered objects of the bundle
+    componentDidMount() {
+        this.initialise(this.props);
     };
 
     asFormLabels() {
@@ -104,12 +97,10 @@ export class BundleContent extends Component {
         // give it new id and name
         newStix.id = this.stixTemplate.type + "--" + uuidv4();
         newStix.name = "new-" + this.stixTemplate.type;
-        // update the props stix --> todo check for deep copy
-        Object.assign(this.props.stix, newStix);
-        // add to the object list
-        this.setState({objList: [...this.state.objList, newStix]});
         // add to the parent bundle
         this.props.bundle.objects.push(newStix);
+        // add to the object list
+        this.setState({objList: [...this.state.objList, newStix]});
         // select the newly added object and tell the parent
         this.handleSelected(event, newStix.id);
     };
@@ -117,8 +108,8 @@ export class BundleContent extends Component {
     // delete the selected stix from the bundle
     handleDelete = (event) => {
         // delete the selected sdoid from the objList
-        let witoutSdoid = this.state.objList.filter(sdo => sdo.id !== this.state.sdoId);
-        this.setState({objList: witoutSdoid});
+        let withoutSdoid = this.state.objList.filter(sdo => sdo.id !== this.state.sdoId);
+        this.setState({objList: withoutSdoid});
         // delete the selected sdoid from the parent bundle
         let indexToDelete = this.props.bundle.objects.findIndex(sdo => sdo.id === this.state.sdoId);
         if (indexToDelete !== -1) {
@@ -129,17 +120,16 @@ export class BundleContent extends Component {
     };
 
     render() {
-        const stixtype = this.props.stix.type;
         return (
             <Grid container className={this.props.root} justify="flex-start">
                 <FormControl component="fieldset" required>
                     <Typography type="body1" style={{margin: 8}}> {this.title} </Typography>
                     <Grid key="k1">
-                        <Tooltip id="tooltip-add" title={"Add a new " + stixtype} placement="top" enterDelay={500}>
+                        <Tooltip id="tooltip-add" title={"Add a new " + this.props.stix.type} placement="top" enterDelay={500}>
                             <Button fab color="primary" onClick={this.handleAdd} raised
                                     style={{margin: 8}}><AddIcon/></Button>
                         </Tooltip>
-                        <Tooltip id="tooltip-add" title={"Delete selected " + stixtype} placement="top"
+                        <Tooltip id="tooltip-delete" title={"Delete selected " + this.props.stix.type} placement="top"
                                  enterDelay={500}>
                             <Button fab color="primary" onClick={this.handleDelete} raised
                                     style={{margin: 8}}><RemoveIcon/></Button>

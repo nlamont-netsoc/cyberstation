@@ -10,12 +10,17 @@ import Typography from 'material-ui/Typography';
 import {FormControlLabel} from 'material-ui/Form';
 import Radio, {RadioGroup} from 'material-ui/Radio';
 import Button from 'material-ui/Button';
-import Dialog, {DialogActions, DialogContent, DialogTitle,} from 'material-ui/Dialog';
 import Slide from 'material-ui/transitions/Slide';
 import Paper from 'material-ui/Paper';
 import TextField from 'material-ui/TextField';
 import Divider from 'material-ui/Divider';
 import Tooltip from 'material-ui/Tooltip';
+import Dialog, {
+    DialogActions,
+    DialogContent,
+    DialogContentText,
+    DialogTitle,
+} from 'material-ui/Dialog';
 
 
 const styles = {};
@@ -29,9 +34,9 @@ export default class AddPanel extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            title: '', selection: this.props.initSelection, openDialog: false,
+            title: '', selection: '', openDialog: false,
             add: false, delete: false, objList: [],
-            addition: ''
+            addition: '', showAlert: false
         };
     }
 
@@ -41,7 +46,7 @@ export default class AddPanel extends Component {
             title: this.props.title,
             selection: this.props.initSelection,
             openDialog: false, add: false, delete: false,
-            objList: this.props.itemList, addition: ''
+            objList: this.props.itemList, addition: '', showAlert: false
         });
     };
 
@@ -51,7 +56,7 @@ export default class AddPanel extends Component {
             title: newProps.title,
             selection: newProps.initSelection,
             openDialog: false, add: false, delete: false,
-            objList: newProps.itemList, addition: ''
+            objList: newProps.itemList, addition: '', showAlert: false
         });
     };
 
@@ -69,7 +74,6 @@ export default class AddPanel extends Component {
     // change the selected item
     handleListSelection = (event, value) => {
         this.setState({selection: value.trim()});
-        this.props.update({target: {value: value.trim()}});
     };
 
     // show the add dialog
@@ -94,18 +98,30 @@ export default class AddPanel extends Component {
     };
 
     handleDialogOk = () => {
-        if (this.state.addition.trim()) {
-            this.state.objList.push(this.state.addition.trim());
-            this.state.openDialog = false;
-            this.forceUpdate();
-            let event = {target: {value: this.state.objList}};
-            this.props.update(event);
+        let newEntry = this.state.addition.trim();
+        if (newEntry) {
+            let found = this.state.objList.find(obj => obj === newEntry);
+            // if this entry is already in the list
+            if (found) {
+                this.setState({ showAlert: true });
+            } else {
+                // ok, a new entry
+                this.state.objList.push(newEntry);
+                this.state.openDialog = false;
+                this.forceUpdate();
+                let event = {target: {value: this.state.objList}};
+                this.props.update(event);
+            }
         }
     };
 
     // typing the text
     handleDialogChange = name => event => {
         this.setState({[name]: event.target.value});
+    };
+
+    handleAlertClose = () => {
+        this.setState({ showAlert: false });
     };
 
     render() {
@@ -117,12 +133,12 @@ export default class AddPanel extends Component {
                     <Grid key="k3" item style={{margin: 8}}>
                         <Typography type="body1">{this.state.title}</Typography>
                         {/*<Tooltip id="tooltip-add" title={"Add a new " + itemType} placement="top" enterDelay={500}>*/}
-                            <Button fab color="primary" onClick={this.handleAddToList} raised
-                                    style={{width: 34, height: 12, margin: 4}}><AddIcon/></Button>
+                        <Button fab color="primary" onClick={this.handleAddToList} raised
+                                style={{width: 34, height: 12, margin: 4}}><AddIcon/></Button>
                         {/*</Tooltip>*/}
                         {/*<Tooltip id="tooltip-del" title={"Delete selected " + itemType} placement="top" enterDelay={500}>*/}
-                            <Button fab color="primary" onClick={this.handleDeleteFromList} raised
-                                    style={{width: 34, height: 12, margin: 4}}><RemoveIcon/></Button>
+                        <Button fab color="primary" onClick={this.handleDeleteFromList} raised
+                                style={{width: 34, height: 12, margin: 4}}><RemoveIcon/></Button>
                         {/*</Tooltip>*/}
                         <Divider/>
                     </Grid>
@@ -166,6 +182,16 @@ export default class AddPanel extends Component {
                     <DialogActions>
                         <Button onClick={this.handleDialogCancel} color="primary">Cancel</Button>
                         <Button onClick={this.handleDialogOk} color="primary">Ok</Button>
+                    </DialogActions>
+                </Dialog>
+
+                <Dialog open={this.state.showAlert} transition={Slide} onRequestClose={this.handleAlertClose}>
+                    <DialogTitle>{"This entry is already in the list"}</DialogTitle>
+                    <DialogContent>
+                        <DialogContentText> change the name of this entry </DialogContentText>
+                    </DialogContent>
+                    <DialogActions style={{justifyContent:'center'}}>
+                        <Button onClick={this.handleAlertClose} color="primary">Ok</Button>
                     </DialogActions>
                 </Dialog>
 

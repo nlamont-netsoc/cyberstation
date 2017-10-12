@@ -9,6 +9,8 @@ import {BundleContent} from '../stix/bundleContent.js';
 import TextField from 'material-ui/TextField';
 import moment from 'moment';
 import AddKillPhase from './addKillPhase.js';
+import PropTypes from "prop-types";
+import uuidv4 from "uuid/v4";
 
 const styles = {};
 
@@ -21,6 +23,7 @@ const SDOTYPE = "attack-pattern";
  * todo granular_markings
  */
 
+// a "attack-pattern" stix object
 let theStix = {
     name: '', type: SDOTYPE, id: '', created: '', modified: '', revoked: '',
     created_by_ref: '', labels: [], confidence: '', external_references: [], lang: '',
@@ -34,38 +37,39 @@ export class AttackPatternPage extends Component {
 
     constructor(props) {
         super(props);
-        let theBundleArr = JSON.parse(localStorage.getItem('bundleList'));
-        let theBundle = theBundleArr[localStorage.getItem('bundleSelected')];
-        if(theBundle) {
-            this.state = {
-                display: false,
-                bundle: JSON.parse(JSON.stringify(theBundle)),  // make a deep copy of theBundle
-                stix: JSON.parse(JSON.stringify(theStix))       // make a deep copy of theStix
-            };
-        }
+        this.state = {display: false, stix: this.stixDefault()
+        };
     }
+
+    // initialise the state
+    componentDidMount() {
+        this.setState({display: false, stix: this.stixDefault()});
+    };
 
     // before leaving the component, update the store
     componentWillUnmount() {
         let theBundleArr = JSON.parse(localStorage.getItem('bundleList'));
-        theBundleArr[localStorage.getItem('bundleSelected')] = this.state.bundle;
+        theBundleArr[localStorage.getItem('bundleSelected')] = this.props.bundle;
         localStorage.setItem('bundleList', JSON.stringify(theBundleArr));
+
     }
 
     stixDefault = () => {
         // make a deep copy of theStix
         let dstix = JSON.parse(JSON.stringify(theStix));
+        dstix.id = SDOTYPE + "--" + uuidv4();
         dstix.revoked = false;
         dstix.created = moment().toISOString();
         dstix.modified = moment().toISOString();
         dstix.confidence = 0;
         dstix.lang = "en";
+        dstix.object_marking_refs = [];
         return dstix;
     };
 
     updateBundleObject = (fieldName, value) => {
         // find the object in the bundle
-        let objFound = this.state.bundle.objects.find(obj => obj.id === this.state.stix.id);
+        let objFound = this.props.bundle.objects.find(obj => obj.id === this.state.stix.id);
         if (objFound) {
             objFound[fieldName] = value;
         }
@@ -74,6 +78,7 @@ export class AttackPatternPage extends Component {
     // change the state value of the given fieldName
     handleChange = fieldName => (event, checked) => {
         let theValue = event.target.value;
+        console.log("--> fieldName="+fieldName+" theValue="+theValue);
         // if event came from some switch
         if (checked === true || checked === false) theValue = checked;
         // change the individual field value of the stix
@@ -85,14 +90,15 @@ export class AttackPatternPage extends Component {
         this.updateBundleObject(fieldName, theValue);
     };
 
+    // callback for BundleContent
     // update the info display of the selected bundle object
     selectedObject = (sdoid, isDeleted) => {
         if (isDeleted) {
-            this.setState({display: false, stix: JSON.parse(JSON.stringify(theStix))});
+            this.setState({display: false, stix: this.stixDefault()});
         } else {
             if (sdoid) {
                 // find the object with id=sdoid in the bundle
-                let objFound = this.state.bundle.objects.find(obj => obj.id === sdoid);
+                let objFound = this.props.bundle.objects.find(obj => obj.id === sdoid);
                 if (objFound) {
                     this.setState({display: true, stix: objFound});
                 }
@@ -101,13 +107,11 @@ export class AttackPatternPage extends Component {
     };
 
     render() {
-        // prepare a default stix object
-        let defaultStix = this.stixDefault();
         if (this.state.display === true) {
             return (
                 <Grid container className={this.props.root}>
                     <Grid item xs={3}>
-                        <BundleContent selected={this.selectedObject} bundle={this.state.bundle} stix={defaultStix}/>
+                        <BundleContent selected={this.selectedObject} bundle={this.props.bundle} stix={this.state.stix}/>
                     </Grid>
                     <Grid item xs={9}>
                         {commonStix(this.state.stix, this.handleChange)}
@@ -119,7 +123,7 @@ export class AttackPatternPage extends Component {
             return (
                 <Grid container className={this.props.root}>
                     <Grid item xs={3}>
-                        <BundleContent selected={this.selectedObject} bundle={this.state.bundle} stix={defaultStix}/>
+                        <BundleContent selected={this.selectedObject} bundle={this.props.bundle} stix={this.state.stix}/>
                     </Grid>
                 </Grid>
             );
@@ -156,4 +160,7 @@ export class AttackPatternPage extends Component {
 
 }
 
+AttackPatternPage.propTypes = {
+    bundle: PropTypes.object.isRequired
+};
 

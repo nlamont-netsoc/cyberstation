@@ -13,6 +13,8 @@ import Cached from 'material-ui-icons/Cached';
 import AddPanel from '../components/addPanel.js';
 import Switch from 'material-ui/Switch';
 import {FormControlLabel} from 'material-ui/Form';
+import PropTypes from "prop-types";
+import uuidv4 from "uuid/v4";
 
 
 const styles = {};
@@ -39,27 +41,20 @@ export class SightingPage extends Component {
 
     constructor(props) {
         super(props);
-        let theBundleArr = JSON.parse(localStorage.getItem('bundleList'));
-        let theBundle = theBundleArr[localStorage.getItem('bundleSelected')];
-        if(theBundle) {
-            this.state = {
-                display: false,
-                bundle: JSON.parse(JSON.stringify(theBundle)),  // make a deep copy of theBundle
-                stix: JSON.parse(JSON.stringify(theStix))       // make a deep copy of theStix
-            };
-        }
+        this.state = {display: false, stix: this.stixDefault()};
     }
 
     // before leaving the component, update the store
     componentWillUnmount(){
         let theBundleArr = JSON.parse(localStorage.getItem('bundleList'));
-        theBundleArr[localStorage.getItem('bundleSelected')] = this.state.bundle;
+        theBundleArr[localStorage.getItem('bundleSelected')] = this.props.bundle;
         localStorage.setItem('bundleList', JSON.stringify(theBundleArr));
     }
 
     stixDefault = () => {
         // make a deep copy of theStix
         let dstix = JSON.parse(JSON.stringify(theStix));
+        dstix.id = SDOTYPE + "--" + uuidv4();
         dstix.revoked = false;
         dstix.created = moment().toISOString();
         dstix.modified = moment().toISOString();
@@ -70,7 +65,7 @@ export class SightingPage extends Component {
 
     updateBundleObject = (fieldName, value) => {
         // find the object in the bundle
-        let objFound = this.state.bundle.objects.find(obj => obj.id === this.state.stix.id);
+        let objFound = this.props.bundle.objects.find(obj => obj.id === this.state.stix.id);
         if (objFound) {
             objFound[fieldName] = value;
         }
@@ -97,7 +92,7 @@ export class SightingPage extends Component {
         } else {
             if (sdoid) {
                 // find the object with id=sdoid in the bundle
-                let objFound = this.state.bundle.objects.find(obj => obj.id === sdoid);
+                let objFound = this.props.bundle.objects.find(obj => obj.id === sdoid);
                 if (objFound) {
                     this.setState({display: true, stix: objFound});
                 }
@@ -112,7 +107,7 @@ export class SightingPage extends Component {
             return (
                 <Grid container className={this.props.root}>
                     <Grid item xs={3}>
-                        <BundleContent selected={this.selectedObject} bundle={this.state.bundle} stix={defaultStix}/>
+                        <BundleContent selected={this.selectedObject} bundle={this.props.bundle} stix={this.state.stix}/>
                     </Grid>
                     <Grid item xs={9}>
                         {commonStix(this.state.stix, this.handleChange)}
@@ -124,7 +119,7 @@ export class SightingPage extends Component {
             return (
                 <Grid container className={this.props.root}>
                     <Grid item xs={3}>
-                        <BundleContent selected={this.selectedObject} bundle={this.state.bundle} stix={defaultStix}/>
+                        <BundleContent selected={this.selectedObject} bundle={this.props.bundle} stix={this.state.stix}/>
                     </Grid>
                 </Grid>
             );
@@ -219,4 +214,6 @@ export class SightingPage extends Component {
 
 }
 
-
+SightingPage.propTypes = {
+    bundle: PropTypes.object.isRequired
+};

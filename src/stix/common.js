@@ -25,7 +25,7 @@ export const ITEM_PADDING_TOP = 12;
  *
  * todo granular_markings
  */
-export const commonStix = (state, handler) => {
+export const commonStix = (stix, handler) => {
     return (
         <Grid>
             <form noValidate autoComplete="off">
@@ -35,7 +35,7 @@ export const commonStix = (state, handler) => {
                                type="text"
                                id="name"
                                label="name"
-                               value={state.name}
+                               value={stix.name}
                                margin="normal"
                                onChange={handler('name')}
                                fullWidth
@@ -48,7 +48,7 @@ export const commonStix = (state, handler) => {
                                name="created"
                                id="created"
                                label="created"
-                               value={state.created}
+                               value={stix.created}
                                margin="normal"
                                onChange={handler('created')}
                     />
@@ -65,7 +65,7 @@ export const commonStix = (state, handler) => {
                                name="modified"
                                id="modified"
                                label="modified"
-                               value={state.modified}
+                               value={stix.modified}
                                margin="normal"
                                onChange={handler('modified')}
                     />
@@ -80,7 +80,7 @@ export const commonStix = (state, handler) => {
                     <FormControlLabel
                         control={
                             <Switch
-                                checked={state.revoked}
+                                checked={stix.revoked}
                                 onChange={handler('revoked')}
                                 aria-label="revoked"
                             />
@@ -96,7 +96,7 @@ export const commonStix = (state, handler) => {
                                name="confidence"
                                id="confidence"
                                label="conf"
-                               value={state.confidence}
+                               value={stix.confidence}
                                margin="normal"
                                onChange={handler('confidence')}
                                InputLabelProps={{shrink: true}}
@@ -106,7 +106,7 @@ export const commonStix = (state, handler) => {
                                name="lang"
                                id="lang"
                                label="lang"
-                               value={state.lang}
+                               value={stix.lang}
                                margin="normal"
                                onChange={handler('lang')}
                     />
@@ -116,7 +116,7 @@ export const commonStix = (state, handler) => {
                         <Select
                             style={{width: 550}}
                             multiple
-                            value={state.labels}
+                            value={stix.labels}
                             onChange={handler('labels')}
                             input={<Input id="labels-multiple"/>}
                             MenuProps={{
@@ -144,7 +144,7 @@ export const commonStix = (state, handler) => {
                                name="created_by_ref"
                                id="created_by_ref"
                                label="created_by_ref"
-                               value={state.created_by_ref}
+                               value={stix.created_by_ref}
                                margin="normal"
                                onChange={handler('created_by_ref')}
                                fullWidth
@@ -153,10 +153,10 @@ export const commonStix = (state, handler) => {
 
                 <Grid key="a9" item>
 
-                    <AddPanel title="Object marking refs" itemList={state.object_marking_refs}
+                    <AddPanel title="Object marking refs" itemList={stix.object_marking_refs}
                               update={handler('object_marking_refs')}/>
 
-                    <AddPanel title="External references" itemList={state.external_references}
+                    <AddPanel title="External references" itemList={stix.external_references}
                               update={handler('external_references')}/>
                 </Grid>
 

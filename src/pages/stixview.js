@@ -42,13 +42,18 @@ export class StixView extends Component {
 
     constructor(props) {
         super(props);
-        this.state = {value: 0, server: this.props.server, hasBundle: true};
+        this.state = {value: 0, server: this.props.server, bundle: undefined, hasBundle: false};
     }
 
     // initialise the state
     componentDidMount() {
-        let haveBundle = localStorage.getItem('bundleSelected') ? true : false;
-        this.setState({value: 0, server: this.props.server, hasBundle: haveBundle});
+        let bndlList = JSON.parse(localStorage.getItem('bundleList')) || [];
+        let theBundle = bndlList[localStorage.getItem('bundleSelected')];
+        if (theBundle) {
+            this.setState({value: 0, server: this.props.server, bundle: theBundle, hasBundle: true});
+        } else {
+            this.setState({value: 0, server: this.props.server, bundle: undefined, hasBundle: false});
+        }
     };
 
     // when a new props is received
@@ -56,15 +61,18 @@ export class StixView extends Component {
         this.setState({server: newProps.server});
     };
 
+    // change to the Server page or the Collection page
     handleChange = (event, value) => {
         this.setState({value: value});
     };
 
-    // update from the BundlePage, is for the case where all bundles have been deleted.
-    // if false means no bundle is selected, true there is a selected bundle
-    // Use to disable the sdo pages, see below
+    // update from the BundlePage, the currently selected bundle object
     handleBundleUpdate = (value) => {
-        this.setState({hasBundle: value});
+        if (value) {
+            this.setState({bundle: value, hasBundle: true});
+        } else {
+            this.setState({bundle: undefined, hasBundle: false});
+        }
     };
 
     render() {
@@ -99,14 +107,28 @@ export class StixView extends Component {
                 </div>
 
                 <div style={viewStyle.content}>
-                    {this.state.value === 0 && <TabContainer><BundlePage update={this.handleBundleUpdate} server={this.state.server}/></TabContainer>}
-                    {this.state.hasBundle && this.state.value === 1 && <TabContainer><AttackPatternPage /></TabContainer>}
-                    {this.state.hasBundle && this.state.value === 2 && <TabContainer><RelationShipPage /></TabContainer>}
-                    {this.state.hasBundle && this.state.value === 3 && <TabContainer><IndicatorPage /></TabContainer>}
-                    {this.state.hasBundle && this.state.value === 4 && <TabContainer><SightingPage /></TabContainer>}
-                    {this.state.hasBundle && this.state.value === 5 && <TabContainer>{'Malware'}</TabContainer>}
+                    {this.state.value === 0 && <TabContainer>
+                        <BundlePage update={this.handleBundleUpdate}
+                                    server={this.state.server}
+                                    bundle={this.state.bundle}/></TabContainer>}
+
+                    {this.state.hasBundle && this.state.value === 1 &&
+                    <TabContainer><AttackPatternPage bundle={this.state.bundle}/></TabContainer>}
+
+                    {this.state.hasBundle && this.state.value === 2 &&
+                    <TabContainer><RelationShipPage bundle={this.state.bundle}/></TabContainer>}
+
+                    {this.state.hasBundle && this.state.value === 3 &&
+                    <TabContainer><IndicatorPage bundle={this.state.bundle}/></TabContainer>}
+
+                    {this.state.hasBundle && this.state.value === 4 &&
+                    <TabContainer><SightingPage bundle={this.state.bundle}/></TabContainer>}
+
+                    {this.state.hasBundle && this.state.value === 5 &&
+                    <TabContainer>{'Malware'}</TabContainer>}
                     {this.state.hasBundle && this.state.value === 6 && <TabContainer>{'Campaign'}</TabContainer>}
-                    {this.state.hasBundle && this.state.value === 7 && <TabContainer>{'Course of Action'}</TabContainer>}
+                    {this.state.hasBundle && this.state.value === 7 &&
+                    <TabContainer>{'Course of Action'}</TabContainer>}
                     {this.state.hasBundle && this.state.value === 8 && <TabContainer>{'Identity'}</TabContainer>}
                     {this.state.hasBundle && this.state.value === 9 && <TabContainer>{'Intrusion Set'}</TabContainer>}
                     {this.state.hasBundle && this.state.value === 10 && <TabContainer>{'Observed Data'}</TabContainer>}

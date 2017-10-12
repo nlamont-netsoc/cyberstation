@@ -30,33 +30,35 @@ export class BundlePage extends Component {
         super(props);
         this.state = {
             waiting: false,         // for the progress spinner
-            server: this.props.server,
+            server: this.props.server, // the current server object
+            bundle: this.props.bundle, // the current bundle object
             collection: '',
             apiroot: '',
-            bundleMap: new Map(),
-            bundleList: [],
-            bundleNameList: [],
-            objList: [],
-            info: '',
-            bundle: JSON.parse(JSON.stringify(defaultBundle))
+            bundleList: [],     // the list of bundles obtained from the store
+            bundleNameList: [], // the list of bundles names for use in the AddPanel
+            info: ''
         };
     }
 
-    initialise(theServer) {
-        // make a deep copy of the bundle list
+    initialise(theProps) {
+        // make a copy of the bundle list
         let bndlList = JSON.parse(localStorage.getItem('bundleList')) || [];
         let theBundleNdx = localStorage.getItem('bundleSelected') || '';
-        if (theBundleNdx && bndlList.length <= 0){
+        // if have no selection or bundle list is empty
+        // create a default bundle and add it to the store list
+        if (theBundleNdx && bndlList.length <= 0) {
             localStorage.setItem('bundleList', JSON.stringify([defaultBundle]));
             localStorage.setItem('bundleSelected', 0);
-            bndlList = JSON.parse(localStorage.getItem('bundleList'));
+            bndlList.push(defaultBundle);
+            // tell the parent to update the bundle
+            this.props.update(defaultBundle);
         }
         this.setState({
-            server: theServer,
+            server: theProps.server,
             collection: JSON.parse(localStorage.getItem('collectionSelected')),
             apiroot: localStorage.getItem('serverApiroot') || '',
             bundleList: bndlList,
-            bundle: bndlList[localStorage.getItem('bundleSelected')],
+            bundle: theProps.bundle,
             bundleNameList: bndlList.map(bndl => bndl.name)
         });
         this.showServerInfo();
@@ -64,12 +66,12 @@ export class BundlePage extends Component {
 
     // initialise the state
     componentDidMount() {
-        this.initialise(this.props.server)
+        this.initialise(this.props)
     };
 
     // when a new props is received
     componentWillReceiveProps(newProps) {
-        this.initialise(newProps.server)
+        this.initialise(newProps)
     };
 
     objectsAsFormLabels() {
@@ -86,9 +88,9 @@ export class BundlePage extends Component {
         this.setState({bundle: {...this.state.bundle, [name]: event.target.value}});
         // special case, changing the name of the bundle, we need to also update the bundleNameList
         if (name === 'name') {
-            // the index of the selected bundle in the list
+            // get the index of the selected bundle in the list
             let ndx = localStorage.getItem('bundleSelected');
-            // update the value of this name in the list
+            // update the name of this bundle in the list
             this.state.bundleNameList[ndx] = event.target.value;
         }
         this.forceUpdate();
@@ -100,25 +102,25 @@ export class BundlePage extends Component {
         // event.target.value can be a string or an array of strings (the list)
         if (event.target.value) {
             if (Array.isArray(event.target.value)) {
-                // if there is nothing in the list clear everything and return
+                // if there is nothing in the list, clear everything and return
                 if (event.target.value.length <= 0) {
                     localStorage.setItem('bundleSelected', '');
                     localStorage.setItem('bundleList', JSON.stringify([]));
                     this.state.bundleList = [];
                     this.state.bundleNameList = [];
-                    this.state.objList = [];
                     this.state.info = '';
                     this.state.bundle = undefined;
                     this.forceUpdate();
                     // tell the parent about having no bundle selected
-                    this.props.update(false);
+                    this.props.update(undefined);
                     return;
                 }
+                // if have an array of names
                 // pick the last value of the array
                 let lastValue = event.target.value[event.target.value.length - 1];
                 // update the name list
                 this.state.bundleNameList = event.target.value;
-                // find the index of the lastValue bundle in the bundle list
+                // find the index of the lastValue bundle name in the bundle list
                 let ndx = this.state.bundleList.findIndex(bndl => bndl.name === lastValue);
                 // if could not find the selection in the list, means the list is empty
                 if (ndx === -1) {
@@ -127,28 +129,33 @@ export class BundlePage extends Component {
                     newBundle.name = lastValue;
                     this.state.bundleList = [newBundle];
                     this.state.bundleNameList = [newBundle.name];
-                    this.state.objList = [];
                     this.state.info = '';
                     this.state.bundle = newBundle;
                     // update the store selected bundle index
                     localStorage.setItem('bundleSelected', 0);
                     // store the new bundle list as a json string object
                     localStorage.setItem('bundleList', JSON.stringify(this.state.bundleList));
+                    // tell the parent about the new bundle
+                    this.props.update(newBundle);
                 } else {
-                    // update the store selected bundle
+                    // update the store selected bundle index
                     localStorage.setItem('bundleSelected', ndx);
+                    let bndlList = JSON.parse(localStorage.getItem('bundleList'));
+                    // tell the parent about the selected bundle
+                    this.props.update(bndlList[ndx]);
                 }
-                // tell the parent about having a bundle selected
-                this.props.update(true);
                 this.forceUpdate();
             }
         } else {
             // a single selection
-            this.forceUpdate();
             // find the index of the selected named bundle in the list
-            let ndx = this.state.bundleList.findIndex(bndl => bndl.name === event.target.value);
-            // update the store selected bundle
-            localStorage.setItem('bundleSelected', ndx);
+            let theIndex = this.state.bundleList.findIndex(bndl => bndl.name === event.target.value);
+            if (theIndex) {
+                // update the store selected bundle
+                localStorage.setItem('bundleSelected', theIndex);
+                // tell the parent about the selected bundle
+                this.props.update(this.state.bundleList[theIndex]);
+            }
         }
     };
 
@@ -294,12 +301,12 @@ export class BundlePage extends Component {
                 </Grid>
             </Grid>
         );
-    }
-    ;
+    };
 
 }
 
 BundlePage.propTypes = {
     server: PropTypes.object,
+    bundle: PropTypes.object,
     update: PropTypes.func
 };

@@ -92,7 +92,7 @@ class MainPage extends Component {
     initStore = () => {
         //  localStorage.setItem('serverApiroot', '');
         //  localStorage.removeItem('bundle--99819859-f19d-49e7-84de-4fbb344c0630');
-        //  localStorage.clear();
+      //    localStorage.clear();
        //   localStorage.setItem('collectionSelected', JSON.stringify({}));
         //  localStorage.setItem('bundleList', JSON.stringify([]));
     //      for(let key in localStorage) {
