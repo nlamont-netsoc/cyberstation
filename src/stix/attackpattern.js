@@ -3,7 +3,7 @@
 
 // @flow weak
 import Grid from 'material-ui/Grid';
-import React, {Component} from 'react';
+import React from 'react';
 import TextField from 'material-ui/TextField';
 import moment from 'moment';
 import AddKillPhase from './addKillPhase.js';

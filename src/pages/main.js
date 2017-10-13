@@ -94,8 +94,6 @@ class MainPage extends Component {
     };
 
     initStore = () => {
-        //  localStorage.setItem('serverApiroot', '');
-        //  localStorage.removeItem('bundle--99819859-f19d-49e7-84de-4fbb344c0630');
       //    localStorage.clear();
        //   localStorage.setItem('collectionSelected', JSON.stringify({}));
         //  localStorage.setItem('bundleList', JSON.stringify([]));
@@ -103,19 +101,18 @@ class MainPage extends Component {
     //          console.log(key + ' = ' + localStorage.getItem(key));
     //      }
 
-        // add a default bundle if store is empty
-        let defBndl = JSON.parse(JSON.stringify(defaultBundle)); // make a deep copy to be sure
+        // add a default bundle if the store is empty
+        let defBndl = JSON.parse(JSON.stringify(defaultBundle)); // make a deep copy
         let bndlList = JSON.parse(localStorage.getItem('bundleList')) || [];
         // if the store bundleList is empty add the default bundle to it
-        if (bndlList.length <= 0) {
+        if (bndlList.length === 0) {
             localStorage.setItem('bundleList', JSON.stringify([defBndl]));
-            bndlList.push(defBndl);
             // bundle selected is the index into the bundle list
             localStorage.setItem('bundleSelected', 0);
         }
         // add a default test taxii server if the list is empty
         let srvList = JSON.parse(localStorage.getItem('serverUrlList')) || [];
-        if (srvList.length <= 0) {
+        if (srvList.length === 0) {
             localStorage.setItem('serverUrlList', JSON.stringify(["https://test.freetaxii.com:8000"]));
         }
     };

@@ -172,7 +172,7 @@ export class BundlePage extends Component {
                 let colInfo = 'Collection';
                 if (this.state.collection) {
                     writeVal = this.state.collection.can_write ? 'can write to' : 'cannot write to';
-                    colInfo = "Collection" + " (" + writeVal + ")";
+                    colInfo = "Collection (" + writeVal + ")";
                     colEntry = this.state.collection.title;
                 }
                 let serverInfo = <Table style={{marginLeft: 8}}>

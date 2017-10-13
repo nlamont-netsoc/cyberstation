@@ -124,18 +124,16 @@ export class StixView extends Component {
                     {this.state.hasBundle && this.state.value === 4 &&
                     <TabContainer><SightingPage bundle={this.state.bundle}/></TabContainer>}
 
-                    {this.state.hasBundle && this.state.value === 5 &&
-                    <TabContainer>{'Malware'}</TabContainer>}
-                    {this.state.hasBundle && this.state.value === 6 && <TabContainer>{'Campaign'}</TabContainer>}
-                    {this.state.hasBundle && this.state.value === 7 &&
-                    <TabContainer>{'Course of Action'}</TabContainer>}
-                    {this.state.hasBundle && this.state.value === 8 && <TabContainer>{'Identity'}</TabContainer>}
-                    {this.state.hasBundle && this.state.value === 9 && <TabContainer>{'Intrusion Set'}</TabContainer>}
-                    {this.state.hasBundle && this.state.value === 10 && <TabContainer>{'Observed Data'}</TabContainer>}
-                    {this.state.hasBundle && this.state.value === 11 && <TabContainer>{'Report'}</TabContainer>}
-                    {this.state.hasBundle && this.state.value === 12 && <TabContainer>{'Threat Actor'}</TabContainer>}
-                    {this.state.hasBundle && this.state.value === 13 && <TabContainer>{'Tool'}</TabContainer>}
-                    {this.state.hasBundle && this.state.value === 14 && <TabContainer>{'Vulnerability'}</TabContainer>}
+                    {this.state.hasBundle && this.state.value === 5 && <TabContainer>{'Malware not yet implemented'}</TabContainer>}
+                    {this.state.hasBundle && this.state.value === 6 && <TabContainer>{'Campaign not yet implemented'}</TabContainer>}
+                    {this.state.hasBundle && this.state.value === 7 && <TabContainer>{'Course of Action not yet implemented'}</TabContainer>}
+                    {this.state.hasBundle && this.state.value === 8 && <TabContainer>{'Identity not yet implemented'}</TabContainer>}
+                    {this.state.hasBundle && this.state.value === 9 && <TabContainer>{'Intrusion Set not yet implemented'}</TabContainer>}
+                    {this.state.hasBundle && this.state.value === 10 && <TabContainer>{'Observed Data not yet implemented'}</TabContainer>}
+                    {this.state.hasBundle && this.state.value === 11 && <TabContainer>{'Report not yet implemented'}</TabContainer>}
+                    {this.state.hasBundle && this.state.value === 12 && <TabContainer>{'Threat Actor not yet implemented'}</TabContainer>}
+                    {this.state.hasBundle && this.state.value === 13 && <TabContainer>{'Tool not yet implemented'}</TabContainer>}
+                    {this.state.hasBundle && this.state.value === 14 && <TabContainer>{'Vulnerability not yet implemented'}</TabContainer>}
                 </div>
 
             </div>
