@@ -1,10 +1,8 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
 
 // @flow weak
-import {commonStix} from '../stix/common.js';
 import Grid from 'material-ui/Grid';
 import React, {Component} from 'react';
-import {BundleContent} from '../stix/bundleContent.js';
 import TextField from 'material-ui/TextField';
 import moment from 'moment';
 import {relationshipsNames} from "./stixutil";
@@ -12,24 +10,17 @@ import Input, {InputLabel} from 'material-ui/Input';
 import {FormControl} from 'material-ui/Form';
 import Select from 'material-ui/Select';
 import {MenuItem} from 'material-ui/Menu';
-import PropTypes from "prop-types";
 import uuidv4 from "uuid/v4";
+import {StixBase} from "./stixBase";
 
 
-export const ITEM_HEIGHT = 48;
-export const ITEM_PADDING_TOP = 12;
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 12;
 
-const styles = {};
-
+// the stix object type
 const SDOTYPE = "relationship";
 
-/**
- * common:
- * name, created, modify, revoked, confidence, lang, labels, created_by_ref,
- * object_marking_refs, external_references
- *
- * todo granular_markings
- */
+// a "relationship" stix object
 let theStix = {
     name: '', type: SDOTYPE, id: '', created: '', modified: '', revoked: '',
     created_by_ref: '', labels: [], confidence: '', external_references: [], lang: '',
@@ -37,94 +28,29 @@ let theStix = {
     source_ref: '', relationship_type: '', target_ref: ''
 };
 
-export class RelationShipPage extends Component {
+// a default stix
+let stixDefault = () => {
+    // make a deep copy of theStix
+    let dstix = JSON.parse(JSON.stringify(theStix));
+    dstix.id = SDOTYPE + "--" + uuidv4();
+    dstix.revoked = false;
+    dstix.created = moment().toISOString();
+    dstix.modified = moment().toISOString();
+    dstix.confidence = 0;
+    dstix.lang = "en";
+    return dstix;
+};
+
+
+/**
+ * allows for add/delete/edit of relationships.
+ */
+export class RelationShipPage extends StixBase {
 
     constructor(props) {
-        super(props);
-        this.state = {display: false, stix: this.stixDefault()};
+        super(props, stixDefault());
+        this.state.specific = this.specific();
     }
-
-    // before leaving the component, update the store
-    componentWillUnmount() {
-        let theBundleArr = JSON.parse(localStorage.getItem('bundleList'));
-        theBundleArr[localStorage.getItem('bundleSelected')] = this.props.bundle;
-        localStorage.setItem('bundleList', JSON.stringify(theBundleArr));
-    }
-
-    stixDefault = () => {
-        // make a deep copy of theStix
-        let dstix = JSON.parse(JSON.stringify(theStix));
-        dstix.id = SDOTYPE + "--" + uuidv4();
-        dstix.revoked = false;
-        dstix.created = moment().toISOString();
-        dstix.modified = moment().toISOString();
-        dstix.confidence = 0;
-        dstix.lang = "en";
-        return dstix;
-    };
-
-    updateBundleObject = (fieldName, value) => {
-        // find the object in the bundle
-        let objFound = this.props.bundle.objects.find(obj => obj.id === this.state.stix.id);
-        if (objFound) {
-            objFound[fieldName] = value;
-        }
-    };
-
-    // change the state value of the given fieldName
-    handleChange = fieldName => (event, checked) => {
-        let theValue = event.target.value;
-        // if event came from some switch
-        if (checked === true || checked === false) theValue = checked;
-        // change the individual field value of the stix
-        this.setState((prevState) => {
-            prevState.stix[fieldName] = theValue;
-            return prevState;
-        });
-        // update the bundle object
-        this.updateBundleObject(fieldName, theValue);
-    };
-
-    // update the info display of the selected bundle object
-    selectedObject = (sdoid, isDeleted) => {
-        if (isDeleted) {
-            this.setState({display: false, stix: JSON.parse(JSON.stringify(theStix))});
-        } else {
-            if (sdoid) {
-                // find the object with id=sdoid in the bundle
-                let objFound = this.props.bundle.objects.find(obj => obj.id === sdoid);
-                if (objFound) {
-                    this.setState({display: true, stix: objFound});
-                }
-            }
-        }
-    };
-
-    render() {
-        // prepare a default stix object
-        let defaultStix = this.stixDefault();
-        if (this.state.display === true) {
-            return (
-                <Grid container className={this.props.root}>
-                    <Grid item xs={3}>
-                        <BundleContent selected={this.selectedObject} bundle={this.props.bundle} stix={this.state.stix}/>
-                    </Grid>
-                    <Grid item xs={9}>
-                        {commonStix(this.state.stix, this.handleChange)}
-                        {this.specific()}
-                    </Grid>
-                </Grid>
-            );
-        } else {
-            return (
-                <Grid container className={this.props.root}>
-                    <Grid item xs={3}>
-                        <BundleContent selected={this.selectedObject} bundle={this.props.bundle} stix={this.state.stix}/>
-                    </Grid>
-                </Grid>
-            );
-        }
-    };
 
     // attributes specific to relationship objects
     specific() {
@@ -200,7 +126,3 @@ export class RelationShipPage extends Component {
     };
 
 }
-
-RelationShipPage.propTypes = {
-    bundle: PropTypes.object.isRequired
-};

@@ -71,14 +71,14 @@ const styles = theme => ({
 
 /**
  * main entry point into CyberStation.
- * Provide a single page application consisting of a AppBar with login/logout and
- * a server and stix views buttons.
+ * Provide a single page application consisting of a AppBar with Login/Logout and
+ * a SERVER and STIX views buttons.
  */
 class MainPage extends Component {
 
     constructor(props) {
         super(props);
-        // for login testing--> todo to be removed
+        // todo to be removed, for testing
         this.taxiCom = new TaxiiConnect("https://test.freetaxii.com:8000", "user-me", "user-password");
         this.state = {
             view: '',
@@ -86,8 +86,12 @@ class MainPage extends Component {
             isLogged: false,
             loglabel: 'Login'
         };
-        this.initStore();
     }
+
+    componentDidMount() {
+        this.initStore();
+        this.setState({view: <LoginPage conn={this.taxiCom} loggedin={this.isLoggedin}/>});
+    };
 
     initStore = () => {
         //  localStorage.setItem('serverApiroot', '');
@@ -147,10 +151,6 @@ class MainPage extends Component {
     // set the view to the StixView
     handleStix = () => {
         this.setState({view: <StixView server={this.state.server}/>});
-    };
-
-    componentDidMount() {
-        this.setState({view: <LoginPage conn={this.taxiCom} loggedin={this.isLoggedin}/>});
     };
 
     render() {

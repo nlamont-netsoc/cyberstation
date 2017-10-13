@@ -34,7 +34,7 @@ const styles = theme => ({
 });
 
 /**
- * show the servers and collections tabs
+ * show the SERVERS and COLLECTIONS tabs
  */
 export class ServerView extends Component {
 
@@ -50,9 +50,7 @@ export class ServerView extends Component {
 
     // callback for ServersPage
     updateServer = (server) => {
-      //  this.setState({server: server});
-        this.state.server = server;
-        this.forceUpdate();
+        this.setState({server: server});
         // tell the parent component
         this.props.update(server);
     };

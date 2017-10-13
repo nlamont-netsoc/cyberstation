@@ -36,7 +36,7 @@ const styles = theme => ({
 });
 
 /**
- * shows the bundle and all stix types tabs
+ * shows the BUNDLE and all STIX types tabs
  */
 export class StixView extends Component {
 
@@ -66,7 +66,7 @@ export class StixView extends Component {
         this.setState({value: value});
     };
 
-    // update from the BundlePage, the currently selected bundle object
+    // callback for the BundlePage, set the currently selected bundle object
     handleBundleUpdate = (value) => {
         if (value) {
             this.setState({bundle: value, hasBundle: true});
