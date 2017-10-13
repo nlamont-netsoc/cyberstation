@@ -16,6 +16,9 @@ import Toolbar from 'material-ui/Toolbar';
 import Typography from 'material-ui/Typography';
 import Button from 'material-ui/Button';
 import {defaultBundle} from '../stix/stixutil.js';
+import MenuIcon from 'material-ui-icons/Menu';
+import IconButton from 'material-ui/IconButton';
+
 
 
 function TabContainer(props) {
@@ -65,6 +68,10 @@ const styles = theme => ({
         [theme.breakpoints.up('md')]: {
             height: 'calc(100% - 64px)',
             marginTop: 26
+        },
+        menuButton: {
+            marginLeft: -12,
+            marginRight: 20
         }
     }
 });
@@ -94,12 +101,12 @@ class MainPage extends Component {
     };
 
     initStore = () => {
-      //    localStorage.clear();
-       //   localStorage.setItem('collectionSelected', JSON.stringify({}));
+        //    localStorage.clear();
+        //   localStorage.setItem('collectionSelected', JSON.stringify({}));
         //  localStorage.setItem('bundleList', JSON.stringify([]));
-    //      for(let key in localStorage) {
-    //          console.log(key + ' = ' + localStorage.getItem(key));
-    //      }
+        //      for(let key in localStorage) {
+        //          console.log(key + ' = ' + localStorage.getItem(key));
+        //      }
 
         // add a default bundle if the store is empty
         let defBndl = JSON.parse(JSON.stringify(defaultBundle)); // make a deep copy
@@ -157,8 +164,10 @@ class MainPage extends Component {
 
                     <AppBar className={this.props.classes.appBar}>
                         <Toolbar>
-                            <Typography type="title" color="inherit"
-                                        className={this.props.classes.flex}>
+                            <IconButton style={styles.menuButton} color="contrast" aria-label="Menu">
+                                <MenuIcon />
+                            </IconButton>
+                            <Typography type="title" color="inherit" className={this.props.classes.flex}>
                                 CyberStation 0.1</Typography>
                             <Button color="contrast" onClick={this.handleLogin}>{this.state.loglabel}</Button>
                             <Button disabled={!this.state.isLogged} color="contrast"
