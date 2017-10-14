@@ -91,7 +91,7 @@ export class StixView extends Component {
         return (
             <div>
 
-                <div style={viewStyle.tabs}>
+                <div style={tabsStyle}>
                     <Tabs
                         value={this.state.value}
                         onChange={this.handleChange}

@@ -101,12 +101,11 @@ export class ServerView extends Component {
             zIndex: 1,
             marginTop: 2,
             color: '#FFFFFF',
-            backgroundColor: blue[500]};
-        //    backgroundColor: getThemeColor(this.props.theme)};
+            backgroundColor: getThemeColor(this.props.theme)};
 
         return (
             <div className={styles.root}>
-                <div style={viewStyle.tabs}>
+                <div style={tabsStyle}>
                     <Tabs
                         value={this.state.value}
                         onChange={this.handleChange}
@@ -133,7 +132,7 @@ export class ServerView extends Component {
 
 ServerView.propTypes = {
     update: PropTypes.func.isRequired,
-    server: PropTypes.object
- //   theme: PropTypes.string
+    server: PropTypes.object,
+    theme: PropTypes.string
 };
 

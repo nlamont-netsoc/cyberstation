@@ -155,12 +155,12 @@ class MainPage extends Component {
 
     // set the view to the ServerView
     handleServer = () => {
-        this.setState({view: <ServerView server={this.state.server} update={this.updateServer}/>});
+        this.setState({view: <ServerView server={this.state.server} update={this.updateServer} theme={themeOptions[this.state.menuIndex]}/>});
     };
 
     // set the view to the StixView
     handleStix = () => {
-        this.setState({view: <StixView server={this.state.server}/>});
+        this.setState({view: <StixView server={this.state.server} theme={themeOptions[this.state.menuIndex]}/>});
     };
 
     handleClick = event => {
