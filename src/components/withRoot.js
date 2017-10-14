@@ -39,7 +39,7 @@ function withRoot(BaseComponent) {
 
         // callback for the BaseCompoment to change the theme
         updateContext(newTheme) {
-            if(newTheme) this.setState({context: createContextWith(newTheme)});
+         //   if(newTheme) this.setState({context: createContextWith(newTheme)});
         }
 
         componentDidMount() {

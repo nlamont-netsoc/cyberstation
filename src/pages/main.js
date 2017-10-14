@@ -178,9 +178,9 @@ class MainPage extends Component {
     };
 
     handleMenuItemClick = (event, index) => {
-        this.setState({menuIndex: index, menuOpen: false});
+    //    this.setState({menuIndex: index, menuOpen: false});
         // call the WithRoot updateContext with the new theme
-        this.props.update(createTheme(themeOptions[index]));
+    //    this.props.update(createTheme(themeOptions[index]));
     };
 
     handleRequestClose = (event) => {
