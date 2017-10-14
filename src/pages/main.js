@@ -78,6 +78,7 @@ const styles = theme => ({
 });
 
 
+
 /**
  * main entry point into CyberStation.
  * Provide a single page application consisting of a AppBar with Login/Logout and
@@ -169,7 +170,7 @@ class MainPage extends Component {
     handleMenuItemClick = (event, index) => {
         this.setState({menuIndex: index, menuOpen: false});
         // call the WithRoot updateContext with the new theme
-    //    this.props.update(createTheme(themeOptions[index]));
+        this.props.update(createTheme(themeOptions[index]));
     };
 
     handleRequestClose = (event) => {
@@ -184,7 +185,7 @@ class MainPage extends Component {
                     <AppBar className={this.props.classes.appBar}>
                         <Toolbar>
                             <IconButton
-                                style={viewStyle.menuButton}
+                                style={styles.menuButton}
                                 color="contrast"
                                 aria-label="Menu"
                                 aria-owns={this.state.menuOpen ? 'the-menu' : null}
@@ -194,28 +195,28 @@ class MainPage extends Component {
                                 <MenuIcon/>
                             </IconButton>
 
-                            {/*<Menu*/}
-                                {/*id="the-menu"*/}
-                                {/*anchorEl={this.state.anchorEl}*/}
-                                {/*open={this.state.menuOpen}*/}
-                                {/*onRequestClose={this.handleRequestClose}*/}
-                                {/*PaperProps={{*/}
-                                    {/*style: {*/}
-                                        {/*maxHeight: ITEM_HEIGHT * 4.5,*/}
-                                        {/*width: 200,*/}
-                                    {/*},*/}
-                                {/*}}*/}
-                            {/*>*/}
-                                {/*{themeOptions.map((option, index) => (*/}
-                                    {/*<MenuItem*/}
-                                        {/*value={option}*/}
-                                        {/*key={option}*/}
-                                        {/*selected={index === this.state.menuIndex}*/}
-                                        {/*onClick={event => this.handleMenuItemClick(event, index)}>*/}
-                                        {/*{option}*/}
-                                    {/*</MenuItem>*/}
-                                {/*))}*/}
-                            {/*</Menu>*/}
+                            <Menu
+                                id="the-menu"
+                                anchorEl={this.state.anchorEl}
+                                open={this.state.menuOpen}
+                                onRequestClose={this.handleRequestClose}
+                                PaperProps={{
+                                    style: {
+                                        maxHeight: ITEM_HEIGHT * 4.5,
+                                        width: 200,
+                                    },
+                                }}
+                            >
+                                {themeOptions.map((option, index) => (
+                                    <MenuItem
+                                        value={option}
+                                        key={option}
+                                        selected={index === this.state.menuIndex}
+                                        onClick={event => this.handleMenuItemClick(event, index)}>
+                                        {option}
+                                    </MenuItem>
+                                ))}
+                            </Menu>
 
                             <Typography type="title" color="inherit" className={this.props.classes.flex}>
                                 CyberStation 0.1</Typography>
@@ -236,7 +237,8 @@ class MainPage extends Component {
 }
 
 MainPage.propTypes = {
-    classes: PropTypes.object.isRequired
+    classes: PropTypes.object.isRequired,
+    update: PropTypes.func
 };
 
 export default withRoot(withStyles(styles)(MainPage));

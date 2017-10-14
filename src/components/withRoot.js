@@ -11,16 +11,16 @@ import {createContext, createContextWith} from '../styles/createContext';
 
 // Apply some reset
 const styles = theme => ({
-    '@global': {
-        html: {
-            background: theme.palette.background.default,
-            WebkitFontSmoothing: 'antialiased', // Antialiasing.
-            MozOsxFontSmoothing: 'grayscale' // Antialiasing.
-        },
-        body: {
-            margin: 0
-        }
-    }
+    // '@global': {
+    //     html: {
+    //         background: theme.palette.background.default,
+    //         WebkitFontSmoothing: 'antialiased', // Antialiasing.
+    //         MozOsxFontSmoothing: 'grayscale' // Antialiasing.
+    //     },
+    //     body: {
+    //         margin: 0
+    //     }
+    // }
 });
 
 let AppWrapper = props => props.children;
@@ -34,13 +34,13 @@ function withRoot(BaseComponent) {
             super(props);
             this.state = {context: createContext()};
             // because we are inside a function we need this
-        //    this.updateContext = this.updateContext.bind(this);
+            this.updateContext = this.updateContext.bind(this);
         }
 
         // callback for the BaseCompoment to change the theme
-    //    updateContext(newTheme) {
-    //        if(newTheme) this.setState({context: createContextWith(newTheme)});
-    //    }
+        updateContext(newTheme) {
+            if(newTheme) this.setState({context: createContextWith(newTheme)});
+        }
 
         componentDidMount() {
             // Remove the server-side injected CSS.
@@ -55,7 +55,7 @@ function withRoot(BaseComponent) {
                 <JssProvider registry={this.state.context.sheetsRegistry} jss={this.state.context.jss}>
                     <MuiThemeProvider theme={this.state.context.theme} sheetsManager={this.state.context.sheetsManager}>
                         <AppWrapper>
-                            <BaseComponent />
+                            <BaseComponent update={this.updateContext}/>
                         </AppWrapper>
                     </MuiThemeProvider>
                 </JssProvider>
