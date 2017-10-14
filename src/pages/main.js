@@ -185,7 +185,6 @@ class MainPage extends Component {
                     <AppBar className={this.props.classes.appBar}>
                         <Toolbar>
                             <IconButton
-                                style={styles.menuButton}
                                 color="contrast"
                                 aria-label="Menu"
                                 aria-owns={this.state.menuOpen ? 'the-menu' : null}

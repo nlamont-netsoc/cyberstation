@@ -20,7 +20,7 @@ export const viewStyle = {
         backgroundColor: blue[500]
     },
     content: {
-        marginTop: 74, 
+        marginTop: 74,
         top: 74
     },
     menuButton: {

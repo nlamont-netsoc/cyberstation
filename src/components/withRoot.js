@@ -11,16 +11,16 @@ import {createContext, createContextWith} from '../styles/createContext';
 
 // Apply some reset
 const styles = theme => ({
-    // '@global': {
-    //     html: {
-    //         background: theme.palette.background.default,
-    //         WebkitFontSmoothing: 'antialiased', // Antialiasing.
-    //         MozOsxFontSmoothing: 'grayscale' // Antialiasing.
-    //     },
-    //     body: {
-    //         margin: 0
-    //     }
-    // }
+    '@global': {
+        html: {
+            background: theme.palette.background.default,
+            WebkitFontSmoothing: 'antialiased', // Antialiasing.
+            MozOsxFontSmoothing: 'grayscale' // Antialiasing.
+        },
+        body: {
+            margin: 0
+        }
+    }
 });
 
 let AppWrapper = props => props.children;
