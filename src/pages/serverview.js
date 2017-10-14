@@ -2,6 +2,7 @@
 /* eslint-disable react/no-multi-comp */
 import {CollectionsPage} from '../server/collections.js';
 import {ServersPage} from '../server/servers.js';
+import {ObjectsPage} from '../server/objects.js';
 import Tabs, {Tab} from 'material-ui/Tabs';
 import SwipeableViews from 'react-swipeable-views';
 import React, {Component} from 'react';
@@ -80,6 +81,7 @@ export class ServerView extends Component {
                         fullWidth>
                         <Tab label="Servers"/>
                         <Tab label="Collections"/>
+                        <Tab label="Objects"/>
                     </Tabs>
                 </div>
 
@@ -89,6 +91,7 @@ export class ServerView extends Component {
                     onChangeIndex={this.handleChangeIndex}>
                     <TabContainer> <ServersPage server={this.state.server} update={this.updateServer}/> </TabContainer>
                     <TabContainer> <CollectionsPage server={this.state.server}/> </TabContainer>
+                    <TabContainer> <ObjectsPage server={this.state.server}/> </TabContainer>
                 </SwipeableViews>
             </div>
         );

@@ -42,9 +42,12 @@ so ignore it for now and just press the **Submit** button.
 #### Main page
 The main page has a top bar that allows for selecting the **SERVER** and **STIX** pages.
 
-Clicking on the **SERVER** button brings a page with the tabs; **SERVERS** where TAXII-2 servers can be added, removed and selected,
-and **COLLECTIONS** representing the endpoints of the chosen server collections. Clicking on 
-the **STIX** button brings the UI for creating the different types of STIX objects. 
+Clicking on the **SERVER** button brings a page with the tabs; **SERVERS** where 
+TAXII-2 servers can be added, removed and selected, 
+**COLLECTIONS** representing the endpoints of the chosen server collections and 
+the **OBJECTS** tab page showing the objects at the selected collection endpoint.
+ 
+Clicking on the **STIX** button brings the UI for creating the different types of STIX objects. 
 
 #### Server page
 On the **SERVER** tab page, a test server from [freetaxii-server](https://github.com/freetaxii/freetaxii-server)
@@ -57,6 +60,8 @@ by selecting the desired server and clicking on the ![-](/images/delete.png?raw=
 
 On the **COLLECTIONS** tab page, a list of the collections available at the selected server is displayed.
 A collection should be selected to be able to send STIX objects to the server.
+
+On the **OBJECTS** tab page (not yet implemented), displays the list of objects at the selected collection.
 
 #### Stix page
 Clicking on the **STIX** button brings a page where STIX objects can be created. All STIX objects 
