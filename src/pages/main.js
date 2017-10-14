@@ -16,7 +16,15 @@ import Toolbar from 'material-ui/Toolbar';
 import Typography from 'material-ui/Typography';
 import Button from 'material-ui/Button';
 import {defaultBundle} from '../stix/stixutil.js';
+import MenuIcon from 'material-ui-icons/Menu';
+import IconButton from 'material-ui/IconButton';
+import Menu, {MenuItem} from 'material-ui/Menu';
+import {getContextWith, createTheme} from '../styles/createContext';
+import {themeOptions} from '../stix/stixutil.js';
 
+
+
+const ITEM_HEIGHT = 45;
 
 function TabContainer(props) {
     return <div>{props.children}</div>;
@@ -65,53 +73,61 @@ const styles = theme => ({
         [theme.breakpoints.up('md')]: {
             height: 'calc(100% - 64px)',
             marginTop: 26
+        },
+        menuButton: {
+            marginLeft: -12,
+            marginRight: 20
         }
     }
 });
 
 /**
  * main entry point into CyberStation.
- * Provide a single page application consisting of a AppBar with login/logout and
- * a server and stix views buttons.
+ * Provide a single page application consisting of a AppBar with Login/Logout and
+ * a SERVER and STIX views buttons.
  */
 class MainPage extends Component {
 
     constructor(props) {
         super(props);
-        // for login testing--> todo to be removed
+        // todo to be removed, for testing
         this.taxiCom = new TaxiiConnect("https://test.freetaxii.com:8000", "user-me", "user-password");
         this.state = {
             view: '',
             server: undefined,
             isLogged: false,
-            loglabel: 'Login'
+            loglabel: 'Login',
+            menuOpen: false, // theme menu
+            anchorEl: null,  // the anchor element of the theme menu
+            menuIndex: 0     // theme menu selection index
         };
-        this.initStore();
     }
 
-    initStore = () => {
-        //  localStorage.setItem('serverApiroot', '');
-        //  localStorage.removeItem('bundle--99819859-f19d-49e7-84de-4fbb344c0630');
-      //    localStorage.clear();
-       //   localStorage.setItem('collectionSelected', JSON.stringify({}));
-        //  localStorage.setItem('bundleList', JSON.stringify([]));
-    //      for(let key in localStorage) {
-    //          console.log(key + ' = ' + localStorage.getItem(key));
-    //      }
+    componentDidMount() {
+        this.initStore();
+        this.setState({view: <LoginPage conn={this.taxiCom} loggedin={this.isLoggedin}/>});
+    };
 
-        // add a default bundle if store is empty
-        let defBndl = JSON.parse(JSON.stringify(defaultBundle)); // make a deep copy to be sure
+    initStore = () => {
+        //    localStorage.clear();
+        //   localStorage.setItem('collectionSelected', JSON.stringify({}));
+        //  localStorage.setItem('bundleList', JSON.stringify([]));
+        //      for(let key in localStorage) {
+        //          console.log(key + ' = ' + localStorage.getItem(key));
+        //      }
+
+        // add a default bundle if the store is empty
+        let defBndl = JSON.parse(JSON.stringify(defaultBundle)); // make a deep copy
         let bndlList = JSON.parse(localStorage.getItem('bundleList')) || [];
         // if the store bundleList is empty add the default bundle to it
-        if (bndlList.length <= 0) {
+        if (bndlList.length === 0) {
             localStorage.setItem('bundleList', JSON.stringify([defBndl]));
-            bndlList.push(defBndl);
             // bundle selected is the index into the bundle list
             localStorage.setItem('bundleSelected', 0);
         }
         // add a default test taxii server if the list is empty
         let srvList = JSON.parse(localStorage.getItem('serverUrlList')) || [];
-        if (srvList.length <= 0) {
+        if (srvList.length === 0) {
             localStorage.setItem('serverUrlList', JSON.stringify(["https://test.freetaxii.com:8000"]));
         }
     };
@@ -149,8 +165,18 @@ class MainPage extends Component {
         this.setState({view: <StixView server={this.state.server}/>});
     };
 
-    componentDidMount() {
-        this.setState({view: <LoginPage conn={this.taxiCom} loggedin={this.isLoggedin}/>});
+    handleClick = event => {
+        this.setState({menuOpen: true, anchorEl: event.currentTarget});
+    };
+
+    handleMenuItemClick = (event, index) => {
+        this.setState({menuIndex: index, menuOpen: false});
+        // call the WithRoot updateContext with the new theme
+    //    this.props.update(createTheme(themeOptions[index]));
+    };
+
+    handleRequestClose = (event) => {
+        this.setState({menuOpen: false});
     };
 
     render() {
@@ -160,8 +186,41 @@ class MainPage extends Component {
 
                     <AppBar className={this.props.classes.appBar}>
                         <Toolbar>
-                            <Typography type="title" color="inherit"
-                                        className={this.props.classes.flex}>
+                            <IconButton
+                                style={styles.menuButton}
+                                color="contrast"
+                                aria-label="Menu"
+                                aria-owns={this.state.menuOpen ? 'the-menu' : null}
+                                aria-haspopup="true"
+                                onClick={this.handleClick}
+                            >
+                                <MenuIcon/>
+                            </IconButton>
+
+                            <Menu
+                                id="the-menu"
+                                anchorEl={this.state.anchorEl}
+                                open={this.state.menuOpen}
+                                onRequestClose={this.handleRequestClose}
+                                PaperProps={{
+                                    style: {
+                                        maxHeight: ITEM_HEIGHT * 4.5,
+                                        width: 200,
+                                    },
+                                }}
+                            >
+                                {themeOptions.map((option, index) => (
+                                    <MenuItem
+                                        value={option}
+                                        key={option}
+                                        selected={index === this.state.menuIndex}
+                                        onClick={event => this.handleMenuItemClick(event, index)}>
+                                        {option}
+                                    </MenuItem>
+                                ))}
+                            </Menu>
+
+                            <Typography type="title" color="inherit" className={this.props.classes.flex}>
                                 CyberStation 0.1</Typography>
                             <Button color="contrast" onClick={this.handleLogin}>{this.state.loglabel}</Button>
                             <Button disabled={!this.state.isLogged} color="contrast"
@@ -180,7 +239,8 @@ class MainPage extends Component {
 }
 
 MainPage.propTypes = {
-    classes: PropTypes.object.isRequired
+    classes: PropTypes.object.isRequired,
+    update: PropTypes.func
 };
 
 export default withRoot(withStyles(styles)(MainPage));

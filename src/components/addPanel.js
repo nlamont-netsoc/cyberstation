@@ -79,6 +79,7 @@ export default class AddPanel extends Component {
         }
     };
 
+
     // show the add dialog
     handleAddToList = (event) => {
         this.setState({openDialog: true, addition: ''});

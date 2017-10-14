@@ -18,25 +18,30 @@ import Button from 'material-ui/Button';
 import Cached from 'material-ui-icons/Cached';
 
 
+
 const styles = {};
 
 /**
- * control add/delete/save/load and send bundles to the server,
- * display the bundle info and its objects list
+ * A bundle is the container for stix objects.
+ * This is what can be sent to the TAXII-2 server.
+ *
+ * Create and update bundles of stix objects.
+ * Control add/delete and send bundles to the server,
+ * display the bundle info and its stix objects list
  */
 export class BundlePage extends Component {
 
     constructor(props) {
         super(props);
         this.state = {
-            waiting: false,         // for the progress spinner
-            server: this.props.server, // the current server object
-            bundle: this.props.bundle, // the current bundle object
-            collection: '',
-            apiroot: '',
-            bundleList: [],     // the list of bundles obtained from the store
-            bundleNameList: [], // the list of bundles names for use in the AddPanel
-            info: ''
+            waiting: false,             // for the progress spinner
+            server: this.props.server,  // the current server object
+            bundle: this.props.bundle,  // the current bundle object
+            collection: '',             // the selected collection endpoint
+            apiroot: '',                // the selected apiroot
+            bundleList: [],             // the list of bundles obtained from the store
+            bundleNameList: [],         // the list of bundles names for use in the AddPanel
+            info: ''                    // the server discovery info to display
         };
     }
 
@@ -86,7 +91,8 @@ export class BundlePage extends Component {
     handleChange = name => event => {
         // update only the specific attribute
         this.setState({bundle: {...this.state.bundle, [name]: event.target.value}});
-        // special case, changing the name of the bundle, we need to also update the bundleNameList
+        // special case, when changing the name of the bundle,
+        // we need to also update the bundleNameList
         if (name === 'name') {
             // get the index of the selected bundle in the list
             let ndx = localStorage.getItem('bundleSelected');
@@ -167,7 +173,7 @@ export class BundlePage extends Component {
                 let colInfo = 'Collection';
                 if (this.state.collection) {
                     writeVal = this.state.collection.can_write ? 'can write to' : 'cannot write to';
-                    colInfo = "Collection" + " (" + writeVal + ")";
+                    colInfo = "Collection (" + writeVal + ")";
                     colEntry = this.state.collection.title;
                 }
                 let serverInfo = <Table style={{marginLeft: 8}}>
@@ -251,12 +257,16 @@ export class BundlePage extends Component {
                 let bundleCopy = JSON.parse(JSON.stringify(this.state.bundle));
                 // remove the name attribute from it, because it's not part of the bundle specs
                 delete bundleCopy.name;
-                // make a collection object
+                // make a collection object to send the bundle to
                 const theCollection = new Collection(this.state.collection, this.state.apiroot, this.props.server.conn);
+                // todo timeout
                 theCollection.addObject(bundleCopy).then(status => {
                     console.log("----> collection.addObject() \n" + JSON.stringify(status));
+                    this.setState({waiting: false});
+                }).catch(err => {
+                    this.setState({waiting: false});
+                    new Error('add bundle error')
                 });
-                this.setState({waiting: false});
             }
         }
     };

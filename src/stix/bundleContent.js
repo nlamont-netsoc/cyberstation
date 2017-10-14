@@ -16,6 +16,7 @@ import uuidv4 from 'uuid/v4';
 import Tooltip from 'material-ui/Tooltip';
 
 
+
 const styles = {
     tabs: {
         width: '100%',
@@ -31,17 +32,17 @@ const styles = {
     }
 };
 
+/**
+ * Allow for adding/deleting/editing stix objects of the chosen type.
+ * Displays the content of the bundle objects list of the chosen stix type.
+ * For example stix type "attack-pattern", the BundleContent displays
+ * all stix objects of this type in the AttackPatternPage.
+ */
 export class BundleContent extends Component {
 
     constructor(props) {
         super(props);
         this.state = {sdoId: '', objList: []};
-        this.title = "Bundle " + this.props.stix.type;
-        if (this.props.stix.type) {
-            this.title = this.title + "s";
-        }
-        // make a deep copy of the stix template
-        this.stixTemplate = JSON.parse(JSON.stringify(this.props.stix));
     }
 
     initialise(theProps) {

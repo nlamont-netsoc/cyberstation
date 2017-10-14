@@ -1,12 +1,15 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
 /* eslint-disable react/no-multi-comp */
-import {viewStyle} from '../styles/viewStyle.js';
+import {getThemeColor} from '../stix/stixutil.js';
 import {CollectionsPage} from '../server/collections.js';
 import {ServersPage} from '../server/servers.js';
 import Tabs, {Tab} from 'material-ui/Tabs';
 import SwipeableViews from 'react-swipeable-views';
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
+import {blue, purple, green, blueGrey} from 'material-ui/colors';
+import {viewStyle} from '../styles/viewStyle.js';
+
 
 
 function TabContainer(props) {
@@ -30,11 +33,37 @@ const styles = theme => ({
         zIndex: 1,
         padding: theme.spacing.unit * 12,
         marginTop: theme.spacing.unit * 2
+    },
+    content: {
+        marginTop: 74,
+        top: 74
     }
 });
 
+// const styles = {
+//     root: {
+//         flexGrow: 1,
+//     //    marginTop: theme.spacing.unit * 30,
+//     //    padding: theme.spacing.unit * 12,
+//     //    backgroundColor: theme.palette.background.paper
+//     },
+//     tabs: {
+//         width: '100%',
+//         position: 'fixed',
+//         top: 52,
+//         zIndex: 1,
+//         marginTop: 2,
+//         color: '#FFFFFF',
+//         backgroundColor: blue[500]
+//     },
+//     content: {
+//         marginTop: 74,
+//         top: 74
+//     }
+// };
+
 /**
- * show the servers and collections tabs
+ * show the SERVERS and COLLECTIONS tabs
  */
 export class ServerView extends Component {
 
@@ -50,9 +79,7 @@ export class ServerView extends Component {
 
     // callback for ServersPage
     updateServer = (server) => {
-      //  this.setState({server: server});
-        this.state.server = server;
-        this.forceUpdate();
+        this.setState({server: server});
         // tell the parent component
         this.props.update(server);
     };
@@ -66,6 +93,17 @@ export class ServerView extends Component {
     };
 
     render() {
+        // temporary hack to set the theme color
+        const tabsStyle = {
+            width: '100%',
+            position: 'fixed',
+            top: 52,
+            zIndex: 1,
+            marginTop: 2,
+            color: '#FFFFFF',
+            backgroundColor: blue[500]};
+        //    backgroundColor: getThemeColor(this.props.theme)};
+
         return (
             <div className={styles.root}>
                 <div style={viewStyle.tabs}>
@@ -96,5 +134,6 @@ export class ServerView extends Component {
 ServerView.propTypes = {
     update: PropTypes.func.isRequired,
     server: PropTypes.object
+ //   theme: PropTypes.string
 };
 
