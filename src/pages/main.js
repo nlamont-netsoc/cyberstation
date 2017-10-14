@@ -231,8 +231,7 @@ class MainPage extends Component {
 }
 
 MainPage.propTypes = {
-    classes: PropTypes.object.isRequired,
-    update: PropTypes.func
+    classes: PropTypes.object.isRequired
 };
 
 export default withRoot(withStyles(styles)(MainPage));

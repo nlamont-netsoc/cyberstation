@@ -24,7 +24,7 @@ export const viewStyle = {
         top: 74
     },
     menuButton: {
-        marginLeft: -12,
+        marginLeft: 1,
         marginRight: 20
     }
 };
