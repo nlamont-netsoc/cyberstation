@@ -63,9 +63,9 @@ function withRoot(BaseComponent) {
         }
     };
 
-    if (process.env.NODE_ENV !== 'production') {
-        WithRoot.displayName = wrapDisplayName(BaseComponent, 'withRoot');
-    }
+ //   if (process.env.NODE_ENV !== 'production') {
+ //       WithRoot.displayName = wrapDisplayName(BaseComponent, 'withRoot');
+ //   }
 
     return WithRoot;
 }
