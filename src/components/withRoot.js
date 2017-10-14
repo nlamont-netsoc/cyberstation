@@ -1,6 +1,6 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
 
-
+/* global WithRoot, BaseComponent, process */
 
 import React, {Component} from 'react';
 import JssProvider from 'react-jss/lib/JssProvider';
@@ -34,13 +34,13 @@ function withRoot(BaseComponent) {
             super(props);
             this.state = {context: createContext()};
             // because we are inside a function we need this
-            this.updateContext = this.updateContext.bind(this);
+        //    this.updateContext = this.updateContext.bind(this);
         }
 
         // callback for the BaseCompoment to change the theme
-        updateContext(newTheme) {
-            if(newTheme) this.setState({context: createContextWith(newTheme)});
-        }
+    //    updateContext(newTheme) {
+    //        if(newTheme) this.setState({context: createContextWith(newTheme)});
+    //    }
 
         componentDidMount() {
             // Remove the server-side injected CSS.
@@ -55,7 +55,7 @@ function withRoot(BaseComponent) {
                 <JssProvider registry={this.state.context.sheetsRegistry} jss={this.state.context.jss}>
                     <MuiThemeProvider theme={this.state.context.theme} sheetsManager={this.state.context.sheetsManager}>
                         <AppWrapper>
-                            <BaseComponent update={this.updateContext}/>
+                            <BaseComponent />
                         </AppWrapper>
                     </MuiThemeProvider>
                 </JssProvider>
@@ -63,9 +63,9 @@ function withRoot(BaseComponent) {
         }
     };
 
- //   if (process.env.NODE_ENV !== 'production') {
- //       WithRoot.displayName = wrapDisplayName(BaseComponent, 'withRoot');
- //   }
+    if (process.env.NODE_ENV !== 'production') {
+        WithRoot.displayName = wrapDisplayName(BaseComponent, 'withRoot');
+    }
 
     return WithRoot;
 }
