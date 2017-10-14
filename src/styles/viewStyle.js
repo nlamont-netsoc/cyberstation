@@ -16,8 +16,7 @@ export const viewStyle = {
         zIndex: 1,
         marginTop: 2,
         color: '#FFFFFF',
-    //    backgroundColor: blue[500] // purple[500]
-        backgroundColor: purple[500]
+        backgroundColor: blue[500]
     },
     content: {
         marginTop: 74, 

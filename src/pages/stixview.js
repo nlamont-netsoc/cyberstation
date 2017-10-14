@@ -9,6 +9,7 @@ import {RelationShipPage} from '../stix/relations.js';
 import {AttackPatternPage} from '../stix/attackpattern.js';
 import {SightingPage} from '../stix/sighting.js';
 import {getThemeColor} from "../stix/stixutil";
+import {viewStyle} from '../styles/viewStyle.js';
 
 
 function TabContainer(props) {
@@ -19,12 +20,12 @@ TabContainer.propTypes = {
     children: PropTypes.node.isRequired
 };
 
-const styles = {
+const styles = theme => ({
     root: {
         flexGrow: 1,
         width: '100%',
-    //    marginTop: theme.spacing.unit * 30,
-    //    backgroundColor: theme.palette.background.paper
+        marginTop: theme.spacing.unit * 30,
+        backgroundColor: theme.palette.background.paper
     },
     appBar: {
         position: 'fixed',
@@ -32,12 +33,8 @@ const styles = {
         width: '100%',
         marginLeft: 1,
         order: 1
-    },
-    content: {
-        marginTop: 74,
-        top: 74
     }
-};
+});
 
 /**
  * shows the BUNDLE and all STIX types tabs
@@ -93,7 +90,7 @@ export class StixView extends Component {
         return (
             <div>
 
-                <div style={tabsStyle}>
+                <div style={viewStyle.tabs}>
                     <Tabs
                         value={this.state.value}
                         onChange={this.handleChange}
@@ -120,7 +117,7 @@ export class StixView extends Component {
                     </Tabs>
                 </div>
 
-                <div style={styles.content}>
+                <div style={viewStyle.content}>
                     {this.state.value === 0 && <TabContainer>
                         <BundlePage update={this.handleBundleUpdate}
                                     server={this.state.server}

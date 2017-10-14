@@ -8,7 +8,7 @@ import SwipeableViews from 'react-swipeable-views';
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {blue, purple, green, blueGrey} from 'material-ui/colors';
-
+import {viewStyle} from '../styles/viewStyle.js';
 
 
 function TabContainer(props) {
@@ -19,27 +19,47 @@ TabContainer.propTypes = {
     children: PropTypes.node.isRequired
 };
 
-const styles = {
+const styles = theme => ({
     root: {
         flexGrow: 1,
-    //    marginTop: theme.spacing.unit * 30,
-    //    padding: theme.spacing.unit * 12,
-    //    backgroundColor: theme.palette.background.paper
+        marginTop: theme.spacing.unit * 30,
+        padding: theme.spacing.unit * 12,
+        backgroundColor: theme.palette.background.paper
     },
     tabs: {
-        width: '100%',
         position: 'fixed',
         top: 52,
         zIndex: 1,
-        marginTop: 2,
-        color: '#FFFFFF',
-        backgroundColor: blue[500]
+        padding: theme.spacing.unit * 12,
+        marginTop: theme.spacing.unit * 2
     },
     content: {
         marginTop: 74,
         top: 74
     }
-};
+});
+
+// const styles = {
+//     root: {
+//         flexGrow: 1,
+//     //    marginTop: theme.spacing.unit * 30,
+//     //    padding: theme.spacing.unit * 12,
+//     //    backgroundColor: theme.palette.background.paper
+//     },
+//     tabs: {
+//         width: '100%',
+//         position: 'fixed',
+//         top: 52,
+//         zIndex: 1,
+//         marginTop: 2,
+//         color: '#FFFFFF',
+//         backgroundColor: blue[500]
+//     },
+//     content: {
+//         marginTop: 74,
+//         top: 74
+//     }
+// };
 
 /**
  * show the SERVERS and COLLECTIONS tabs
@@ -80,11 +100,12 @@ export class ServerView extends Component {
             zIndex: 1,
             marginTop: 2,
             color: '#FFFFFF',
-            backgroundColor: getThemeColor(this.props.theme)};
+            backgroundColor: blue[500]};
+        //    backgroundColor: getThemeColor(this.props.theme)};
 
         return (
             <div className={styles.root}>
-                <div style={tabsStyle}>
+                <div style={viewStyle.tabs}>
                     <Tabs
                         value={this.state.value}
                         onChange={this.handleChange}
@@ -97,7 +118,7 @@ export class ServerView extends Component {
                 </div>
 
                 <SwipeableViews
-                    style={styles.content}
+                    style={viewStyle.content}
                     index={this.state.value}
                     onChangeIndex={this.handleChangeIndex}>
                     <TabContainer> <ServersPage server={this.state.server} update={this.updateServer}/> </TabContainer>
@@ -111,7 +132,7 @@ export class ServerView extends Component {
 
 ServerView.propTypes = {
     update: PropTypes.func.isRequired,
-    server: PropTypes.object,
-    theme: PropTypes.string
+    server: PropTypes.object
+ //   theme: PropTypes.string
 };
 

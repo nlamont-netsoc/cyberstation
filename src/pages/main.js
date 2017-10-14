@@ -156,21 +156,12 @@ class MainPage extends Component {
 
     // set the view to the ServerView
     handleServer = () => {
-        this.setState({
-            view: <ServerView
-                server={this.state.server}
-                update={this.updateServer}
-                theme={themeOptions[this.state.menuIndex]}/>
-        });
+        this.setState({view: <ServerView server={this.state.server} update={this.updateServer}/>});
     };
 
     // set the view to the StixView
     handleStix = () => {
-        this.setState({
-            view: <StixView
-                server={this.state.server}
-                theme={themeOptions[this.state.menuIndex]}/>
-        });
+        this.setState({view: <StixView server={this.state.server}/>});
     };
 
     handleClick = event => {
@@ -178,7 +169,7 @@ class MainPage extends Component {
     };
 
     handleMenuItemClick = (event, index) => {
-    //    this.setState({menuIndex: index, menuOpen: false});
+        this.setState({menuIndex: index, menuOpen: false});
         // call the WithRoot updateContext with the new theme
     //    this.props.update(createTheme(themeOptions[index]));
     };
