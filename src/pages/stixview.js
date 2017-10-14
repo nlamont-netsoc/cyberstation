@@ -1,5 +1,6 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
 /* eslint-disable react/no-multi-comp */
+import {viewStyle} from '../styles/viewStyle.js';
 import Tabs, {Tab} from 'material-ui/Tabs';
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
@@ -8,8 +9,6 @@ import {BundlePage} from '../stix/bundle.js';
 import {RelationShipPage} from '../stix/relations.js';
 import {AttackPatternPage} from '../stix/attackpattern.js';
 import {SightingPage} from '../stix/sighting.js';
-import {getThemeColor} from "../stix/stixutil";
-import {viewStyle} from '../styles/viewStyle.js';
 
 
 function TabContainer(props) {
@@ -37,7 +36,7 @@ const styles = theme => ({
 });
 
 /**
- * shows the BUNDLE and all STIX types tabs
+ * shows the bundle and all stix types tabs
  */
 export class StixView extends Component {
 
@@ -67,7 +66,7 @@ export class StixView extends Component {
         this.setState({value: value});
     };
 
-    // callback for the BundlePage, set the currently selected bundle object
+    // update from the BundlePage, the currently selected bundle object
     handleBundleUpdate = (value) => {
         if (value) {
             this.setState({bundle: value, hasBundle: true});
@@ -77,16 +76,6 @@ export class StixView extends Component {
     };
 
     render() {
-        // temporary hack to set the theme color
-        const tabsStyle = {
-            width: '100%',
-            position: 'fixed',
-            top: 52,
-            zIndex: 1,
-            marginTop: 2,
-            color: '#FFFFFF',
-            backgroundColor: getThemeColor(this.props.theme)};
-
         return (
             <div>
 
@@ -135,16 +124,18 @@ export class StixView extends Component {
                     {this.state.hasBundle && this.state.value === 4 &&
                     <TabContainer><SightingPage bundle={this.state.bundle}/></TabContainer>}
 
-                    {this.state.hasBundle && this.state.value === 5 && <TabContainer>{'Malware not yet implemented'}</TabContainer>}
-                    {this.state.hasBundle && this.state.value === 6 && <TabContainer>{'Campaign not yet implemented'}</TabContainer>}
-                    {this.state.hasBundle && this.state.value === 7 && <TabContainer>{'Course of Action not yet implemented'}</TabContainer>}
-                    {this.state.hasBundle && this.state.value === 8 && <TabContainer>{'Identity not yet implemented'}</TabContainer>}
-                    {this.state.hasBundle && this.state.value === 9 && <TabContainer>{'Intrusion Set not yet implemented'}</TabContainer>}
-                    {this.state.hasBundle && this.state.value === 10 && <TabContainer>{'Observed Data not yet implemented'}</TabContainer>}
-                    {this.state.hasBundle && this.state.value === 11 && <TabContainer>{'Report not yet implemented'}</TabContainer>}
-                    {this.state.hasBundle && this.state.value === 12 && <TabContainer>{'Threat Actor not yet implemented'}</TabContainer>}
-                    {this.state.hasBundle && this.state.value === 13 && <TabContainer>{'Tool not yet implemented'}</TabContainer>}
-                    {this.state.hasBundle && this.state.value === 14 && <TabContainer>{'Vulnerability not yet implemented'}</TabContainer>}
+                    {this.state.hasBundle && this.state.value === 5 &&
+                    <TabContainer>{'Malware'}</TabContainer>}
+                    {this.state.hasBundle && this.state.value === 6 && <TabContainer>{'Campaign'}</TabContainer>}
+                    {this.state.hasBundle && this.state.value === 7 &&
+                    <TabContainer>{'Course of Action'}</TabContainer>}
+                    {this.state.hasBundle && this.state.value === 8 && <TabContainer>{'Identity'}</TabContainer>}
+                    {this.state.hasBundle && this.state.value === 9 && <TabContainer>{'Intrusion Set'}</TabContainer>}
+                    {this.state.hasBundle && this.state.value === 10 && <TabContainer>{'Observed Data'}</TabContainer>}
+                    {this.state.hasBundle && this.state.value === 11 && <TabContainer>{'Report'}</TabContainer>}
+                    {this.state.hasBundle && this.state.value === 12 && <TabContainer>{'Threat Actor'}</TabContainer>}
+                    {this.state.hasBundle && this.state.value === 13 && <TabContainer>{'Tool'}</TabContainer>}
+                    {this.state.hasBundle && this.state.value === 14 && <TabContainer>{'Vulnerability'}</TabContainer>}
                 </div>
 
             </div>
@@ -154,7 +145,6 @@ export class StixView extends Component {
 }
 
 StixView.propTypes = {
-    server: PropTypes.object,
-    theme: PropTypes.string
+    server: PropTypes.object
 };
 

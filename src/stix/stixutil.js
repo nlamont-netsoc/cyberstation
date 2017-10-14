@@ -1,9 +1,5 @@
 
 import uuidv4 from "uuid/v4";
-import {blue, purple, green, blueGrey} from 'material-ui/colors';
-
-// color theme types
-export const themeOptions = [ 'Summer','Spring','Autumn','Winter' ];
 
 export const labelsNames = [
     "anomalous-activity",
@@ -55,19 +51,4 @@ export const emptyBundle = {
     id: '',
     spec_version: '',
     objects: []
-};
-
-export const getThemeColor = (themeName) => {
-    switch (themeName) {
-        case 'Summer':
-            return blue[500];
-        case 'Spring':
-            return green[500];
-        case 'Autumn':
-            return purple[500];
-        case 'Winter':
-            return blueGrey[500];
-        default:
-            return blue[500];
-    }
 };

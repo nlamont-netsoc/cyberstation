@@ -18,7 +18,8 @@ const styles = {};
 
 /**
  * Display the list of servers and the selected server information including its api roots.
- * Can add new servers to storage and delete selected servers from storage.
+ * Can add new servers to storage and deleting selected servers from storage.
+ *
  */
 export class ServersPage extends Component {
 
@@ -28,7 +29,7 @@ export class ServersPage extends Component {
             waiting: false,         // for the progress spinner
             alert: false,           // to open the alert dialog, when a server cannot connect
             serverListUrl: [],      // the list of servers url
-            discovery: undefined,   // the current server discovery info object
+            discovery: undefined,   // the current server discovery info
             currentServer: '',      // the current selected server url
             serverObj: undefined,   // the current selected server object
             currentApiroot: ''      // the current selected api root url
@@ -151,6 +152,7 @@ export class ServersPage extends Component {
             localStorage.setItem('serverSelected', '');
             localStorage.setItem('collectionSelected', JSON.stringify({}));
             this.setState({serverObj: '', currentServer: '', discovery: '', currentApiroot: ''});
+            this.forceUpdate();
             // tell the parent component
             this.props.update(undefined);
             return;

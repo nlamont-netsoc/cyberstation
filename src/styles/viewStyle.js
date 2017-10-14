@@ -4,9 +4,7 @@
  * and open the template in the editor.
  */
 
-
-import { blue, purple, green } from 'material-ui/colors';
-
+import blue from 'material-ui/colors/blue';
 
 export const viewStyle = { 
     tabs: {
@@ -15,7 +13,6 @@ export const viewStyle = {
         top: 52,
         zIndex: 1,
         marginTop: 2,
-        color: '#FFFFFF',
         backgroundColor: blue[500]
     },
     content: {

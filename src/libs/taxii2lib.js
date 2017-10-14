@@ -59,7 +59,7 @@ export class TaxiiConnect {
 
     }
 
-    // todo to be removed --> for testing, a CORS proxy to bypass the Access-Control-Allow-Origin response header
+    // for testing, a CORS proxy to bypass the Access-Control-Allow-Origin response header
     static proxyurl = "https://cors-anywhere.herokuapp.com/";
 
     /**
@@ -80,7 +80,6 @@ export class TaxiiConnect {
         return results;
     }
 
-    // todo testing timeout
     async asyncFetch2(path, config, filter, timeout) {
         Promise.race([
             this.asyncFetch(path, config, filter),
