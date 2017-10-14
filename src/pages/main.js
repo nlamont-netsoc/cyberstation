@@ -178,39 +178,6 @@ class MainPage extends Component {
 
                     <AppBar className={this.props.classes.appBar}>
                         <Toolbar>
-                            <IconButton
-                                style={viewStyle.menuButton}
-                                color="contrast"
-                                aria-label="Menu"
-                                aria-owns={this.state.menuOpen ? 'the-menu' : null}
-                                aria-haspopup="true"
-                                onClick={this.handleClick}
-                            >
-                                <MenuIcon/>
-                            </IconButton>
-
-                            <Menu
-                                id="the-menu"
-                                anchorEl={this.state.anchorEl}
-                                open={this.state.menuOpen}
-                                onRequestClose={this.handleRequestClose}
-                                PaperProps={{
-                                    style: {
-                                        maxHeight: ITEM_HEIGHT * 4.5,
-                                        width: 200,
-                                    },
-                                }}
-                            >
-                                {themeOptions.map((option, index) => (
-                                    <MenuItem
-                                        value={option}
-                                        key={option}
-                                        selected={index === this.state.menuIndex}
-                                        onClick={event => this.handleMenuItemClick(event, index)}>
-                                        {option}
-                                    </MenuItem>
-                                ))}
-                            </Menu>
 
                             <Typography type="title" color="inherit" className={this.props.classes.flex}>
                                 CyberStation 0.1</Typography>
