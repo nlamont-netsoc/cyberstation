@@ -18,8 +18,12 @@ import Button from 'material-ui/Button';
 import {defaultBundle} from '../stix/stixutil.js';
 import MenuIcon from 'material-ui-icons/Menu';
 import IconButton from 'material-ui/IconButton';
+import Menu, {MenuItem} from 'material-ui/Menu';
+import {getContextWith, createTheme} from '../styles/createContext';
+import {themeOptions} from '../stix/stixutil.js';
 
 
+const ITEM_HEIGHT = 45;
 
 function TabContainer(props) {
     return <div>{props.children}</div>;
@@ -91,7 +95,10 @@ class MainPage extends Component {
             view: '',
             server: undefined,
             isLogged: false,
-            loglabel: 'Login'
+            loglabel: 'Login',
+            menuOpen: false, // theme menu
+            anchorEl: null,  // the anchor element of the theme menu
+            menuIndex: 0     // theme menu selection index
         };
     }
 
@@ -149,12 +156,35 @@ class MainPage extends Component {
 
     // set the view to the ServerView
     handleServer = () => {
-        this.setState({view: <ServerView server={this.state.server} update={this.updateServer}/>});
+        this.setState({
+            view: <ServerView
+                server={this.state.server}
+                update={this.updateServer}
+                theme={themeOptions[this.state.menuIndex]}/>
+        });
     };
 
     // set the view to the StixView
     handleStix = () => {
-        this.setState({view: <StixView server={this.state.server}/>});
+        this.setState({
+            view: <StixView
+                server={this.state.server}
+                theme={themeOptions[this.state.menuIndex]}/>
+        });
+    };
+
+    handleClick = event => {
+        this.setState({menuOpen: true, anchorEl: event.currentTarget});
+    };
+
+    handleMenuItemClick = (event, index) => {
+        this.setState({menuIndex: index, menuOpen: false});
+        // call the WithRoot updateContext with the new theme
+        this.props.update(createTheme(themeOptions[index]));
+    };
+
+    handleRequestClose = (event) => {
+        this.setState({menuOpen: false});
     };
 
     render() {
@@ -164,9 +194,40 @@ class MainPage extends Component {
 
                     <AppBar className={this.props.classes.appBar}>
                         <Toolbar>
-                            <IconButton style={styles.menuButton} color="contrast" aria-label="Menu">
-                                <MenuIcon />
+                            <IconButton
+                                style={styles.menuButton}
+                                color="contrast"
+                                aria-label="Menu"
+                                aria-owns={this.state.menuOpen ? 'the-menu' : null}
+                                aria-haspopup="true"
+                                onClick={this.handleClick}
+                            >
+                                <MenuIcon/>
                             </IconButton>
+
+                            <Menu
+                                id="the-menu"
+                                anchorEl={this.state.anchorEl}
+                                open={this.state.menuOpen}
+                                onRequestClose={this.handleRequestClose}
+                                PaperProps={{
+                                    style: {
+                                        maxHeight: ITEM_HEIGHT * 4.5,
+                                        width: 200,
+                                    },
+                                }}
+                            >
+                                {themeOptions.map((option, index) => (
+                                    <MenuItem
+                                        value={option}
+                                        key={option}
+                                        selected={index === this.state.menuIndex}
+                                        onClick={event => this.handleMenuItemClick(event, index)}>
+                                        {option}
+                                    </MenuItem>
+                                ))}
+                            </Menu>
+
                             <Typography type="title" color="inherit" className={this.props.classes.flex}>
                                 CyberStation 0.1</Typography>
                             <Button color="contrast" onClick={this.handleLogin}>{this.state.loglabel}</Button>
@@ -186,7 +247,8 @@ class MainPage extends Component {
 }
 
 MainPage.propTypes = {
-    classes: PropTypes.object.isRequired
+    classes: PropTypes.object.isRequired,
+    update: PropTypes.func
 };
 
 export default withRoot(withStyles(styles)(MainPage));

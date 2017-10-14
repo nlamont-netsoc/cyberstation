@@ -1,6 +1,5 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
 /* eslint-disable react/no-multi-comp */
-import {viewStyle} from '../styles/viewStyle.js';
 import Tabs, {Tab} from 'material-ui/Tabs';
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
@@ -9,6 +8,7 @@ import {BundlePage} from '../stix/bundle.js';
 import {RelationShipPage} from '../stix/relations.js';
 import {AttackPatternPage} from '../stix/attackpattern.js';
 import {SightingPage} from '../stix/sighting.js';
+import {getThemeColor} from "../stix/stixutil";
 
 
 function TabContainer(props) {
@@ -19,12 +19,12 @@ TabContainer.propTypes = {
     children: PropTypes.node.isRequired
 };
 
-const styles = theme => ({
+const styles = {
     root: {
         flexGrow: 1,
         width: '100%',
-        marginTop: theme.spacing.unit * 30,
-        backgroundColor: theme.palette.background.paper
+    //    marginTop: theme.spacing.unit * 30,
+    //    backgroundColor: theme.palette.background.paper
     },
     appBar: {
         position: 'fixed',
@@ -32,8 +32,12 @@ const styles = theme => ({
         width: '100%',
         marginLeft: 1,
         order: 1
+    },
+    content: {
+        marginTop: 74,
+        top: 74
     }
-});
+};
 
 /**
  * shows the BUNDLE and all STIX types tabs
@@ -76,10 +80,20 @@ export class StixView extends Component {
     };
 
     render() {
+        // temporary hack to set the theme color
+        const tabsStyle = {
+            width: '100%',
+            position: 'fixed',
+            top: 52,
+            zIndex: 1,
+            marginTop: 2,
+            color: '#FFFFFF',
+            backgroundColor: getThemeColor(this.props.theme)};
+
         return (
             <div>
 
-                <div style={viewStyle.tabs}>
+                <div style={tabsStyle}>
                     <Tabs
                         value={this.state.value}
                         onChange={this.handleChange}
@@ -106,7 +120,7 @@ export class StixView extends Component {
                     </Tabs>
                 </div>
 
-                <div style={viewStyle.content}>
+                <div style={styles.content}>
                     {this.state.value === 0 && <TabContainer>
                         <BundlePage update={this.handleBundleUpdate}
                                     server={this.state.server}
@@ -143,6 +157,7 @@ export class StixView extends Component {
 }
 
 StixView.propTypes = {
-    server: PropTypes.object
+    server: PropTypes.object,
+    theme: PropTypes.string
 };
 
