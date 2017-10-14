@@ -131,10 +131,10 @@ export default class AddPanel extends Component {
     render() {
         const itemType = this.state.title;
         return (
-            <Grid container justify="flex-start" style={{marginTop: 12}}>
+            <Grid container style={{marginTop: 12}}>
 
                 <Grid key="k2" container>
-                    <Grid key="k3" item style={{margin: 8}}>
+                    <Grid key="k3" item style={{margin: 4}}>
                         <Typography type="body1">{this.state.title}</Typography>
                         {/*<Tooltip id="tooltip-add" title={"Add a new " + itemType} placement="top" enterDelay={500}>*/}
                         <Button fab color="primary" onClick={this.handleAddToList} raised
@@ -151,8 +151,8 @@ export default class AddPanel extends Component {
 
                 <Grid key="k6" container>
                     <Grid key="k5" item>
-                        <Paper style={{marginTop: 6, maxHeight: 200, minWidth: 400, maxWidth: 600, overflow: 'auto'}}>
-                            <RadioGroup style={{display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between'}}
+                        <Paper style={{marginTop: 6, maxHeight: 200, minWidth: 350, maxWidth: 500, overflow: 'auto'}}>
+                            <RadioGroup style={{display: 'flex', flexWrap: 'wrap'}}
                                         aria-label="obj"
                                         name="objGroup"
                                         value={this.state.selection}

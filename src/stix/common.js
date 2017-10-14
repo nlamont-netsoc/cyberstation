@@ -15,7 +15,6 @@ import AddPanel from '../components/addPanel.js';
 import Tooltip from 'material-ui/Tooltip';
 
 
-
 export const ITEM_HEIGHT = 48;
 export const ITEM_PADDING_TOP = 12;
 
@@ -152,13 +151,18 @@ export const commonStix = (stix, handler) => {
                     />
                 </Grid>
 
-                <Grid key="a9" item>
+                <Grid key="b4" container>
+                    <Grid key="a11" item md={6} >
+                        <AddPanel title="Object marking refs" itemList={stix.object_marking_refs}
+                                  update={handler('object_marking_refs')}
+                        />
+                    </Grid>
 
-                    <AddPanel title="Object marking refs" itemList={stix.object_marking_refs}
-                              update={handler('object_marking_refs')}/>
-
-                    <AddPanel title="External references" itemList={stix.external_references}
-                              update={handler('external_references')}/>
+                    <Grid key="a12" item md={6} >
+                        <AddPanel title="External references" itemList={stix.external_references}
+                                  update={handler('external_references')}
+                        />
+                    </Grid>
                 </Grid>
 
 
