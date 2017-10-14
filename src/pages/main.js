@@ -21,7 +21,6 @@ import IconButton from 'material-ui/IconButton';
 import Menu, {MenuItem} from 'material-ui/Menu';
 import {createTheme} from '../styles/createContext';
 import {themeOptions} from '../stix/stixutil.js';
-import {viewStyle} from '../styles/viewStyle.js';
 
 
 const ITEM_HEIGHT = 45;

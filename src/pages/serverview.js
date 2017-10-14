@@ -7,7 +7,6 @@ import Tabs, {Tab} from 'material-ui/Tabs';
 import SwipeableViews from 'react-swipeable-views';
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import {blue, purple, green, blueGrey} from 'material-ui/colors';
 import {viewStyle} from '../styles/viewStyle.js';
 
 

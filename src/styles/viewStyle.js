@@ -5,7 +5,7 @@
  */
 
 
-import { blue, purple, green } from 'material-ui/colors';
+import { blue } from 'material-ui/colors';
 
 
 

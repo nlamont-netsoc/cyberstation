@@ -6,7 +6,7 @@ import {create} from 'jss';
 import preset from 'jss-preset-default';
 import {SheetsRegistry} from 'react-jss/lib/jss';
 import {createMuiTheme} from 'material-ui/styles';
-import {blue, purple, green, blueGrey} from 'material-ui/colors';
+import {blue, purple, green, cyan} from 'material-ui/colors';
 import createGenerateClassName from 'material-ui/styles/createGenerateClassName';
 
 
@@ -50,7 +50,7 @@ export function createTheme(name) {
         case 'Autumn':
             return createMuiTheme({palette: {primary: purple, secondary: green}});
         case 'Winter':
-            return createMuiTheme({palette: {primary: blueGrey, secondary: green}});
+            return createMuiTheme({palette: {primary: cyan, secondary: green}});
         default:
             return createMuiTheme({palette: {primary: blue, secondary: green}});
     }

@@ -1,6 +1,6 @@
 
 import uuidv4 from "uuid/v4";
-import {blue, purple, green, blueGrey} from 'material-ui/colors';
+import {blue, purple, green, cyan} from 'material-ui/colors';
 
 
 // color theme types
@@ -67,7 +67,7 @@ export const getThemeColor = (themeName) => {
         case 'Autumn':
             return purple[500];
         case 'Winter':
-            return blueGrey[500];
+            return cyan[500];
         default:
             return blue[500];
     }
