@@ -19,9 +19,9 @@ import {defaultBundle} from '../stix/stixutil.js';
 import MenuIcon from 'material-ui-icons/Menu';
 import IconButton from 'material-ui/IconButton';
 import Menu, {MenuItem} from 'material-ui/Menu';
-import {getContextWith, createTheme} from '../styles/createContext';
+import {createTheme} from '../styles/createContext';
 import {themeOptions} from '../stix/stixutil.js';
-
+import {viewStyle} from '../styles/viewStyle.js';
 
 
 const ITEM_HEIGHT = 45;
@@ -56,10 +56,6 @@ const styles = theme => ({
         marginLeft: 1,
         order: 1
     },
-    menuButton: {
-        marginLeft: -12,
-        marginRight: 20
-    },
     flex: {
         flex: 1
     },
@@ -73,10 +69,6 @@ const styles = theme => ({
         [theme.breakpoints.up('md')]: {
             height: 'calc(100% - 64px)',
             marginTop: 26
-        },
-        menuButton: {
-            marginLeft: -12,
-            marginRight: 20
         }
     }
 });
@@ -187,7 +179,7 @@ class MainPage extends Component {
                     <AppBar className={this.props.classes.appBar}>
                         <Toolbar>
                             <IconButton
-                                style={styles.menuButton}
+                                style={viewStyle.menuButton}
                                 color="contrast"
                                 aria-label="Menu"
                                 aria-owns={this.state.menuOpen ? 'the-menu' : null}
