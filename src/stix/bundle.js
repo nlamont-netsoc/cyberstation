@@ -259,7 +259,7 @@ export class BundlePage extends Component {
                 delete bundleCopy.name;
                 // make a collection object to send the bundle to
                 const theCollection = new Collection(this.state.collection, this.state.apiroot, this.props.server.conn);
-                // todo timeout
+                // todo timeout, display status and catch error
                 theCollection.addObject(bundleCopy).then(status => {
                     console.log("----> collection.addObject() \n" + JSON.stringify(status));
                     this.setState({waiting: false});

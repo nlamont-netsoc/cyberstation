@@ -8,7 +8,6 @@ import {BundlePage} from '../stix/bundle.js';
 import {RelationShipPage} from '../stix/relations.js';
 import {AttackPatternPage} from '../stix/attackpattern.js';
 import {SightingPage} from '../stix/sighting.js';
-import {getThemeColor} from "../stix/stixutil";
 import {viewStyle} from '../styles/viewStyle.js';
 
 
@@ -78,20 +77,10 @@ export class StixView extends Component {
     };
 
     render() {
-        // temporary hack to set the theme color
-        const tabsStyle = {
-            width: '100%',
-            position: 'fixed',
-            top: 52,
-            zIndex: 1,
-            marginTop: 2,
-            color: '#FFFFFF',
-            backgroundColor: getThemeColor(this.props.theme)};
-
         return (
             <div>
 
-                <div style={tabsStyle}>
+                <div style={viewStyle.tabs}>
                     <Tabs
                         value={this.state.value}
                         onChange={this.handleChange}
@@ -155,7 +144,6 @@ export class StixView extends Component {
 }
 
 StixView.propTypes = {
-    server: PropTypes.object,
-    theme: PropTypes.string
+    server: PropTypes.object
 };
 

@@ -7,7 +7,7 @@
 
 import { blue } from 'material-ui/colors';
 
-
+// white --> color: '#FFFFFF'
 
 export const viewStyle = { 
     tabs: {

@@ -6,7 +6,7 @@ import React, {Component} from 'react';
 import JssProvider from 'react-jss/lib/JssProvider';
 import {withStyles, MuiThemeProvider} from 'material-ui/styles';
 import wrapDisplayName from 'recompose/wrapDisplayName';
-import {createContext, createContextWith} from '../styles/createContext';
+import {createContext} from '../styles/createContext';
 
 
 // Apply some reset
@@ -27,20 +27,10 @@ let AppWrapper = props => props.children;
 
 AppWrapper = withStyles(styles)(AppWrapper);
 
+const context = createContext();
+
 function withRoot(BaseComponent) {
     class WithRoot extends Component {
-
-        constructor(props) {
-            super(props);
-            this.state = {context: createContext()};
-            // because we are inside a function we need this
-            this.updateContext = this.updateContext.bind(this);
-        }
-
-        // callback for the BaseCompoment to change the theme
-        updateContext(newTheme) {
-            if(newTheme) this.setState({context: createContextWith(newTheme)});
-        }
 
         componentDidMount() {
             // Remove the server-side injected CSS.
@@ -52,10 +42,10 @@ function withRoot(BaseComponent) {
 
         render() {
             return (
-                <JssProvider registry={this.state.context.sheetsRegistry} jss={this.state.context.jss}>
-                    <MuiThemeProvider theme={this.state.context.theme} sheetsManager={this.state.context.sheetsManager}>
+                <JssProvider registry={context.sheetsRegistry} jss={context.jss}>
+                    <MuiThemeProvider theme={context.theme} sheetsManager={context.sheetsManager}>
                         <AppWrapper>
-                            <BaseComponent update={this.updateContext}/>
+                            <BaseComponent />
                         </AppWrapper>
                     </MuiThemeProvider>
                 </JssProvider>
