@@ -47,7 +47,8 @@ TAXII-2 servers can be added, removed and selected,
 **COLLECTIONS** representing the endpoints of the chosen server collections and 
 the **OBJECTS** tab page showing the objects at the selected collection endpoint.
  
-Clicking on the **STIX** button brings the UI for creating the different types of STIX objects. 
+Clicking on the **STIX** button brings the UI for creating the different types of STIX objects. First a bundle object 
+is created, then various STIX objects are added to it. 
 
 #### Server page
 On the **SERVER** tab page, a test server from [freetaxii-server](https://github.com/freetaxii/freetaxii-server)
