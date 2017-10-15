@@ -184,7 +184,9 @@ export class BundlePage extends Component {
                         </TableRow>
                         <TableRow key="Description">
                             <TableCell>Description</TableCell>
-                            <TableCell>{discovery.description}</TableCell>
+                            <TableCell style={{whiteSpace: "normal", wordWrap: "break-word"}}>
+                                {discovery.description}
+                            </TableCell>
                         </TableRow>
                         <TableRow key="Contact">
                             <TableCell>Contact</TableCell>

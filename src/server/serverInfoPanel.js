@@ -69,7 +69,9 @@ export class ServerInfoPanel extends Component {
                 </TableRow>
                 <TableRow key="Description">
                     <TableCell>Description</TableCell>
-                    <TableCell>{this.state.discovery.description}</TableCell>
+                    <TableCell style={{whiteSpace: "normal", wordWrap: "break-word"}}>
+                        {this.state.discovery.description}
+                    </TableCell>
                 </TableRow>
                 <TableRow key="Contact">
                     <TableCell>Contact</TableCell>

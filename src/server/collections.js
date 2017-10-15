@@ -116,7 +116,9 @@ export class CollectionsPage extends Component {
                     </TableRow>
                     <TableRow key="Description">
                         <TableCell>Description</TableCell>
-                        <TableCell>{this.state.info.description}</TableCell>
+                        <TableCell style={{whiteSpace: "normal", wordWrap: "break-word"}}>
+                            {this.state.info.description}
+                        </TableCell>
                     </TableRow>
                     <TableRow key="CanRead">
                         <TableCell>Can be read</TableCell>
