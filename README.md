@@ -116,5 +116,15 @@ You need a modern browser compatible with Javascript ES6, see
 work in progress, not tested, prototype stage.
 
 
+### License 
+
+Apache License, Version 2.0.
+
+
+### Copyright 
+
+Copyright 2017 R. Wathelet, All rights reserved.
+
+
 
 
