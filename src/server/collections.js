@@ -32,8 +32,7 @@ const styles = theme => ({
 });
 
 /**
- * list all collections from the selected server and api root.
- * Display the objects of the selected collection.
+ * Display all collections from the selected server and api root.
  */
 export class CollectionsPage extends Component {
 
@@ -49,6 +48,8 @@ export class CollectionsPage extends Component {
         };
     }
 
+    // get the selected server and api root from storage and then
+    // get the list of all collections
     initialise(theServer) {
         let apiroot = localStorage.getItem('serverApiroot');
         if (theServer && apiroot) {
@@ -66,7 +67,7 @@ export class CollectionsPage extends Component {
         }
     };
 
-    // load the collections of the api root
+    // load the collections of the given server
     componentDidMount() {
         this.initialise(this.props.server);
     };

@@ -102,7 +102,7 @@ export class BundlePage extends Component {
         this.forceUpdate();
     };
 
-    // callback from the AddPanel, either a selection or the list of bundle names
+    // callback for the AddPanel (add/delete), either a selection or the list of bundle names
     // ---> todo all this should be redone
     handleBundleUpdate = (event) => {
         // event.target.value can be a string or an array of strings (the list)

@@ -33,7 +33,7 @@ export class TaxiiConnect {
             'method': 'get',
             'headers': new Headers({
                 'Accept': 'application/vnd.oasis.taxii+json',
-                'version': '2.1',
+                'version': '2.0',
                 'Authorization': 'Basic ' + this.hash,
                 'Content-Type': 'application/vnd.oasis.taxii+json'
             })
@@ -43,7 +43,7 @@ export class TaxiiConnect {
             'method': 'post',
             'headers': new Headers({
                 'Accept': 'application/vnd.oasis.taxii+json',
-                'version': '2.1',
+                'version': '2.0',
                 'Authorization': 'Basic ' + this.hash,
                 'Content-Type': 'application/vnd.oasis.stix+json'
             })
@@ -53,7 +53,7 @@ export class TaxiiConnect {
             'method': 'get',
             'headers': new Headers({
                 'Accept': 'application/vnd.oasis.stix+json',
-                'version': '2.1',
+                'version': '2.0',
                 'Authorization': 'Basic ' + this.hash,
                 'Content-Type': 'application/vnd.oasis.stix+json'
             })
@@ -178,7 +178,7 @@ export class Server {
 
     /**
      * reset the internal options flags so that the next method call of this class will
-     * send a request to the server rather than retreive the results from cache.
+     * send a request to the server rather than retrieve the results from cache.
      */
     invalidate() {
         this.disOptions.flag = false;

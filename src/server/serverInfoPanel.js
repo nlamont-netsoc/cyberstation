@@ -43,7 +43,7 @@ export class ServerInfoPanel extends Component {
         this.props.update(value);
     };
 
-    // the api roots url as form labels
+    // the api roots url as form labels with a radio button for selection
     apiRootsAsFormLabels() {
         let items = [];
         if (this.state.discovery) {

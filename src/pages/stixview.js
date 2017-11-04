@@ -43,7 +43,7 @@ export class StixView extends Component {
 
     constructor(props) {
         super(props);
-        this.state = {value: 0, server: this.props.server, bundle: undefined, hasBundle: false};
+        this.state = {tab: 0, server: this.props.server, bundle: undefined, hasBundle: false};
     }
 
     // initialise the state
@@ -51,9 +51,9 @@ export class StixView extends Component {
         let bndlList = JSON.parse(localStorage.getItem('bundleList')) || [];
         let theBundle = bndlList[localStorage.getItem('bundleSelected')];
         if (theBundle) {
-            this.setState({value: 0, server: this.props.server, bundle: theBundle, hasBundle: true});
+            this.setState({tab: 0, server: this.props.server, bundle: theBundle, hasBundle: true});
         } else {
-            this.setState({value: 0, server: this.props.server, bundle: undefined, hasBundle: false});
+            this.setState({tab: 0, server: this.props.server, bundle: undefined, hasBundle: false});
         }
     };
 
@@ -62,9 +62,9 @@ export class StixView extends Component {
         this.setState({server: newProps.server});
     };
 
-    // change to the Server page or the Collection page
+    // change to another tab
     handleChange = (event, value) => {
-        this.setState({value: value});
+        this.setState({tab: value});
     };
 
     // callback for the BundlePage, set the currently selected bundle object
@@ -82,7 +82,7 @@ export class StixView extends Component {
 
                 <div style={viewStyle.tabs}>
                     <Tabs
-                        value={this.state.value}
+                        value={this.state.tab}
                         onChange={this.handleChange}
                         indicatorColor="orchid"
                         textColor="inherit"
@@ -108,33 +108,33 @@ export class StixView extends Component {
                 </div>
 
                 <div style={viewStyle.content}>
-                    {this.state.value === 0 && <TabContainer>
+                    {this.state.tab === 0 && <TabContainer>
                         <BundlePage update={this.handleBundleUpdate}
                                     server={this.state.server}
                                     bundle={this.state.bundle}/></TabContainer>}
 
-                    {this.state.hasBundle && this.state.value === 1 &&
+                    {this.state.hasBundle && this.state.tab === 1 &&
                     <TabContainer><AttackPatternPage bundle={this.state.bundle}/></TabContainer>}
 
-                    {this.state.hasBundle && this.state.value === 2 &&
+                    {this.state.hasBundle && this.state.tab === 2 &&
                     <TabContainer><RelationShipPage bundle={this.state.bundle}/></TabContainer>}
 
-                    {this.state.hasBundle && this.state.value === 3 &&
+                    {this.state.hasBundle && this.state.tab === 3 &&
                     <TabContainer><IndicatorPage bundle={this.state.bundle}/></TabContainer>}
 
-                    {this.state.hasBundle && this.state.value === 4 &&
+                    {this.state.hasBundle && this.state.tab === 4 &&
                     <TabContainer><SightingPage bundle={this.state.bundle}/></TabContainer>}
 
-                    {this.state.hasBundle && this.state.value === 5 && <TabContainer>{'Malware not yet implemented'}</TabContainer>}
-                    {this.state.hasBundle && this.state.value === 6 && <TabContainer>{'Campaign not yet implemented'}</TabContainer>}
-                    {this.state.hasBundle && this.state.value === 7 && <TabContainer>{'Course of Action not yet implemented'}</TabContainer>}
-                    {this.state.hasBundle && this.state.value === 8 && <TabContainer>{'Identity not yet implemented'}</TabContainer>}
-                    {this.state.hasBundle && this.state.value === 9 && <TabContainer>{'Intrusion Set not yet implemented'}</TabContainer>}
-                    {this.state.hasBundle && this.state.value === 10 && <TabContainer>{'Observed Data not yet implemented'}</TabContainer>}
-                    {this.state.hasBundle && this.state.value === 11 && <TabContainer>{'Report not yet implemented'}</TabContainer>}
-                    {this.state.hasBundle && this.state.value === 12 && <TabContainer>{'Threat Actor not yet implemented'}</TabContainer>}
-                    {this.state.hasBundle && this.state.value === 13 && <TabContainer>{'Tool not yet implemented'}</TabContainer>}
-                    {this.state.hasBundle && this.state.value === 14 && <TabContainer>{'Vulnerability not yet implemented'}</TabContainer>}
+                    {this.state.hasBundle && this.state.tab === 5 && <TabContainer>{'Malware not yet implemented'}</TabContainer>}
+                    {this.state.hasBundle && this.state.tab === 6 && <TabContainer>{'Campaign not yet implemented'}</TabContainer>}
+                    {this.state.hasBundle && this.state.tab === 7 && <TabContainer>{'Course of Action not yet implemented'}</TabContainer>}
+                    {this.state.hasBundle && this.state.tab === 8 && <TabContainer>{'Identity not yet implemented'}</TabContainer>}
+                    {this.state.hasBundle && this.state.tab === 9 && <TabContainer>{'Intrusion Set not yet implemented'}</TabContainer>}
+                    {this.state.hasBundle && this.state.tab === 10 && <TabContainer>{'Observed Data not yet implemented'}</TabContainer>}
+                    {this.state.hasBundle && this.state.tab === 11 && <TabContainer>{'Report not yet implemented'}</TabContainer>}
+                    {this.state.hasBundle && this.state.tab === 12 && <TabContainer>{'Threat Actor not yet implemented'}</TabContainer>}
+                    {this.state.hasBundle && this.state.tab === 13 && <TabContainer>{'Tool not yet implemented'}</TabContainer>}
+                    {this.state.hasBundle && this.state.tab === 14 && <TabContainer>{'Vulnerability not yet implemented'}</TabContainer>}
                 </div>
 
             </div>

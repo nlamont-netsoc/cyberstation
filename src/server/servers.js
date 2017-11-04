@@ -15,8 +15,6 @@ import AddPanel from '../components/addPanel.js';
 
 
 
-const styles = {};
-
 /**
  * Display the list of servers and the selected server information including its api roots.
  * Can add new servers to storage and delete selected servers from storage.
@@ -37,6 +35,7 @@ export class ServersPage extends Component {
     };
 
     componentDidMount() {
+        // set the state to the storage info
         this.setState({
             currentServer: localStorage.getItem('serverSelected') || '',
             discovery: JSON.parse(localStorage.getItem('serverDiscovery')) || undefined,
@@ -44,6 +43,7 @@ export class ServersPage extends Component {
             serverListUrl: JSON.parse(localStorage.getItem('serverUrlList')) || [],
             serverObj: this.props.server,
         });
+        // if did not get a server obj, create one
         if (!this.props.server) this.createServer();
     };
 
@@ -64,9 +64,8 @@ export class ServersPage extends Component {
         this.setState({currentApiroot: value});
     };
 
-    // close the alert dialog
+    // close the alert dialog, clear all current info including in storage
     handleAlertRequestClose = () => {
-      //  this.setState({alert: false});
          this.setState({alert: false, currentServer: '', currentApiroot: '', serverObj: undefined});
          localStorage.setItem('serverSelected', '');
          localStorage.setItem('serverApiroot', '');
@@ -86,11 +85,12 @@ export class ServersPage extends Component {
     createServer() {
         if (isValidURL(this.state.currentServer)) {
             this.setState({waiting: true});
-            // create a server, get its discovery info and add it to the list
+            // create a server
             let newServer = new Server("/taxii/", new TaxiiConnect(this.state.currentServer, "user-me", "user-password"));
             // timeout for connecting to the server
             let timeout = 5000;
-            // fancy foot work
+            // messy fancy foot work for the timeout
+            // get the server discovery info and add it to the list
             Promise.race([
                 newServer.discovery().then(discovery => {
                     this.setState({
@@ -143,9 +143,9 @@ export class ServersPage extends Component {
         }
     };
 
-    // callback from the AddPanel, either a selection or the list of server url
+    // callback for the AddPanel (add/delete), either a selection or the list of server url
     handleServerUpdate = (event) => {
-        // if there is nothing in the list clear everything
+        // if there is nothing in the list (because we deleted all servers) clear everything
         if (event.target.value.length <= 0) {
             localStorage.setItem('serverApiroot', '');
             localStorage.setItem('serverDiscovery', JSON.stringify({}));
@@ -158,12 +158,13 @@ export class ServersPage extends Component {
         }
         // event.target.value can be a string or an array of strings
         if (event.target.value) {
+            // if have an array representing the list of servers
             if (Array.isArray(event.target.value)) {
-                // pick the last value of the array
+                // pick the last value of the array, because this is the one we have just added
                 let lastUrl = event.target.value[event.target.value.length - 1];
                 // check it is a valid url
                 if (isValidURL(lastUrl)) {
-                    // the list of url
+                    // update the list of url
                     this.state.serverListUrl = event.target.value;
                     this.state.currentServer = lastUrl;
                     // store the array as a json string object
@@ -172,13 +173,13 @@ export class ServersPage extends Component {
                     this.forceUpdate();
                     this.createServer()
                 } else {
-                    // not a valid url, remove the last url
+                    // not a valid url, remove the last url from the list
                     event.target.value.splice((event.target.value.length - 1), 1);
                     this.state.serverListUrl = event.target.value;
                     this.forceUpdate();
                 }
             } else {
-                // a single selection
+                // have a single selection
                 this.state.currentServer = event.target.value;
                 localStorage.setItem('serverSelected', event.target.value);
                 this.forceUpdate();
