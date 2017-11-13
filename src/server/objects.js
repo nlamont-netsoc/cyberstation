@@ -45,11 +45,7 @@ export class ObjectsPage extends Component {
             const colInfoObj = JSON.parse(theSelectedCol);
             const theCollection = new Collection(colInfoObj, theApiroot, theServer.conn);
             theCollection.getObjects().then(bundle => {
-                if (bundle) {
-                    let objList = [];
-                    bundle.objects.map(obj => objList.push(obj));
-                    this.setState({objectList: objList, waiting: false});
-                }
+                this.setState({objectList: bundle.objects, waiting: false});
             });
         } else {
             this.setState({waiting: false});
