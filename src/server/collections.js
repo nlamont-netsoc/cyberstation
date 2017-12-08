@@ -57,7 +57,7 @@ export class CollectionsPage extends Component {
             let colid = colInfo ? colInfo.id : '';
             this.setState({info: colInfo, apiroot: apiroot, selectedColid: colid, waiting: true});
             const theCollections = new Collections(apiroot, theServer.conn);
-            theCollections.get().then(collections => {
+            theCollections.collections().then(collections => {
                 let colList = [];
                 collections.map(col => colList.push(col));
                 this.setState({collectionList: colList, waiting: false});

@@ -100,12 +100,12 @@ class MainPage extends Component {
     };
 
     initStore = () => {
-        //    localStorage.clear();
-        //   localStorage.setItem('collectionSelected', JSON.stringify({}));
-        //  localStorage.setItem('bundleList', JSON.stringify([]));
-        //      for(let key in localStorage) {
-        //          console.log(key + ' = ' + localStorage.getItem(key));
-        //      }
+         //  localStorage.clear();
+         //  localStorage.setItem('collectionSelected', JSON.stringify({}));
+         // localStorage.setItem('bundleList', JSON.stringify([]));
+             for(let key in localStorage) {
+                 console.log(key + ' = ' + localStorage.getItem(key));
+             }
 
         // add a default bundle if the store is empty
         let defBndl = JSON.parse(JSON.stringify(defaultBundle)); // make a deep copy

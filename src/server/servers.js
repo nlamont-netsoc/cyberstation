@@ -36,9 +36,11 @@ export class ServersPage extends Component {
 
     componentDidMount() {
         // set the state to the storage info
+        const disco = localStorage.getItem('serverDiscovery') !== undefined ? localStorage.getItem('serverDiscovery') : JSON.stringify({});
+
         this.setState({
             currentServer: localStorage.getItem('serverSelected') || '',
-            discovery: JSON.parse(localStorage.getItem('serverDiscovery')) || undefined,
+            discovery: JSON.parse(disco) || undefined,
             currentApiroot: localStorage.getItem('serverApiroot') || '',
             serverListUrl: JSON.parse(localStorage.getItem('serverUrlList')) || [],
             serverObj: this.props.server,
@@ -49,9 +51,10 @@ export class ServersPage extends Component {
 
     // when a new props is received
     componentWillReceiveProps(newProps) {
+        const disco = localStorage.getItem('serverDiscovery') !== undefined ? localStorage.getItem('serverDiscovery') : JSON.stringify({});
         this.setState({
             currentServer: localStorage.getItem('serverSelected'),
-            discovery: JSON.parse(localStorage.getItem('serverDiscovery')) || undefined,
+            discovery: JSON.parse(disco) || undefined,
             currentApiroot: localStorage.getItem('serverApiroot') || '',
             serverListUrl: JSON.parse(localStorage.getItem('serverUrlList')) || [],
             serverObj: newProps.server

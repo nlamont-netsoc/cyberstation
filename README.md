@@ -1,6 +1,6 @@
 ### CyberStation
 
-**CyberStation** is an interactive browser application for 
+**CyberStation** is a prototype interactive browser application for 
 creating and sending [STIX 2.1](https://oasis-open.github.io/cti-documentation/stix/intro) objects 
 to a [TAXII-2.0](https://oasis-open.github.io/cti-documentation/taxii/intro.html) server.
 
@@ -18,13 +18,13 @@ is an application protocol for exchanging CTI over HTTPS. ​TAXII defines a RES
 (a set of services and message exchanges) and a set of requirements for TAXII Clients 
 and Servers."
 
-**CyberStation** is developed to assist in manually creating STIX-2.1 objects through a 
+**CyberStation** is developed to test in manually creating STIX-2.1 objects through a 
 simple user interface, and sending those to a chosen TAXII-2 server for sharing cyber threat 
 intelligence amongst the participating clients.
 
 ### Documentation
 
-The aim of **CyberStation** is to create STIX-2.1 objects through a UI and sending them as a bundle to a 
+The aim of the prototype **CyberStation** is to create STIX-2.1 objects through a UI and sending them as a bundle to a 
 selected TAXII-2 server. The App consist of a single page user interface, with a number 
 of tabs to choose from. The work flow consists of selecting a server together with a collection endpoint to connect to.
  Then creating a bundle of STIX objects using the UI and sending that bundle to the selected server endpoint. 
