@@ -18,9 +18,11 @@ is an application protocol for exchanging CTI over HTTPS. ​TAXII defines a RES
 (a set of services and message exchanges) and a set of requirements for TAXII Clients 
 and Servers."
 
-**CyberStation** is developed to test in manually creating STIX-2.1 objects through a 
+**CyberStation** is developed to assist in manually creating STIX-2.1 objects through a 
 simple user interface, and sending those to a chosen TAXII-2 server for sharing cyber threat 
 intelligence amongst the participating clients.
+
+For a similar desktop version, see [CyberStationFX](https://github.com/workingDog/cyberstationFX)
 
 ### Documentation
 
@@ -111,7 +113,7 @@ You need a modern browser compatible with Javascript ES6, see
 
 ### Status
 
-work in progress, not tested, prototype stage.
+work in progress, just a prototype.
 
 
 ### License 
