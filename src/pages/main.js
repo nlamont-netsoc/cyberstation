@@ -118,7 +118,7 @@ class MainPage extends Component {
         // add a default test taxii server if the list is empty
         let srvList = JSON.parse(localStorage.getItem('serverUrlList')) || [];
         if (srvList.length === 0) {
-            localStorage.setItem('serverUrlList', JSON.stringify(["https://test.freetaxii.com:8000", "https://limo.anomali.com/api/v1/taxii2"]));
+            localStorage.setItem('serverUrlList', JSON.stringify(["https://test.freetaxii.com:8000"]));
         }
     };
 

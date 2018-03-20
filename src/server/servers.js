@@ -71,8 +71,7 @@ export class ServersPage extends Component {
 
     // close the alert dialog, clear all current info including in storage
     handleAlertRequestClose = () => {
-         this.setState({alert: false, alertMessage: "", currentServer: '', currentApiroot: '', serverObj: undefined});
-         localStorage.setItem('serverSelected', '');
+         this.setState({alert: false, alertMessage: "", currentApiroot: '', serverObj: undefined});
          localStorage.setItem('serverApiroot', '');
          localStorage.setItem('serverDiscovery', JSON.stringify({}));
          localStorage.setItem('collectionSelected', JSON.stringify({}));
@@ -83,7 +82,7 @@ export class ServersPage extends Component {
         if (this.state.serverObj) {
             return <ServerInfoPanel server={this.state.serverObj} update={this.updateApiRootSelection}/>
         } else {
-            return <div>no TAXII-2 server selected</div>
+            return <div>no TAXII-2 server</div>
         }
     };
 
@@ -121,7 +120,7 @@ export class ServersPage extends Component {
                     this.props.update(newServer);
                 }).catch(err => {
                     this.setState({alert: true, alertMessage: this.state.currentServer, waiting: false, serverObj: undefined});
-                    localStorage.setItem('serverSelected', '');
+                //    localStorage.setItem('serverSelected', '');
                     localStorage.setItem('serverApiroot', '');
                     localStorage.setItem('serverDiscovery', JSON.stringify({}));
                     localStorage.setItem('collectionSelected', JSON.stringify({}));
