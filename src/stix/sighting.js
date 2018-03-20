@@ -67,7 +67,7 @@ export class SightingPage extends StixBase {
                                    margin="normal"
                                    onChange={this.handleChange('first_seen')}
                         />
-                        <Button fab dense color="primary" style={{width: 33, height: 22}}
+                        <Button variant="fab" dense="true" color="primary" style={{width: 33, height: 22}}
                                 onClick={(e) => {
                                     this.handleChange('first_seen')({target: {value: moment().toISOString()}})
                                 }}>
@@ -83,7 +83,7 @@ export class SightingPage extends StixBase {
                                    margin="normal"
                                    onChange={this.handleChange('last_seen')}
                         />
-                        <Button fab dense color="primary" style={{width: 33, height: 22}}
+                        <Button variant="fab" dense="true" color="primary" style={{width: 33, height: 22}}
                                 onClick={(e) => {
                                     this.handleChange('last_seen')({target: {value: moment().toISOString()}})
                                 }}>

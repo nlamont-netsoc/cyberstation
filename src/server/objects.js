@@ -3,9 +3,10 @@
 import Grid from 'material-ui/Grid';
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import {Collection} from "../libs/taxii2lib";
+import {Collection, Server} from "../libs/taxii2lib";
 import {CircularProgress} from 'material-ui/Progress';
 import Paper from 'material-ui/Paper';
+import {isEmpty} from '../stix/stixutil.js';
 import Table, {
     TableHeaderColumn,
     TableHeader,
@@ -41,12 +42,12 @@ export class ObjectsPage extends Component {
             apiroot: theApiroot,
             waiting: true
         });
-        if (theServer && theApiroot && theSelectedCol) {
+        if (theServer && theApiroot && !isEmpty(theSelectedCol)) {
             const colInfoObj = JSON.parse(theSelectedCol);
             const theCollection = new Collection(colInfoObj, theApiroot, theServer.conn);
             theCollection.getObjects().then(bundle => {
-                this.setState({objectList: bundle.objects, waiting: false});
-            });
+              this.setState({objectList: bundle.objects, waiting: false});
+            }).catch(err => { this.setState({waiting: false, objectList: []}); });
         } else {
             this.setState({waiting: false});
         }
@@ -63,18 +64,17 @@ export class ObjectsPage extends Component {
     };
 
     objectsTableEntries() {
-        let objItems = [];
-        if (this.state.selectedCol) {
-            this.state.objectList.map(obj => {
-                objItems.push(<TableRow key={obj.id}>
+        if (!isEmpty(this.state.selectedCol) && this.state.objectList) {
+            return this.state.objectList.map(obj =>
+                <TableRow key={obj.id}>
                     <TableCell>{obj.type}</TableCell>
                     <TableCell>{obj.name}</TableCell>
                     <TableCell>{obj.id}</TableCell>
                     <TableCell>{obj.description}</TableCell>
-                </TableRow>)
-            });
+                </TableRow>);
+        } else {
+            return [];
         }
-        return objItems;
     };
 
     render() {

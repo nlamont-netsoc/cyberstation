@@ -21,43 +21,56 @@ export class ServerInfoPanel extends Component {
 
     constructor(props) {
         super(props);
-        this.state = {currentApiroot: '', discovery: ''}
+        this.state = {currentApiroot: '', discovery: '', updateFunc: props.update }
     };
 
-    componentDidMount() {
-        if(this.props.server) {
-            this.props.server.discovery().then(discovery => {
-                this.setState({discovery: discovery, currentApiroot: discovery.default});
+    initialise(theProps){
+        if(theProps.server) {
+            theProps.server.discovery().then(discovery => {
+                this.setState({discovery: discovery, currentApiroot: discovery.default, updateFunc: theProps.update});
                 // tell the parent component
-                this.props.update(discovery.default);
+             //   this.state.updateFunc(discovery.default);
+             //   this.props.update(discovery.default);
             });
         }
     };
 
+    componentDidMount() {
+       this.initialise(this.props)
+    };
+
+    // when a new props is received
+    componentWillReceiveProps(newProps) {
+       this.initialise(newProps)
+    };
+
     // change the selected api root
     handleSelection = event => {
-        event.persist();
-        let value = event.target.value;
-        this.setState({currentApiroot: value});
+    event.persist();
+    let theValue = event.target.value;
+    if(theValue) {
+        this.setState({currentApiroot: theValue.trim()});
         // tell the parent component
-        this.props.update(value);
+        this.state.updateFunc(theValue.trim());
+    //    this.props.update(theValue.trim());
+        }
     };
 
     // the api roots url as form labels with a radio button for selection
-    apiRootsAsFormLabels() {
-        let items = [];
-        if (this.state.discovery) {
-            let arr = this.state.discovery.api_roots;
-            if (arr) {
-                for (let j = 0; j < arr.length; j++) {
-                    items.push(<FormControlLabel
-                        style={{margin: 8}} key={j} value={arr[j]}
-                        control={<Radio/>} label={arr[j]}/>);
-                }
-            }
-        }
-        return items;
-    };
+     apiRootsAsFormLabels() {
+         if (this.state.discovery) {
+             return this.state.discovery.api_roots.map(obj =>
+               <FormControlLabel
+                style={{margin: 8}}
+                key={obj}
+                value={obj}
+                control={<Radio/>}
+                label={obj}/>);
+         }
+          else {
+             return [];
+          }
+        };
 
     serverInfo() {
         if (this.state.discovery) {
@@ -95,7 +108,8 @@ export class ServerInfoPanel extends Component {
                             aria-label="apiroots"
                             name="apiroots"
                             value={this.state.currentApiroot}
-                            onChange={this.handleSelection}>
+                          //  onChange={this.handleSelection}>
+                            onClick={this.handleSelection}>
                     {this.apiRootsAsFormLabels()}
                 </RadioGroup>
             </Grid>

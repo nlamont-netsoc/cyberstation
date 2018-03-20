@@ -65,7 +65,7 @@ export class LogoutPage extends Component {
 
         <Grid item xs={12}>
           <Grid container className={this.props.container} justify="center" spacing={8}>
-            <Button raised color="primary" style={{ margin: 16 }} className={this.props.button}
+            <Button variant="raised" color="primary" style={{ margin: 16 }} className={this.props.button}
               onClick={this.handleLogout} >
               Ok
             </Button>                       

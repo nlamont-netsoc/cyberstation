@@ -61,24 +61,27 @@ export default class AddPanel extends Component {
     };
 
     asFormLabels() {
-        let formItems = [];
-        this.state.objList.map(obj => formItems.push(<FormControlLabel
+        if(this.state.objList){
+          return this.state.objList.map(obj => <FormControlLabel
             style={{margin: 2}}
             key={obj}
             value={obj}
             control={<Radio/>}
-            label={obj}/>));
-        return formItems;
-    };
-
-    // change the selected item
-    handleListSelection = (event, theValue) => {
-        this.setState({selection: theValue.trim()});
-        if (this.props.updateFlag) {
-            this.props.update({target: {value: theValue}});
+            label={obj}/>);
+        } else {
+            return [];
         }
     };
 
+    // change the selected item
+    handleListSelection = (event) => {
+    if(event.target.value){
+        this.setState({selection: event.target.value.trim()});
+        if (this.props.updateFlag) {
+            this.props.update({target: {value: event.target.value, delete: false}});
+        }
+    }
+    };
 
     // show the add dialog
     handleAddToList = (event) => {
@@ -92,7 +95,7 @@ export default class AddPanel extends Component {
         if (indexToDelete !== -1) {
             this.state.objList.splice(indexToDelete, 1);
             this.forceUpdate();
-            let event = {target: {value: this.state.objList}};
+            let event = {target: {value: this.state.objList, delete: true}};
             this.props.update(event);
         }
     };
@@ -113,7 +116,7 @@ export default class AddPanel extends Component {
                 this.state.objList.push(newEntry);
                 this.state.openDialog = false;
                 this.forceUpdate();
-                let event = {target: {value: this.state.objList}};
+                let event = {target: {value: this.state.objList, delete: false}};
                 this.props.update(event);
             }
         }
@@ -137,11 +140,11 @@ export default class AddPanel extends Component {
                     <Grid key="k3" item style={{margin: 4}}>
                         <Typography type="body1">{this.state.title}</Typography>
                         {/*<Tooltip id="tooltip-add" title={"Add a new " + itemType} placement="top" enterDelay={500}>*/}
-                        <Button fab color="primary" onClick={this.handleAddToList} raised
+                        <Button color="primary" onClick={this.handleAddToList} variant="fab"
                                 style={{width: 34, height: 12, margin: 4}}><AddIcon/></Button>
                         {/*</Tooltip>*/}
                         {/*<Tooltip id="tooltip-del" title={"Delete selected " + itemType} placement="top" enterDelay={500}>*/}
-                        <Button fab color="primary" onClick={this.handleDeleteFromList} raised
+                        <Button color="primary" onClick={this.handleDeleteFromList} variant="fab"
                                 style={{width: 34, height: 12, margin: 4}}><RemoveIcon/></Button>
                         {/*</Tooltip>*/}
                         <Divider/>
@@ -156,7 +159,8 @@ export default class AddPanel extends Component {
                                         aria-label="obj"
                                         name="objGroup"
                                         value={this.state.selection}
-                                        onChange={this.handleListSelection}>
+                            //            onChange={this.handleListSelection}>
+                                        onClick={this.handleListSelection}>
                                 {this.asFormLabels()}
                             </RadioGroup>
                         </Paper>
@@ -166,9 +170,9 @@ export default class AddPanel extends Component {
                 <Dialog
                     open={this.state.openDialog}
                     transition={Slide}
-                    ignoreBackdropClick
-                    ignoreEscapeKeyUp
                     maxWidth="md"
+                    disableBackdropClick
+                    disableEscapeKeyDown
                 >
                     <DialogTitle>{"Add a new " + itemType}</DialogTitle>
                     <DialogContent style={{width: 400}}>
@@ -189,7 +193,7 @@ export default class AddPanel extends Component {
                     </DialogActions>
                 </Dialog>
 
-                <Dialog open={this.state.showAlert} transition={Slide} onRequestClose={this.handleAlertClose}>
+                <Dialog open={this.state.showAlert} transition={Slide} onClose={this.handleAlertClose}>
                     <DialogTitle>{"This entry is already in the list"}</DialogTitle>
                     <DialogContent>
                         <DialogContentText> change the name of this entry </DialogContentText>

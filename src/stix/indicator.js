@@ -83,7 +83,7 @@ export class IndicatorPage extends StixBase {
                                    onChange={this.handleChange('valid_from')}
                         />
                         <Tooltip id="tooltip-add" title="Renew the timestamp" placement="top" enterDelay={500}>
-                            <Button fab dense color="primary" aria-label="redo" style={{width: 33, height: 22}}
+                            <Button variant="fab" dense="true" color="primary" aria-label="redo" style={{width: 33, height: 22}}
                                     onClick={(e) => {
                                         this.handleChange('valid_from')({target: {value: moment().toISOString()}})
                                     }}>
@@ -100,7 +100,7 @@ export class IndicatorPage extends StixBase {
                                    onChange={this.handleChange('valid_until')}
                         />
                         <Tooltip id="tooltip-add" title="Renew the timestamp" placement="top" enterDelay={500}>
-                            <Button fab dense color="primary" aria-label="redo" style={{width: 33, height: 22}}
+                            <Button variant="fab" dense="true" color="primary" aria-label="redo" style={{width: 33, height: 22}}
                                     onClick={(e) => {
                                         this.handleChange('valid_until')({target: {value: moment().toISOString()}})
                                     }}>

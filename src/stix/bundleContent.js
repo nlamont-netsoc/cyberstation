@@ -77,11 +77,13 @@ export class BundleContent extends Component {
     };
 
     asFormLabels() {
-        let formItems = [];
-        this.state.objList.map(sdo => formItems.push(<FormControlLabel
+        if(this.state.objList){
+        return this.state.objList.map(sdo => <FormControlLabel
             style={{margin: 8}} key={sdo.id} value={sdo.id}
-            control={<Radio/>} label={sdo.name}/>));
-        return formItems;
+            control={<Radio/>} label={sdo.name}/>);
+        } else {
+            return [];
+        }
     };
 
     // change the selected object to edit
@@ -127,12 +129,12 @@ export class BundleContent extends Component {
                     <Typography type="body1" style={{margin: 8}}> {this.title} </Typography>
                     <Grid key="k1">
                         <Tooltip id="tooltip-add" title={"Add a new " + this.props.stix.type} placement="top" enterDelay={500}>
-                            <Button fab color="primary" onClick={this.handleAdd} raised
+                            <Button color="primary" onClick={this.handleAdd} variant="fab"
                                     style={{margin: 8}}><AddIcon/></Button>
                         </Tooltip>
                         <Tooltip id="tooltip-delete" title={"Delete selected " + this.props.stix.type} placement="top"
                                  enterDelay={500}>
-                            <Button fab color="primary" onClick={this.handleDelete} raised
+                            <Button color="primary" onClick={this.handleDelete} variant="fab"
                                     style={{margin: 8}}><RemoveIcon/></Button>
                         </Tooltip>
                     </Grid>

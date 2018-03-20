@@ -54,6 +54,20 @@ export default class AddKillPhase extends Component {
     };
 
     asFormLabels() {
+      if (this.state.objList) {
+        return this.state.objList.map(obj => <FormControlLabel
+            style={{margin: 2}}
+            key={obj.kill_chain_name + ", " + obj.phase_name}
+            value={JSON.stringify({kill_chain_name: obj.kill_chain_name, phase_name: obj.phase_name})}
+            control={<Radio/>}
+            label={obj.kill_chain_name + ", " + obj.phase_name}/>);
+       }
+        else {
+            return [];
+       }
+    };
+
+    asFormLabels2() {
         let formItems = [];
         this.state.objList.map(obj => formItems.push(<FormControlLabel
             style={{margin: 2}}
@@ -116,11 +130,11 @@ export default class AddKillPhase extends Component {
                     </Grid>
                     <Grid key="k4" item>
                         <Tooltip id="tooltip-add" title={"Add a new kill chain phase"} placement="top" enterDelay={500}>
-                            <Button fab color="primary" onClick={this.handleAddToList} raised
+                            <Button color="primary" onClick={this.handleAddToList} variant="fab"
                                     style={{width: 34, height: 12, margin: 4}}><AddIcon/></Button>
                         </Tooltip>
                         <Tooltip id="tooltip-add" title={"Delete selected kill chain phase"} placement="top" enterDelay={500}>
-                            <Button fab color="primary" onClick={this.handleDeleteFromList} raised
+                            <Button color="primary" onClick={this.handleDeleteFromList} variant="fab"
                                     style={{width: 34, height: 12, margin: 4}}><RemoveIcon/></Button>
                         </Tooltip>
                     </Grid>
@@ -142,8 +156,8 @@ export default class AddKillPhase extends Component {
                 <Dialog
                     open={this.state.openDialog}
                     transition={Slide}
-                    ignoreBackdropClick
-                    ignoreEscapeKeyUp
+                    disableBackdropClick
+                    disableEscapeKeyDown
                     maxWidth="md"
                 >
                     <DialogTitle>Add a new kill chain phase</DialogTitle>

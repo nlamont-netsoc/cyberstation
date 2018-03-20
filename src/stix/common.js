@@ -53,7 +53,7 @@ export const commonStix = (stix, handler) => {
                                onChange={handler('created')}
                     />
                     <Tooltip id="tooltip-add" title="Renew the timestamp" placement="top" enterDelay={500}>
-                        <Button fab dense color="primary" aria-label="redo" style={{width: 33, height: 22}}
+                        <Button variant="fab" dense="true" color="primary" aria-label="redo" style={{width: 33, height: 22}}
                                 onClick={(e) => {
                                     handler('created')({target: {value: moment().toISOString()}})
                                 }}>
@@ -70,7 +70,7 @@ export const commonStix = (stix, handler) => {
                                onChange={handler('modified')}
                     />
                     <Tooltip id="tooltip-add" title="Renew the timestamp" placement="top" enterDelay={500}>
-                        <Button fab dense color="primary" aria-label="redo" style={{width: 33, height: 22}}
+                        <Button variant="fab" dense="true" color="primary" aria-label="redo" style={{width: 33, height: 22}}
                                 onClick={(e) => {
                                     handler('modified')({target: {value: moment().toISOString()}})
                                 }}>

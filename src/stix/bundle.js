@@ -11,7 +11,7 @@ import uuidv4 from "uuid/v4";
 import AddPanel from '../components/addPanel.js';
 import {FormControl} from 'material-ui/Form';
 import PropTypes from "prop-types";
-import {defaultBundle} from './stixutil.js';
+import {newDefaultBundle, sleep} from './stixutil.js';
 import Divider from 'material-ui/Divider';
 import {Collection} from "../libs/taxii2lib";
 import Button from 'material-ui/Button';
@@ -48,16 +48,6 @@ export class BundlePage extends Component {
     initialise(theProps) {
         // make a copy of the bundle list
         let bndlList = JSON.parse(localStorage.getItem('bundleList')) || [];
-        let theBundleNdx = localStorage.getItem('bundleSelected') || '';
-        // if have no selection or bundle list is empty
-        // create a default bundle and add it to the store list
-        if (theBundleNdx && bndlList.length <= 0) {
-            localStorage.setItem('bundleList', JSON.stringify([defaultBundle]));
-            localStorage.setItem('bundleSelected', 0);
-            bndlList.push(defaultBundle);
-            // tell the parent to update the bundle
-            this.props.update(defaultBundle);
-        }
         this.setState({
             server: theProps.server,
             collection: JSON.parse(localStorage.getItem('collectionSelected')),
@@ -81,69 +71,99 @@ export class BundlePage extends Component {
 
     objectsAsFormLabels() {
         const objslist = this.state.bundle ? this.state.bundle.objects : [];
-        let formItems = [];
-        objslist.map(sdo => formItems.push(
-            <Typography type="body1" key={sdo.id} style={{margin: 8, marginLeft: 16}}>{sdo.name}</Typography>));
-        return formItems;
+        return objslist.map(sdo =>
+            <Typography type="body1" key={sdo.id} style={{margin: 8, marginLeft: 16}}>{sdo.name}</Typography>);
     };
 
     // changes to bundle due to user input editing
     handleChange = name => event => {
-        // update only the specific attribute
-        this.setState({bundle: {...this.state.bundle, [name]: event.target.value}});
-        // special case, when changing the name of the bundle,
-        // we need to also update the bundleNameList
-        if (name === 'name') {
-            // get the index of the selected bundle in the list
-            let ndx = localStorage.getItem('bundleSelected');
-            // update the name of this bundle in the list
-            this.state.bundleNameList[ndx] = event.target.value;
+    let prevBundleId = this.state.bundle.id;
+        switch (name) {
+            case "id":
+                this.state.bundle.id = event.target.value;
+                break;
+            case "spec_version":
+                this.state.bundle.spec_version = event.target.value;
+                break;
+            case "name":
+                this.state.bundle.name = event.target.value;
+                // get the index of the selected bundle in the list
+                let ndx = localStorage.getItem('bundleSelected');
+                // update the name of this bundle in the list
+                this.state.bundleNameList[ndx] = event.target.value;
+        }
+        let index = this.state.bundleList.findIndex(bndl => bndl.id === prevBundleId);
+        if (index !== -1) {
+            this.state.bundleList[index] = JSON.parse(JSON.stringify(this.state.bundle));
+             localStorage.setItem('bundleList', JSON.stringify(this.state.bundleList));
         }
         this.forceUpdate();
     };
 
-    // callback for the AddPanel (add/delete), either a selection or the list of bundle names
-    // ---> todo all this should be redone
+    // callback for the AddPanel (add/delete/select), either a bundle selection or the list of bundle names
     handleBundleUpdate = (event) => {
+    // if want to delete the bundle
+    if(event.target.delete) {
+       // if there is nothing in the list, we have deleted the last bundle, clear everything and return
+                    if (this.state.bundleNameList.length <= 0) {
+                        localStorage.setItem('bundleSelected', '');
+                        localStorage.setItem('bundleList', JSON.stringify([]));
+                        this.state.bundleList = [];
+                        this.state.bundleNameList = [];
+                        this.state.info = '';
+                        this.state.bundle = undefined;
+                        this.forceUpdate();
+                        // tell the parent about having no bundle selected
+                        this.props.update(undefined);
+                        return;
+                    }
+    // temp array to store the bundles named in the updated bundleNameList
+    let tempArr = [];
+    for (let s of this.state.bundleNameList) {
+        let ndx = this.state.bundleList.findIndex(bndl => bndl.name === s);
+        if(ndx >= 0) {
+            tempArr.push(this.state.bundleList[ndx]);
+        }
+    }
+    // update the state list of bundles
+    this.state.bundleList = tempArr;
+    // select the first bundle of the list
+    this.state.bundle = this.state.bundleList[0];
+    this.forceUpdate();
+    // update the store selected bundle index
+     localStorage.setItem('bundleSelected', 0);
+     // store the new bundle list as a json string object
+     localStorage.setItem('bundleList', JSON.stringify(this.state.bundleList));
+     // tell the parent about the selected bundle
+     this.props.update(this.state.bundle);
+    } else {
+        // add or select the bundle
         // event.target.value can be a string or an array of strings (the list)
         if (event.target.value) {
             if (Array.isArray(event.target.value)) {
-                // if there is nothing in the list, clear everything and return
-                if (event.target.value.length <= 0) {
-                    localStorage.setItem('bundleSelected', '');
-                    localStorage.setItem('bundleList', JSON.stringify([]));
-                    this.state.bundleList = [];
-                    this.state.bundleNameList = [];
-                    this.state.info = '';
-                    this.state.bundle = undefined;
-                    this.forceUpdate();
-                    // tell the parent about having no bundle selected
-                    this.props.update(undefined);
-                    return;
-                }
-                // if have an array of names
-                // pick the last value of the array
+                // if have an array of names, pick the last value of the array
                 let lastValue = event.target.value[event.target.value.length - 1];
-                // update the name list
-                this.state.bundleNameList = event.target.value;
                 // find the index of the lastValue bundle name in the bundle list
                 let ndx = this.state.bundleList.findIndex(bndl => bndl.name === lastValue);
-                // if could not find the selection in the list, means the list is empty
+                // if could not find the selection in the bundleList, means we must add a new bundle
                 if (ndx === -1) {
-                    // must create a new bundle
-                    let newBundle = JSON.parse(JSON.stringify(defaultBundle));
+                    // create a new bundle
+                    let newBundle = JSON.parse(JSON.stringify(newDefaultBundle())); // make a deep copy
                     newBundle.name = lastValue;
-                    this.state.bundleList = [newBundle];
-                    this.state.bundleNameList = [newBundle.name];
+                    this.state.bundleList.push(newBundle)
+                    this.state.bundleNameList.push(newBundle.name)
                     this.state.info = '';
                     this.state.bundle = newBundle;
+                    // the index of the last bundle
+                    let lastNdx = this.state.bundleList.length - 1
                     // update the store selected bundle index
-                    localStorage.setItem('bundleSelected', 0);
+                    localStorage.setItem('bundleSelected', lastNdx);
                     // store the new bundle list as a json string object
                     localStorage.setItem('bundleList', JSON.stringify(this.state.bundleList));
                     // tell the parent about the new bundle
                     this.props.update(newBundle);
                 } else {
+                    // we already have the bundle in the list, just select it
                     // update the store selected bundle index
                     localStorage.setItem('bundleSelected', ndx);
                     let bndlList = JSON.parse(localStorage.getItem('bundleList'));
@@ -151,18 +171,19 @@ export class BundlePage extends Component {
                     this.props.update(bndlList[ndx]);
                 }
                 this.forceUpdate();
-            }
         } else {
-            // a single selection
+            // a single selection, just select the bundle
             // find the index of the selected named bundle in the list
             let theIndex = this.state.bundleList.findIndex(bndl => bndl.name === event.target.value);
-            if (theIndex) {
+             if (theIndex >= 0) {
                 // update the store selected bundle
                 localStorage.setItem('bundleSelected', theIndex);
                 // tell the parent about the selected bundle
                 this.props.update(this.state.bundleList[theIndex]);
             }
         }
+      }
+      }
     };
 
     showServerInfo() {
@@ -235,7 +256,7 @@ export class BundlePage extends Component {
                                margin="normal"
                                onChange={this.handleChange('id')}
                     />
-                    <Button fab dense color="primary" aria-label="redo" style={{width: 33, height: 22}}
+                    <Button variant="fab" dense="true" color="primary" aria-label="redo" style={{width: 33, height: 22}}
                             onClick={(e) => {
                                 this.handleChange('id')({target: {value: "bundle--" + uuidv4()}})
                             }}>
@@ -281,13 +302,14 @@ export class BundlePage extends Component {
 
                 <Grid item xs={5}>
                     <FormControl component="fieldset" required>
-                        <Button disabled={!sendable} onClick={this.handleSend} raised color="primary"
+                        <Button disabled={!sendable} onClick={this.handleSend} variant="raised" color="primary"
                                 style={{margin: 8}}>Send to server</Button>
 
                         <AddPanel title="bundle"
                                   initSelection={bundleName}
                                   itemList={this.state.bundleNameList}
-                                  update={this.handleBundleUpdate}/>
+                                  update={this.handleBundleUpdate}
+                                  updateFlag={true} />
                     </FormControl>
                 </Grid>
 

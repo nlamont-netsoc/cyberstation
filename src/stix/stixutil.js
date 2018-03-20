@@ -42,6 +42,21 @@ export function isValidURL(str) {
     }
 };
 
+
+export function newDefaultBundle() {
+    return {
+           name: 'default-bundle',
+           type: "bundle",
+           id: "bundle--" + uuidv4(),
+           spec_version: "2.1",
+           objects: []
+    };
+};
+
+async function sleep(msec) {
+    return new Promise(resolve => setTimeout(resolve, msec));
+};
+
 export const defaultBundle = {
     name: 'default-bundle',
     type: "bundle",
@@ -70,5 +85,19 @@ export const getThemeColor = (themeName) => {
             return cyan[500];
         default:
             return blue[500];
+    }
+};
+
+    /**
+     * determine if the obj is empty, {}
+     * @param {Object} obj - the object to test
+     * @returns {Boolean} - true if empty else false
+     */
+export function isEmpty(obj) {
+    if (obj === null || obj === undefined || (obj === '{}')) {
+        return true;
+    } else {
+        return Object.keys(obj).length === 0
+        //&& obj.constructor === Object;
     }
 };

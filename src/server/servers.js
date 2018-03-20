@@ -26,6 +26,7 @@ export class ServersPage extends Component {
         this.state = {
             waiting: false,         // for the progress spinner
             alert: false,           // to open the alert dialog, when a server cannot connect
+            alertMessage: "",       // the message to display by the alert dialog
             serverListUrl: [],      // the list of servers url
             discovery: undefined,   // the current server discovery info object
             currentServer: '',      // the current selected server url
@@ -37,7 +38,6 @@ export class ServersPage extends Component {
     componentDidMount() {
         // set the state to the storage info
         const disco = localStorage.getItem('serverDiscovery') !== undefined ? localStorage.getItem('serverDiscovery') : JSON.stringify({});
-
         this.setState({
             currentServer: localStorage.getItem('serverSelected') || '',
             discovery: JSON.parse(disco) || undefined,
@@ -64,12 +64,14 @@ export class ServersPage extends Component {
     // update the selected api root url
     updateApiRootSelection = value => {
         localStorage.setItem('serverApiroot', value);
-        this.setState({currentApiroot: value});
+    //    this.setState({currentApiroot: value});
+        // must not trigger a render
+        this.state.currentApiroot = value;
     };
 
     // close the alert dialog, clear all current info including in storage
     handleAlertRequestClose = () => {
-         this.setState({alert: false, currentServer: '', currentApiroot: '', serverObj: undefined});
+         this.setState({alert: false, alertMessage: "", currentServer: '', currentApiroot: '', serverObj: undefined});
          localStorage.setItem('serverSelected', '');
          localStorage.setItem('serverApiroot', '');
          localStorage.setItem('serverDiscovery', JSON.stringify({}));
@@ -83,25 +85,25 @@ export class ServersPage extends Component {
         } else {
             return <div>no TAXII-2 server selected</div>
         }
-    }
+    };
 
     createServer() {
         if (isValidURL(this.state.currentServer)) {
             this.setState({waiting: true});
-            // create a server
-            let newServer = new Server("/taxii/", new TaxiiConnect(this.state.currentServer, "user-me", "user-password"));
-            // timeout for connecting to the server
-            let timeout = 5000;
-            // messy fancy foot work for the timeout
+            const timeout = 10000;
+            // setup a server
+            let newServer = new Server("/taxii/", new TaxiiConnect(this.state.currentServer, "guest", "guest"));
             // get the server discovery info and add it to the list
-            Promise.race([
                 newServer.discovery().then(discovery => {
                     this.setState({
                         waiting: false,
                         discovery: discovery,
                         currentServer: newServer.conn.baseURL,
-                        serverObj: newServer
+                        serverObj: newServer,
+                        currentApiroot: discovery.default
                     });
+                    localStorage.setItem('collectionSelected', JSON.stringify({}));
+                    localStorage.setItem('serverApiroot', discovery.default);
                     localStorage.setItem("serverDiscovery", JSON.stringify(discovery));
                     // get the storage serverList
                     let thisServerList = JSON.parse(localStorage.getItem('serverUrlList')) || [];
@@ -118,7 +120,7 @@ export class ServersPage extends Component {
                     // tell the parent component
                     this.props.update(newServer);
                 }).catch(err => {
-                    this.setState({waiting: false, currentServer: '', serverObj: undefined});
+                    this.setState({alert: true, alertMessage: this.state.currentServer, waiting: false, serverObj: undefined});
                     localStorage.setItem('serverSelected', '');
                     localStorage.setItem('serverApiroot', '');
                     localStorage.setItem('serverDiscovery', JSON.stringify({}));
@@ -126,27 +128,17 @@ export class ServersPage extends Component {
                     // tell the parent component
                     this.props.update(undefined);
                     new Error('fetch error')
-                }),
-                new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), timeout))
-            ]).catch(err => {
-                // show the alert about cannot connect to the server
-                this.setState({waiting: false, alert: true, serverObj: undefined, discovery: '', currentApiroot: ''});
-                this.forceUpdate();
-                localStorage.setItem('serverApiroot', '');
-                localStorage.setItem('serverDiscovery', JSON.stringify({}));
-                localStorage.setItem('collectionSelected', JSON.stringify({}));
-                // tell the parent component
-                this.props.update(undefined);
-            });
+                })
         } else {
-            this.setState({currentServer: '', serverObj: undefined});
+            // not valid url
+            this.setState({currentServer: '', serverObj: undefined, currentApiroot: ''});
             localStorage.setItem('serverSelected', '');
             // tell the parent component
             this.props.update(undefined);
         }
     };
 
-    // callback for the AddPanel (add/delete), either a selection or the list of server url
+    // callback for the AddPanel (add/delete/select), either a selection or the list of server url
     handleServerUpdate = (event) => {
         // if there is nothing in the list (because we deleted all servers) clear everything
         if (event.target.value.length <= 0) {
@@ -214,7 +206,7 @@ export class ServersPage extends Component {
 
                 <AlertSlide open={this.state.alert}
                             onClose={this.handleAlertRequestClose}
-                            url={this.state.currentServer}/>
+                            url={this.state.alertMessage}/>
             </div>
         );
     };

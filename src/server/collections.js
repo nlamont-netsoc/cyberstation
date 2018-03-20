@@ -14,6 +14,9 @@ import green from 'material-ui/colors/green';
 import red from 'material-ui/colors/red';
 import {CircularProgress} from 'material-ui/Progress';
 import Table, {TableBody, TableCell, TableRow} from 'material-ui/Table';
+import {isEmpty} from '../stix/stixutil.js';
+
+
 
 const styles = theme => ({
     root: {
@@ -52,15 +55,15 @@ export class CollectionsPage extends Component {
     // get the list of all collections
     initialise(theServer) {
         let apiroot = localStorage.getItem('serverApiroot');
-        if (theServer && apiroot) {
+        if (theServer && apiroot ) {
             let colInfo = JSON.parse(localStorage.getItem('collectionSelected'));
-            let colid = colInfo ? colInfo.id : '';
+            let colid = !isEmpty(colInfo) ? colInfo.id : '';
             this.setState({info: colInfo, apiroot: apiroot, selectedColid: colid, waiting: true});
             const theCollections = new Collections(apiroot, theServer.conn);
             theCollections.collections().then(collections => {
-                let colList = [];
-                collections.map(col => colList.push(col));
-                this.setState({collectionList: colList, waiting: false});
+                this.setState({collectionList: collections, waiting: false});
+            }).catch(err => {
+                this.setState({waiting: false, selectedColid: '', collectionList: [], objectList: [], apiroot: '', info: ''});
             });
         } else {
             this.setState({waiting: false, selectedColid: '', collectionList: [], objectList: [], apiroot: '', info: ''});
@@ -78,19 +81,20 @@ export class CollectionsPage extends Component {
     };
 
     colsAsFormLabels() {
-        let colItems = [];
-        this.state.collectionList.map(col => {
-            let theColor = (col.can_write && col.can_read) ? green[500] : red[500];
-            colItems.push(<FormControlLabel style={{margin: 8}}
-                                            disabled={!col.can_read}
-                                            key={col.id}
-                                            value={col.id}
-                                            checked={col.id === this.state.selectedColid}
-                                            control={<Radio style={{color: theColor}}/>}
-                                            label={col.title}/>);
-        });
-        return colItems;
-    }
+       if (this.state.collectionList) {
+          return this.state.collectionList.map(col =>
+            <FormControlLabel style={{margin: 8}}
+                 disabled={!col.can_read}
+                 key={col.id}
+                 value={col.id}
+                 checked={col.id === this.state.selectedColid}
+                 control={<Radio style={{color: (col.can_write && col.can_read) ? green[500] : red[500] }}/>}
+                 label={col.title}/>);
+       }
+        else {
+            return [];
+       }
+    };
 
     // change the selected collection
     handleSelected = (event, colid) => {

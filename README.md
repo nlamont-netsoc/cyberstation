@@ -22,7 +22,7 @@ and Servers."
 simple user interface, and sending those to a chosen TAXII-2 server for sharing cyber threat 
 intelligence amongst the participating clients.
 
-For a similar desktop version, see [CyberStationFX](https://github.com/workingDog/cyberstationFX)
+For a more capable desktop equivalent, see [CyberStationFX](https://github.com/workingDog/cyberstationFX)
 
 ### Documentation
 
@@ -112,8 +112,9 @@ You need a modern browser compatible with Javascript ES6, see
 
 
 ### Status
+This is just an experiment.
 
-work in progress, just a prototype.
+Work in progress, a lot of things do not work correctly.
 
 
 ### License 

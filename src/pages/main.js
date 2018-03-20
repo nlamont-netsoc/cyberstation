@@ -15,7 +15,7 @@ import AppBar from 'material-ui/AppBar';
 import Toolbar from 'material-ui/Toolbar';
 import Typography from 'material-ui/Typography';
 import Button from 'material-ui/Button';
-import {defaultBundle} from '../stix/stixutil.js';
+import {newDefaultBundle} from '../stix/stixutil.js';
 import MenuIcon from 'material-ui-icons/Menu';
 import IconButton from 'material-ui/IconButton';
 
@@ -85,7 +85,7 @@ class MainPage extends Component {
     constructor(props) {
         super(props);
         // todo to be removed, for testing
-        this.taxiCom = new TaxiiConnect("https://test.freetaxii.com:8000", "user-me", "user-password");
+        this.taxiCom = new TaxiiConnect("https://test.freetaxii.com:8000", "guest", "guest");
         this.state = {
             view: '',
             server: undefined,
@@ -100,15 +100,14 @@ class MainPage extends Component {
     };
 
     initStore = () => {
-         //  localStorage.clear();
+      //     localStorage.clear();
          //  localStorage.setItem('collectionSelected', JSON.stringify({}));
          // localStorage.setItem('bundleList', JSON.stringify([]));
-             for(let key in localStorage) {
-                 console.log(key + ' = ' + localStorage.getItem(key));
-             }
-
+         for(let key in localStorage) {
+             console.log(key + ' = ' + localStorage.getItem(key));
+         }
         // add a default bundle if the store is empty
-        let defBndl = JSON.parse(JSON.stringify(defaultBundle)); // make a deep copy
+        let defBndl = JSON.parse(JSON.stringify(newDefaultBundle())); // make a deep copy
         let bndlList = JSON.parse(localStorage.getItem('bundleList')) || [];
         // if the store bundleList is empty add the default bundle to it
         if (bndlList.length === 0) {
@@ -119,7 +118,7 @@ class MainPage extends Component {
         // add a default test taxii server if the list is empty
         let srvList = JSON.parse(localStorage.getItem('serverUrlList')) || [];
         if (srvList.length === 0) {
-            localStorage.setItem('serverUrlList', JSON.stringify(["https://test.freetaxii.com:8000"]));
+            localStorage.setItem('serverUrlList', JSON.stringify(["https://test.freetaxii.com:8000", "https://limo.anomali.com/api/v1/taxii2"]));
         }
     };
 
@@ -163,15 +162,15 @@ class MainPage extends Component {
 
                     <AppBar className={this.props.classes.appBar}>
                         <Toolbar>
-                            <IconButton color="contrast" aria-label="Menu">
+                            <IconButton color="secondary" aria-label="Menu">
                                 <MenuIcon/>
                             </IconButton>
                             <Typography type="title" color="inherit" className={this.props.classes.flex}>
                                 CyberStation 0.1</Typography>
-                            <Button color="contrast" onClick={this.handleLogin}>{this.state.loglabel}</Button>
-                            <Button disabled={!this.state.isLogged} color="contrast"
+                            <Button color="secondary" onClick={this.handleLogin}>{this.state.loglabel}</Button>
+                            <Button disabled={!this.state.isLogged} color="secondary"
                                     onClick={this.handleServer}>Server</Button>
-                            <Button disabled={!this.state.isLogged} color="contrast"
+                            <Button disabled={!this.state.isLogged} color="secondary"
                                     onClick={this.handleStix}>Stix</Button>
                         </Toolbar>
                     </AppBar>
