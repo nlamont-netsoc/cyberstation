@@ -47,7 +47,7 @@ export class AlertSlide extends Component {
         const msg = "Could not connect to server: ";
         return (
             <div>
-                <Dialog open={this.state.open} transition={Slide} onClose={this.handleRequestClose}>
+                <Dialog open={this.state.open} transition={Slide} onClose={this.handleRequestClose} disableBackdropClick>
                     <DialogTitle>{"Connection problem"}</DialogTitle>
                     <DialogContent>
                         <DialogContentText> {msg} </DialogContentText>
